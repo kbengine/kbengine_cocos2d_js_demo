@@ -1,0 +1,25 @@
+{
+    "project_type": "javascript",
+
+    "debugMode" : 1,
+    "showFPS" : true,
+    "frameRate" : 60,
+    "id" : "gameCanvas",
+    "renderMode" : 1,
+    "engineDir":"frameworks/cocos2d-html5",
+
+    "modules" : ["cocos2d"],
+
+    "jsList" : [
+	"plugins/kbengine/kbengine.js",
+        "plugins/kbengine/kbe_gameobject.js",
+        "plugins/kbengine/kbe_account.js",
+        "plugins/kbengine/kbe_avatar.js",
+        "plugins/kbengine/kbe_monster.js",
+        "plugins/kbengine/kbe_npc.js",
+        "plugins/kbengine/kbe_gate.js",
+
+        "src/resource.js",
+        "src/app.js"
+    ]
+}

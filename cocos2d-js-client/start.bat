@@ -1,0 +1,1 @@
+cocos run -p web
