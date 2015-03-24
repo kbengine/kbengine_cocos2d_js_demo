@@ -48,7 +48,7 @@ KBEngine.Class.extend = function (prop) {
         if (!initializing) {
             if (!this.ctor) {
                 if (this.__nativeObj)
-                    console.info("No ctor function found!");
+                    KBEngine.INFO_MSG("No ctor function found!");
             }
             else {
                 this.ctor.apply(this, arguments);
@@ -95,6 +95,121 @@ KBEngine.UINT64 = function(hi, lo)
 	this.hi = hi;
 	this.lo = lo;
 }
+
+/*-----------------------------------------------------------------------------------------
+												debug
+-----------------------------------------------------------------------------------------*/
+KBEngine.INFO_MSG = function(s)
+{
+	console.info(s);
+}
+
+KBEngine.DEBUG_MSG = function(s)
+{
+	console.info(s);
+}
+
+KBEngine.ERROR_MSG = function(s)
+{
+	console.error(s);
+}
+
+KBEngine.WARNING_MSG = function(s)
+{
+	console.warn(s);
+}
+
+/*-----------------------------------------------------------------------------------------
+												event
+-----------------------------------------------------------------------------------------*/
+KBEngine.EventInfo = function(classinst, callbackfn)
+{
+	this.callbackfn = callbackfn;
+	this.classinst = classinst;
+}
+
+KBEngine.Event = function()
+{
+	this._events = {};
+	
+	this.register = function(evtName, classinst, strCallback)
+	{
+		var callbackfn = eval("classinst." + strCallback);
+		if(callbackfn == undefined)
+		{
+			KBEngine.ERROR_MSG('KBEngine.Event::fire: not found strCallback(' + classinst  + ")!"+strCallback);  
+			return;
+		}
+
+		var evtlst = this._events[evtName];
+		if(evtlst == undefined)
+		{
+			evtlst = [];
+			this._events[evtName] = evtlst;
+		}
+		
+		var info = new KBEngine.EventInfo(classinst, callbackfn);
+		evtlst.push(info);
+	}
+	
+	this.deregister = function(evtName, classinst, callbackfn)
+	{
+		for(itemkey in this._events)
+		{
+			var evtlst = this._events[itemkey];
+			while(true)
+			{
+				var found = false;
+				for(var i=0; i<evtlst.length; i++)
+				{
+					var info = evtlst[i];
+					if(info.classinst == classinst)
+					{
+						delete evtlst[i];
+						found = true;
+						break;
+					}
+				}
+				
+				if(!found)
+					break;
+			}
+		}
+	}
+	
+	this.fire = function()
+	{
+		if(arguments.length < 1)
+		{
+			KBEngine.ERROR_MSG('KBEngine.Event::fire: not found eventName!');  
+			return;
+		}
+		
+		var evtName = arguments[0];
+		delete arguments[0];
+		var evtlst = this._events[evtName];
+		
+		if(evtlst == undefined)
+		{
+			return;			
+		}
+		
+		for(var i=0; i<evtlst.length; i++)
+		{
+			var info = evtlst[i];
+			if(arguments.length < 1)
+			{
+				info.callbackfn.apply(info.classinst);
+			}
+			else
+			{
+				info.callbackfn.apply(info.classinst, arguments);
+			}
+		}
+	}
+}
+
+KBEngine.Event = new KBEngine.Event();
 
 /*-----------------------------------------------------------------------------------------
 												memorystream
@@ -354,7 +469,7 @@ KBEngine.MemoryStream = function(size_or_buffer)
 		size = v.length;
 		if(size + 4> this.space())
 		{
-			console.error("memorystream::writeBlob: no free!");
+			KBEngine.ERROR_MSG("memorystream::writeBlob: no free!");
 			return;
 		}
 		
@@ -383,7 +498,7 @@ KBEngine.MemoryStream = function(size_or_buffer)
 	{
 		if(v.length > this.space())
 		{
-			console.error("memorystream::writeString: no free!");
+			KBEngine.ERROR_MSG("memorystream::writeString: no free!");
 			return;
 		}
 		
@@ -827,7 +942,7 @@ KBEngine.Message = function(id, name, length, argstype, args, handler)
 	this.length = length;
 	this.argsType = argstype;
 	
-	// °ó¶¨Ö´ĞĞ
+	// ç»‘å®šæ‰§è¡Œ
 	for(i=0; i<args.length; i++)
 	{
 		args[i] = KBEngine.bindReader(args[i]);
@@ -854,7 +969,7 @@ KBEngine.Message = function(id, name, length, argstype, args, handler)
 	{
 		if(this.handler == null)
 		{
-			console.error("KBEngine.Message::handleMessage: interface(" + this.name + "/" + this.id + ") no implement!");  
+			KBEngine.ERROR_MSG("KBEngine.Message::handleMessage: interface(" + this.name + "/" + this.id + ") no implement!");  
 			return;
 		}
 
@@ -872,7 +987,7 @@ KBEngine.Message = function(id, name, length, argstype, args, handler)
 	}
 }
 
-// ÉÏĞĞÏûÏ¢
+// ä¸Šè¡Œæ¶ˆæ¯
 KBEngine.messages = {};
 KBEngine.messages["loginapp"] = {};
 KBEngine.messages["baseapp"] = {};
@@ -888,7 +1003,8 @@ KBEngine.bufferedCreateEntityMessage = {};
 /*-----------------------------------------------------------------------------------------
 												entity
 -----------------------------------------------------------------------------------------*/
-KBEngine.Entity = KBEngine.Class.extend({
+KBEngine.Entity = KBEngine.Class.extend(
+{
 	init : function()
 	{
 		this.id = 0;
@@ -911,7 +1027,7 @@ KBEngine.Entity = KBEngine.Class.extend({
 	{
 		if(arguments.length < 1)
 		{
-			console.error('KBEngine.Entity::baseCall: not fount interfaceName!');  
+			KBEngine.ERROR_MSG('KBEngine.Entity::baseCall: not fount interfaceName!');  
 			return;
 		}
 		
@@ -921,7 +1037,7 @@ KBEngine.Entity = KBEngine.Class.extend({
 		
 		if(arguments.length - 1 != args.length)
 		{
-			console.error("KBEngine.Entity::baseCall: args(" + (arguments.length - 1) + "!= " + args.length + ") size is error!");  
+			KBEngine.ERROR_MSG("KBEngine.Entity::baseCall: args(" + (arguments.length - 1) + "!= " + args.length + ") size is error!");  
 			return;
 		}
 		
@@ -937,7 +1053,7 @@ KBEngine.Entity = KBEngine.Class.extend({
 		}
 		catch(e)
 		{
-			console.error('KBEngine.Entity::baseCall: args is error!');  
+			KBEngine.ERROR_MSG('KBEngine.Entity::baseCall: args is error!');  
 			this.base.bundle = null;
 			return;
 		}
@@ -949,7 +1065,7 @@ KBEngine.Entity = KBEngine.Class.extend({
 	{
 		if(arguments.length < 1)
 		{
-			console.error('KBEngine.Entity::cellCall: not fount interfaceName!');  
+			KBEngine.ERROR_MSG('KBEngine.Entity::cellCall: not fount interfaceName!');  
 			return;
 		}
 		
@@ -959,7 +1075,7 @@ KBEngine.Entity = KBEngine.Class.extend({
 		
 		if(arguments.length - 1 != args.length)
 		{
-			console.error("KBEngine.Entity::cellCall: args(" + (arguments.length - 1) + "!= " + args.length + ") size is error!");  
+			KBEngine.ERROR_MSG("KBEngine.Entity::cellCall: args(" + (arguments.length - 1) + "!= " + args.length + ") size is error!");  
 			return;
 		}
 		
@@ -975,7 +1091,7 @@ KBEngine.Entity = KBEngine.Class.extend({
 		}
 		catch(e)
 		{
-			console.error('KBEngine.Entity::cellCall: args is error!');  
+			KBEngine.ERROR_MSG('KBEngine.Entity::cellCall: args is error!');  
 			this.cell.bundle = null;
 			return;
 		}
@@ -985,24 +1101,24 @@ KBEngine.Entity = KBEngine.Class.extend({
 	
 	onEnterWorld : function()
 	{
-		console.info(this.className + '::onEnterWorld: ' + this.id); 
+		KBEngine.INFO_MSG(this.className + '::onEnterWorld: ' + this.id); 
 		this.inWorld = true;
 	},
 	
 	onLeaveWorld : function()
 	{
-		console.info(this.className + '::onLeaveWorld: ' + this.id); 
+		KBEngine.INFO_MSG(this.className + '::onLeaveWorld: ' + this.id); 
 		this.inWorld = false;
 	},
 	
 	onEnterSpace : function()
 	{
-		console.info(this.className + '::onEnterSpace: ' + this.id); 
+		KBEngine.INFO_MSG(this.className + '::onEnterSpace: ' + this.id); 
 	},
 	
 	onLeaveSpace : function()
 	{
-		console.info(this.className + '::onLeaveSpace: ' + this.id); 
+		KBEngine.INFO_MSG(this.className + '::onLeaveSpace: ' + this.id); 
 	}
 });
 
@@ -1064,7 +1180,7 @@ KBEngine.Mailbox = function()
 KBEngine.moduledefs = {};
 KBEngine.datatypes = {};
 
-function KBEDATATYPE_UINT8()
+KBEngine.DATATYPE_UINT8 = function()
 {
 	this.bind = function()
 	{
@@ -1086,7 +1202,7 @@ function KBEDATATYPE_UINT8()
 	}
 }
 
-function KBEDATATYPE_UINT16()
+KBEngine.DATATYPE_UINT16 = function()
 {
 	this.bind = function()
 	{
@@ -1108,7 +1224,7 @@ function KBEDATATYPE_UINT16()
 	}
 }
 
-function KBEDATATYPE_UINT32()
+KBEngine.DATATYPE_UINT32 = function()
 {
 	this.bind = function()
 	{
@@ -1130,7 +1246,7 @@ function KBEDATATYPE_UINT32()
 	}
 }
 
-function KBEDATATYPE_UINT64()
+KBEngine.DATATYPE_UINT64 = function()
 {
 	this.bind = function()
 	{
@@ -1152,7 +1268,7 @@ function KBEDATATYPE_UINT64()
 	}
 }
 
-function KBEDATATYPE_INT8()
+KBEngine.DATATYPE_INT8 = function()
 {
 	this.bind = function()
 	{
@@ -1174,7 +1290,7 @@ function KBEDATATYPE_INT8()
 	}
 }
 
-function KBEDATATYPE_INT16()
+KBEngine.DATATYPE_INT16 = function()
 {
 	this.bind = function()
 	{
@@ -1196,7 +1312,7 @@ function KBEDATATYPE_INT16()
 	}
 }
 
-function KBEDATATYPE_INT32()
+KBEngine.DATATYPE_INT32 = function()
 {
 	this.bind = function()
 	{
@@ -1218,7 +1334,7 @@ function KBEDATATYPE_INT32()
 	}
 }
 
-function KBEDATATYPE_INT64()
+KBEngine.DATATYPE_INT64 = function()
 {
 	this.bind = function()
 	{
@@ -1240,7 +1356,7 @@ function KBEDATATYPE_INT64()
 	}
 }
 
-function KBEDATATYPE_FLOAT()
+KBEngine.DATATYPE_FLOAT = function()
 {
 	this.bind = function()
 	{
@@ -1262,7 +1378,7 @@ function KBEDATATYPE_FLOAT()
 	}
 }
 
-function KBEDATATYPE_DOUBLE()
+KBEngine.DATATYPE_DOUBLE = function()
 {
 	this.bind = function()
 	{
@@ -1284,7 +1400,7 @@ function KBEDATATYPE_DOUBLE()
 	}
 }
 
-function KBEDATATYPE_STRING()
+KBEngine.DATATYPE_STRING = function()
 {
 	this.bind = function()
 	{
@@ -1306,7 +1422,7 @@ function KBEDATATYPE_STRING()
 	}
 }
 
-function KBEDATATYPE_VECTOR(size)
+KBEngine.DATATYPE_VECTOR = function(size)
 {
 	this.itemsize = size;
 	
@@ -1320,7 +1436,7 @@ function KBEDATATYPE_VECTOR(size)
 		var size = KBEngine.reader.readUint32.call(stream);
 		if(size != this.itemsize)
 		{
-			console.error("KBEDATATYPE_VECTOR::createFromStream: size(" + size + ") != thisSize(" + this.itemsize + ") !");
+			KBEngine.ERROR_MSG("KBEDATATYPE_VECTOR::createFromStream: size(" + size + ") != thisSize(" + this.itemsize + ") !");
 			return undefined;
 		}
 		
@@ -1354,7 +1470,7 @@ function KBEDATATYPE_VECTOR(size)
 	}
 }
 
-function KBEDATATYPE_PYTHON()
+KBEngine.DATATYPE_PYTHON = function()
 {
 	this.bind = function()
 	{
@@ -1374,7 +1490,7 @@ function KBEDATATYPE_PYTHON()
 	}
 }
 
-function KBEDATATYPE_UNICODE()
+KBEngine.DATATYPE_UNICODE = function()
 {
 	this.bind = function()
 	{
@@ -1396,7 +1512,7 @@ function KBEDATATYPE_UNICODE()
 	}
 }
 
-function KBEDATATYPE_MAILBOX()
+KBEngine.DATATYPE_MAILBOX = function()
 {
 	this.bind = function()
 	{
@@ -1416,7 +1532,7 @@ function KBEDATATYPE_MAILBOX()
 	}
 }
 
-function KBEDATATYPE_BLOB()
+KBEngine.DATATYPE_BLOB = function()
 {
 	this.bind = function()
 	{
@@ -1441,7 +1557,7 @@ function KBEDATATYPE_BLOB()
 	}
 }
 
-function KBEDATATYPE_ARRAY()
+KBEngine.DATATYPE_ARRAY = function()
 {
 	this.type = null;
 	
@@ -1482,7 +1598,7 @@ function KBEDATATYPE_ARRAY()
 	}
 }
 
-function KBEDATATYPE_FIXED_DICT()
+KBEngine.DATATYPE_FIXED_DICT = function()
 {
 	this.dicttype = {};
 	this.implementedBy = null;
@@ -1525,27 +1641,27 @@ function KBEDATATYPE_FIXED_DICT()
 	}
 }
 
-KBEngine.datatypes["UINT8"] = new KBEDATATYPE_UINT8();
-KBEngine.datatypes["UINT16"] = new KBEDATATYPE_UINT16();
-KBEngine.datatypes["UINT32"] = new KBEDATATYPE_UINT32();
-KBEngine.datatypes["UINT64"] = new KBEDATATYPE_UINT64();
+KBEngine.datatypes["UINT8"]		= new KBEngine.DATATYPE_UINT8();
+KBEngine.datatypes["UINT16"]	= new KBEngine.DATATYPE_UINT16();
+KBEngine.datatypes["UINT32"]	= new KBEngine.DATATYPE_UINT32();
+KBEngine.datatypes["UINT64"]	= new KBEngine.DATATYPE_UINT64();
 
-KBEngine.datatypes["INT8"] = new KBEDATATYPE_INT8();
-KBEngine.datatypes["INT16"] = new KBEDATATYPE_INT16();
-KBEngine.datatypes["INT32"] = new KBEDATATYPE_INT32();
-KBEngine.datatypes["INT64"] = new KBEDATATYPE_INT64();
+KBEngine.datatypes["INT8"]		= new KBEngine.DATATYPE_INT8();
+KBEngine.datatypes["INT16"]		= new KBEngine.DATATYPE_INT16();
+KBEngine.datatypes["INT32"]		= new KBEngine.DATATYPE_INT32();
+KBEngine.datatypes["INT64"]		= new KBEngine.DATATYPE_INT64();
 
-KBEngine.datatypes["FLOAT"] = new KBEDATATYPE_FLOAT();
-KBEngine.datatypes["DOUBLE"] = new KBEDATATYPE_DOUBLE();
+KBEngine.datatypes["FLOAT"]		= new KBEngine.DATATYPE_FLOAT();
+KBEngine.datatypes["DOUBLE"]	= new KBEngine.DATATYPE_DOUBLE();
 
-KBEngine.datatypes["STRING"] = new KBEDATATYPE_STRING();
-KBEngine.datatypes["VECTOR2"] = new KBEDATATYPE_VECTOR(2);
-KBEngine.datatypes["VECTOR3"] = new KBEDATATYPE_VECTOR(3);
-KBEngine.datatypes["VECTOR4"] = new KBEDATATYPE_VECTOR(4);
-KBEngine.datatypes["PYTHON"] = new KBEDATATYPE_PYTHON();
-KBEngine.datatypes["UNICODE"] = new KBEDATATYPE_UNICODE();
-KBEngine.datatypes["MAILBOX"] = new KBEDATATYPE_MAILBOX();
-KBEngine.datatypes["BLOB"] = new KBEDATATYPE_BLOB();
+KBEngine.datatypes["STRING"]	= new KBEngine.DATATYPE_STRING();
+KBEngine.datatypes["VECTOR2"]	= new KBEngine.DATATYPE_VECTOR(2);
+KBEngine.datatypes["VECTOR3"]	= new KBEngine.DATATYPE_VECTOR(3);
+KBEngine.datatypes["VECTOR4"]	= new KBEngine.DATATYPE_VECTOR(4);
+KBEngine.datatypes["PYTHON"]	= new KBEngine.DATATYPE_PYTHON();
+KBEngine.datatypes["UNICODE"]	= new KBEngine.DATATYPE_UNICODE();
+KBEngine.datatypes["MAILBOX"]	= new KBEngine.DATATYPE_MAILBOX();
+KBEngine.datatypes["BLOB"]		= new KBEngine.DATATYPE_BLOB();
 
 /*-----------------------------------------------------------------------------------------
 												system
@@ -1612,18 +1728,24 @@ KBEngine.KBEngineApp = function()
 	
 	this.connect = function(addr)
 	{
-		try{  
+		try
+		{  
 			if(g_kbengine.socket != null)
 				g_kbengine.socket.close();
 		}
-		catch(e){ 
+		catch(e)
+		{ 
 		}
 		
 		g_kbengine.socket = null;
-		try{  
+		
+		try
+		{  
 			g_kbengine.socket = new WebSocket(addr);  
-		}catch(e){  
-			console.error('WebSocket init error!');  
+		}
+		catch(e)
+		{  
+			KBEngine.ERROR_MSG('WebSocket init error!');  
 			return;  
 		}
 		
@@ -1634,12 +1756,16 @@ KBEngine.KBEngineApp = function()
 		g_kbengine.socket.onclose = g_kbengine.onclose;
 	}
 
-	this.onopen = function(){  
-		console.info('connect success!') ; 
+	this.onopen = function()
+	{  
+		KBEngine.INFO_MSG('connect success!') ; 
+		KBEngine.Event.fire("onConnectStatus", true);
 	}
 
-	this.onerror = function(evt){  
-		console.error('connect error:' + evt.data);
+	this.onerror = function(evt)
+	{  
+		KBEngine.ERROR_MSG('connect error:' + evt.data);
+		KBEngine.Event.fire("onConnectStatus", false);
 	}
 	
 	this.onmessage = function(msg)
@@ -1654,7 +1780,7 @@ KBEngine.KBEngineApp = function()
 			
 			if(!msgHandler)
 			{
-				console.error("KBENGINE::onmessage[" + g_kbengine.currserver + "]: not found msg(" + msgid + ")!");
+				KBEngine.ERROR_MSG("KBEngineApp::onmessage[" + g_kbengine.currserver + "]: not found msg(" + msgid + ")!");
 			}
 			else
 			{
@@ -1663,7 +1789,7 @@ KBEngine.KBEngineApp = function()
 				{
 					msglen = stream.readUint16();
 					
-					// À©Õ¹³¤¶È
+					// æ‰©å±•é•¿åº¦
 					if(msglen == 65535)
 						msglen = stream.readUint32();
 				}
@@ -1678,9 +1804,10 @@ KBEngine.KBEngineApp = function()
 		}
 	}  
 
-	this.onclose = function(){  
-		console.info('connect close:' + g_kbengine.currserver);
-		
+	this.onclose = function()
+	{  
+		KBEngine.INFO_MSG('connect close:' + g_kbengine.currserver);
+		KBEngine.Event.fire("onDisableConnect");
 		//if(g_kbengine.currserver != "loginapp")
 		//	g_kbengine.reset();
 	}
@@ -1730,7 +1857,9 @@ KBEngine.KBEngineApp = function()
 	
 	this.onOpenLoginapp_login = function()
 	{  
-		console.info("KBENGINE::onOpenLoginapp_login: successfully!");
+		KBEngine.INFO_MSG("KBEngineApp::onOpenLoginapp_login: successfully!");
+		KBEngine.Event.fire("onConnectStatus", true);
+		
 		g_kbengine.currserver = "loginapp";
 		g_kbengine.currstate = "login";
 		
@@ -1740,7 +1869,8 @@ KBEngine.KBEngineApp = function()
 			bundle.newMessage(KBEngine.messages.Loginapp_importClientMessages);
 			bundle.send(g_kbengine);
 			g_kbengine.socket.onmessage = g_kbengine.Client_onImportClientMessages;  
-			console.info("KBENGINE::onOpenLoginapp_login: start importClientMessages ...");
+			KBEngine.INFO_MSG("KBEngineApp::onOpenLoginapp_login: start importClientMessages ...");
+			KBEngine.Event.fire("Loginapp_importClientMessages");
 		}
 		else
 		{
@@ -1750,7 +1880,8 @@ KBEngine.KBEngineApp = function()
 	
 	this.onOpenLoginapp_createAccount = function()
 	{  
-		console.info("KBENGINE::onOpenLoginapp_createAccount: successfully!");
+		KBEngine.Event.fire("onConnectStatus", true);
+		KBEngine.INFO_MSG("KBEngineApp::onOpenLoginapp_createAccount: successfully!");
 		g_kbengine.currserver = "loginapp";
 		g_kbengine.currstate = "createAccount";
 		
@@ -1760,7 +1891,8 @@ KBEngine.KBEngineApp = function()
 			bundle.newMessage(KBEngine.messages.Loginapp_importClientMessages);
 			bundle.send(g_kbengine);
 			g_kbengine.socket.onmessage = g_kbengine.Client_onImportClientMessages;  
-			console.info("KBENGINE::onOpenLoginapp_createAccount: start importClientMessages ...");
+			KBEngine.INFO_MSG("KBEngineApp::onOpenLoginapp_createAccount: start importClientMessages ...");
+			KBEngine.Event.fire("Loginapp_importClientMessages");
 		}
 		else
 		{
@@ -1770,7 +1902,7 @@ KBEngine.KBEngineApp = function()
 	
 	this.onImportClientMessagesCompleted = function()
 	{
-		console.info("KBENGINE::onImportClientMessagesCompleted: successfully!");
+		KBEngine.INFO_MSG("KBEngineApp::onImportClientMessagesCompleted: successfully!");
 		g_kbengine.socket.onmessage = g_kbengine.onmessage; 
 		g_kbengine.hello();
 		
@@ -1791,10 +1923,11 @@ KBEngine.KBEngineApp = function()
 			
 			if(!g_kbengine.entitydefImported)
 			{
-				console.info("KBENGINE::onImportClientMessagesCompleted: start importEntityDef ...");
+				KBEngine.INFO_MSG("KBEngineApp::onImportClientMessagesCompleted: start importEntityDef ...");
 				var bundle = new KBEngine.Bundle();
 				bundle.newMessage(KBEngine.messages.Baseapp_importClientEntityDef);
 				bundle.send(g_kbengine);
+				KBEngine.Event.fire("Baseapp_importClientEntityDef");
 			}
 			else
 			{
@@ -1810,11 +1943,11 @@ KBEngine.KBEngineApp = function()
 		var valname = stream.readString();
 		
 		if(canprint)
-			console.info("KBENGINE::Client_onImportClientEntityDef: importAlias(" + name + ":" + valname + ")!");
+			KBEngine.INFO_MSG("KBEngineApp::Client_onImportClientEntityDef: importAlias(" + name + ":" + valname + ")!");
 		
 		if(valname == "FIXED_DICT")
 		{
-			var datatype = new KBEDATATYPE_FIXED_DICT();
+			var datatype = new KBEngine.DATATYPE_FIXED_DICT();
 			var keysize = stream.readUint8();
 			datatype.implementedBy = stream.readString();
 				
@@ -1832,7 +1965,7 @@ KBEngine.KBEngineApp = function()
 		else if(valname == "ARRAY")
 		{
 			var uitemtype = stream.readUint16();
-			var datatype = new KBEDATATYPE_ARRAY();
+			var datatype = new KBEngine.DATATYPE_ARRAY();
 			datatype.type = uitemtype;
 			KBEngine.datatypes[name] = datatype;
 		}
@@ -1848,7 +1981,7 @@ KBEngine.KBEngineApp = function()
 	this.Client_onImportClientEntityDef = function(stream)
 	{
 		var aliassize = stream.readUint16();
-		console.info("KBENGINE::Client_onImportClientEntityDef: importAlias(size=" + aliassize + ")!");
+		KBEngine.INFO_MSG("KBEngineApp::Client_onImportClientEntityDef: importAlias(size=" + aliassize + ")!");
 		
 		while(aliassize > 0)
 		{
@@ -1873,7 +2006,7 @@ KBEngine.KBEngineApp = function()
 			var base_methodsize = stream.readUint16();
 			var cell_methodsize = stream.readUint16();
 			
-			console.info("KBENGINE::Client_onImportClientEntityDef: import(" + scriptmethod_name + "), propertys(" + propertysize + "), " +
+			KBEngine.INFO_MSG("KBEngineApp::Client_onImportClientEntityDef: import(" + scriptmethod_name + "), propertys(" + propertysize + "), " +
 					"clientMethods(" + methodsize + "), baseMethods(" + base_methodsize + "), cellMethods(" + cell_methodsize + ")!");
 			
 			KBEngine.moduledefs[scriptmethod_name] = {};
@@ -1930,7 +2063,7 @@ KBEngine.KBEngineApp = function()
 					currModuleDefs["usePropertyDescrAlias"] = false;
 				}
 				
-				console.info("KBENGINE::Client_onImportClientEntityDef: add(" + scriptmethod_name + "), property(" + name + "/" + properUtype + ").");
+				KBEngine.INFO_MSG("KBEngineApp::Client_onImportClientEntityDef: add(" + scriptmethod_name + "), property(" + name + "/" + properUtype + ").");
 			};
 			
 			while(methodsize > 0)
@@ -1963,7 +2096,7 @@ KBEngine.KBEngineApp = function()
 					currModuleDefs["useMethodDescrAlias"] = false;
 				}
 				
-				console.info("KBENGINE::Client_onImportClientEntityDef: add(" + scriptmethod_name + "), method(" + name + ").");
+				KBEngine.INFO_MSG("KBEngineApp::Client_onImportClientEntityDef: add(" + scriptmethod_name + "), method(" + name + ").");
 			};
 
 			while(base_methodsize > 0)
@@ -1983,7 +2116,7 @@ KBEngine.KBEngineApp = function()
 				};
 				
 				self_base_methods[name] = [methodUtype, aliasID, name, args];
-				console.info("KBENGINE::Client_onImportClientEntityDef: add(" + scriptmethod_name + "), base_method(" + name + ").");
+				KBEngine.INFO_MSG("KBEngineApp::Client_onImportClientEntityDef: add(" + scriptmethod_name + "), base_method(" + name + ").");
 			};
 			
 			while(cell_methodsize > 0)
@@ -2003,16 +2136,16 @@ KBEngine.KBEngineApp = function()
 				};
 				
 				self_cell_methods[name] = [methodUtype, aliasID, name, args];
-				console.info("KBENGINE::Client_onImportClientEntityDef: add(" + scriptmethod_name + "), cell_method(" + name + ").");
+				KBEngine.INFO_MSG("KBEngineApp::Client_onImportClientEntityDef: add(" + scriptmethod_name + "), cell_method(" + name + ").");
 			};
 			
 			try
 			{
-				defmethod = eval(scriptmethod_name);
+				defmethod = eval("KBEngine." + scriptmethod_name);
 			}
 			catch(e)
 			{
-				console.error("KBENGINE::Client_onImportClientEntityDef: module(" + scriptmethod_name + ") not found!");
+				KBEngine.ERROR_MSG("KBEngineApp::Client_onImportClientEntityDef: module(" + scriptmethod_name + ") not found!");
 				defmethod = undefined;
 			}
 			
@@ -2039,7 +2172,7 @@ KBEngine.KBEngineApp = function()
 				
 				if(defmethod != undefined && defmethod.prototype[name] == undefined)
 				{
-					console.warn(scriptmethod_name + ":: method(" + name + ") no implement!");
+					KBEngine.WARNING_MSG(scriptmethod_name + ":: method(" + name + ") no implement!");
 				}
 			};
 		}
@@ -2050,18 +2183,20 @@ KBEngine.KBEngineApp = function()
 	this.Client_onVersionNotMatch = function(stream)
 	{
 		this.serverVersion = stream.readString();
-		console.error("Client_onVersionNotMatch: verInfo=" + g_kbengine.clientVersion + " not match(server: " + this.serverVersion + ")");
+		KBEngine.ERROR_MSG("Client_onVersionNotMatch: verInfo=" + g_kbengine.clientVersion + " not match(server: " + this.serverVersion + ")");
+		KBEngine.Event.fire("onVersionNotMatch", this.clientVersion, this.serverVersion);
 	}
 
 	this.Client_onScriptVersionNotMatch = function(stream)
 	{
 		this.serverScriptVersion = stream.readString();
-		console.error("Client_onScriptVersionNotMatch: verInfo=" + g_kbengine.clientScriptVersion + " not match(server: " + this.serverScriptVersion + ")");
+		KBEngine.ERROR_MSG("Client_onScriptVersionNotMatch: verInfo=" + g_kbengine.clientScriptVersion + " not match(server: " + this.serverScriptVersion + ")");
+		KBEngine.Event.fire("onScriptVersionNotMatch", this.clientScriptVersion, this.serverScriptVersion);
 	}
 	
 	this.onImportEntityDefCompleted = function()
 	{
-		console.info("KBENGINE::onImportEntityDefCompleted: successfully!");
+		KBEngine.INFO_MSG("KBEngineApp::onImportEntityDefCompleted: successfully!");
 		g_kbengine.entitydefImported = true;
 		g_kbengine.login_baseapp(false);
 	}
@@ -2076,7 +2211,7 @@ KBEngine.KBEngineApp = function()
 			var msglen = stream.readUint16();
 			var msgcount = stream.readUint16();
 			
-			console.info("KBENGINE::onImportClientMessages: start(" + msgcount + ") ...!");
+			KBEngine.INFO_MSG("KBEngineApp::onImportClientMessages: start(" + msgcount + ") ...!");
 			
 			while(msgcount > 0)
 			{
@@ -2101,12 +2236,12 @@ KBEngine.KBEngineApp = function()
 					handler = g_kbengine[msgname];
 					if(handler == null || handler == undefined)
 					{
-						console.warn("KBENGINE::onImportClientMessages[" + g_kbengine.currserver + "]: interface(" + msgname + "/" + msgid + ") no implement!");
+						KBEngine.WARNING_MSG("KBEngineApp::onImportClientMessages[" + g_kbengine.currserver + "]: interface(" + msgname + "/" + msgid + ") no implement!");
 						handler = null;
 					}
 					else
 					{
-						console.info("KBENGINE::onImportClientMessages: import(" + msgname + ") successfully!");
+						KBEngine.INFO_MSG("KBEngineApp::onImportClientMessages: import(" + msgname + ") successfully!");
 					}
 				}
 			
@@ -2128,7 +2263,7 @@ KBEngine.KBEngineApp = function()
 			g_kbengine.onImportClientMessagesCompleted();
 		}
 		else
-			console.error("KBENGINE::onmessage: not found msg(" + msgid + ")!");
+			KBEngine.ERROR_MSG("KBEngineApp::onmessage: not found msg(" + msgid + ")!");
 	}
 	
 	this.createAccount = function(username, password)
@@ -2143,7 +2278,7 @@ KBEngine.KBEngineApp = function()
 	{  
 		if(noconnect)
 		{
-			console.info("KBENGINE::createAccount_loginapp: start connect to ws://" + g_kbengine.ip + ":" + g_kbengine.port + "!");
+			KBEngine.INFO_MSG("KBEngineApp::createAccount_loginapp: start connect to ws://" + g_kbengine.ip + ":" + g_kbengine.port + "!");
 			g_kbengine.connect("ws://" + g_kbengine.ip + ":" + g_kbengine.port);
 			g_kbengine.socket.onopen = g_kbengine.onOpenLoginapp_createAccount;  
 		}
@@ -2190,7 +2325,7 @@ KBEngine.KBEngineApp = function()
 	{  
 		if(noconnect)
 		{
-			console.info("KBENGINE::login_loginapp: start connect to ws://" + g_kbengine.ip + ":" + g_kbengine.port + "!");
+			KBEngine.INFO_MSG("KBEngineApp::login_loginapp: start connect to ws://" + g_kbengine.ip + ":" + g_kbengine.port + "!");
 			g_kbengine.connect("ws://" + g_kbengine.ip + ":" + g_kbengine.port);
 			g_kbengine.socket.onopen = g_kbengine.onOpenLoginapp_login;  
 		}
@@ -2208,7 +2343,7 @@ KBEngine.KBEngineApp = function()
 
 	this.onOpenLoginapp_resetpassword = function()
 	{  
-		console.info("KBENGINE::onOpenLoginapp_resetpassword: successfully!");
+		KBEngine.INFO_MSG("KBEngineApp::onOpenLoginapp_resetpassword: successfully!");
 		g_kbengine.currserver = "loginapp";
 		g_kbengine.currstate = "resetpassword";
 		
@@ -2218,7 +2353,7 @@ KBEngine.KBEngineApp = function()
 			bundle.newMessage(KBEngine.messages.Loginapp_importClientMessages);
 			bundle.send(g_kbengine);
 			g_kbengine.socket.onmessage = g_kbengine.Client_onImportClientMessages;  
-			console.info("KBENGINE::onOpenLoginapp_resetpassword: start importClientMessages ...");
+			KBEngine.INFO_MSG("KBEngineApp::onOpenLoginapp_resetpassword: start importClientMessages ...");
 		}
 		else
 		{
@@ -2236,7 +2371,7 @@ KBEngine.KBEngineApp = function()
 	{  
 		if(noconnect)
 		{
-			console.info("KBENGINE::createAccount_loginapp: start connect to ws://" + g_kbengine.ip + ":" + g_kbengine.port + "!");
+			KBEngine.INFO_MSG("KBEngineApp::createAccount_loginapp: start connect to ws://" + g_kbengine.ip + ":" + g_kbengine.port + "!");
 			g_kbengine.connect("ws://" + g_kbengine.ip + ":" + g_kbengine.port);
 			g_kbengine.socket.onopen = g_kbengine.onOpenLoginapp_resetpassword;  
 		}
@@ -2251,7 +2386,7 @@ KBEngine.KBEngineApp = function()
 	
 	this.onOpenBaseapp = function()
 	{
-		console.info("KBENGINE::onOpenBaseapp: successfully!");
+		KBEngine.INFO_MSG("KBEngineApp::onOpenBaseapp: successfully!");
 		g_kbengine.currserver = "baseapp";
 		
 		if(!g_kbengine.baseappMessageImported)
@@ -2260,6 +2395,7 @@ KBEngine.KBEngineApp = function()
 			bundle.newMessage(KBEngine.messages.Baseapp_importClientMessages);
 			bundle.send(g_kbengine);
 			g_kbengine.socket.onmessage = g_kbengine.Client_onImportClientMessages;  
+			KBEngine.Event.fire("Baseapp_importClientMessages");
 		}
 		else
 		{
@@ -2271,7 +2407,8 @@ KBEngine.KBEngineApp = function()
 	{  
 		if(noconnect)
 		{
-			console.info("KBENGINE::login_baseapp: start connect to ws://" + g_kbengine.ip + ":" + g_kbengine.port + "!");
+			KBEngine.Event.fire("login_baseapp");
+			KBEngine.INFO_MSG("KBEngineApp::login_baseapp: start connect to ws://" + g_kbengine.ip + ":" + g_kbengine.port + "!");
 			g_kbengine.connect("ws://" + g_kbengine.ip + ":" + g_kbengine.port);
 			g_kbengine.socket.onopen = g_kbengine.onOpenBaseapp;  
 		}
@@ -2287,14 +2424,15 @@ KBEngine.KBEngineApp = function()
 	
 	this.relogin_baseapp = function()
 	{  
-		console.info("KBENGINE::relogin_baseapp: start connect to ws://" + g_kbengine.ip + ":" + g_kbengine.port + "!");
+		KBEngine.Event.fire("onRelogin_baseapp");
+		KBEngine.INFO_MSG("KBEngineApp::relogin_baseapp: start connect to ws://" + g_kbengine.ip + ":" + g_kbengine.port + "!");
 		g_kbengine.connect("ws://" + g_kbengine.ip + ":" + g_kbengine.port);
 		g_kbengine.socket.onopen = g_kbengine.onReOpenBaseapp;  
 	}
 	
 	this.onReOpenBaseapp = function()
 	{
-		console.info("KBENGINE::onReOpenBaseapp: successfully!");
+		KBEngine.INFO_MSG("KBEngineApp::onReOpenBaseapp: successfully!");
 		g_kbengine.currserver = "baseapp";
 		
 		var bundle = new KBEngine.Bundle();
@@ -2315,7 +2453,7 @@ KBEngine.KBEngineApp = function()
 		
 		var ctype = args.readInt32();
 		
-		console.info("KBENGINE::Client_onHelloCB: verInfo(" + g_kbengine.serverVersion + "), scriptVerInfo(" + 
+		KBEngine.INFO_MSG("KBEngineApp::Client_onHelloCB: verInfo(" + g_kbengine.serverVersion + "), scriptVerInfo(" + 
 			g_kbengine.serverScriptVersion + "), serverProtocolMD5(" + g_kbengine.serverProtocolMD5 + "), serverEntityDefMD5(" + 
 			g_kbengine.serverEntityDefMD5 + "), ctype(" + ctype + ")!");
 	}
@@ -2324,7 +2462,8 @@ KBEngine.KBEngineApp = function()
 	{
 		var failedcode = args.readUint16();
 		g_kbengine.serverdatas = args.readBlob();
-		console.error("KBENGINE::Client_onLoginFailed: failedcode(" + failedcode + "), datas(" + g_kbengine.serverdatas.length + ")!");
+		KBEngine.ERROR_MSG("KBEngineApp::Client_onLoginFailed: failedcode(" + failedcode + "), datas(" + g_kbengine.serverdatas.length + ")!");
+		KBEngine.Event.fire("onLoginFailed", failedcode);
 	}
 	
 	this.Client_onLoginSuccessfully = function(args)
@@ -2335,7 +2474,7 @@ KBEngine.KBEngineApp = function()
 		g_kbengine.port = args.readUint16();
 		g_kbengine.serverdatas = args.readBlob();
 		
-		console.info("KBENGINE::Client_onLoginSuccessfully: accountName(" + accountName + "), addr(" + 
+		KBEngine.INFO_MSG("KBEngineApp::Client_onLoginSuccessfully: accountName(" + accountName + "), addr(" + 
 				g_kbengine.ip + ":" + g_kbengine.port + "), datas(" + g_kbengine.serverdatas.length + ")!");
 		
 		g_kbengine.login_baseapp(true);
@@ -2343,13 +2482,15 @@ KBEngine.KBEngineApp = function()
 	
 	this.Client_onLoginGatewayFailed = function(failedcode)
 	{
-		console.error("KBENGINE::Client_onLoginGatewayFailed: failedcode(" + failedcode + ")!");
+		KBEngine.ERROR_MSG("KBEngineApp::Client_onLoginGatewayFailed: failedcode(" + failedcode + ")!");
+		KBEngine.Event.fire("onLoginGatewayFailed", failedcode);
 	}
 
 	this.Client_onReLoginGatewaySuccessfully = function(stream)
 	{
 		g_kbengine.entity_uuid = stream.readUint64();
-		console.error("KBENGINE::Client_onReLoginGatewaySuccessfully: " + g_kbengine.username);
+		KBEngine.ERROR_MSG("KBEngineApp::Client_onReLoginGatewaySuccessfully: " + g_kbengine.username);
+		KBEngine.Event.fire("onReLoginGatewaySuccessfully");
 	}
 	
 	this.entityclass = {};
@@ -2361,7 +2502,7 @@ KBEngine.KBEngineApp = function()
 			runclass = eval("KBEngine." + entityType);
 			if(runclass == undefined)
 			{
-				console.error("KBENGINE::getentityclass: entityType(" + entityType + ") is error!");
+				KBEngine.ERROR_MSG("KBEngineApp::getentityclass: entityType(" + entityType + ") is error!");
 				return runclass;
 			}
 			else
@@ -2373,13 +2514,13 @@ KBEngine.KBEngineApp = function()
 	
 	this.Client_onCreatedProxies = function(rndUUID, eid, entityType)
 	{
-		console.info("KBENGINE::Client_onCreatedProxies: eid(" + eid + "), entityType(" + entityType + ")!");
+		KBEngine.INFO_MSG("KBEngineApp::Client_onCreatedProxies: eid(" + eid + "), entityType(" + entityType + ")!");
 		
 		var entity = g_kbengine.entities[eid];
 		
 		if(entity != undefined)
 		{
-			console.warn("KBENGINE::Client_onCreatedProxies: entity(" + eid + ") has exist!");
+			KBEngine.WARNING_MSG("KBEngineApp::Client_onCreatedProxies: entity(" + eid + ") has exist!");
 			return;
 		}
 		
@@ -2416,9 +2557,9 @@ KBEngine.KBEngineApp = function()
 			id = g_kbengine.entityIDAliasIDList[stream.readUint8()];
 		}
 		
-		// Èç¹ûÎª0ÇÒ¿Í»§¶ËÉÏÒ»²½ÊÇÖØµÇÂ½»òÕßÖØÁ¬²Ù×÷²¢ÇÒ·şÎñ¶ËentityÔÚ¶ÏÏßÆÚ¼äÒ»Ö±´¦ÓÚÔÚÏß×´Ì¬
-		// Ôò¿ÉÒÔºöÂÔÕâ¸ö´íÎó, ÒòÎªcellapp¿ÉÄÜÒ»Ö±ÔÚÏòbaseapp·¢ËÍÍ¬²½ÏûÏ¢£¬ µ±¿Í»§¶ËÖØÁ¬ÉÏÊ±Î´µÈ
-		// ·şÎñ¶Ë³õÊ¼»¯²½Öè¿ªÊ¼ÔòÊÕµ½Í¬²½ĞÅÏ¢, ´ËÊ±ÕâÀï¾Í»á³ö´í¡£
+		// å¦‚æœä¸º0ä¸”å®¢æˆ·ç«¯ä¸Šä¸€æ­¥æ˜¯é‡ç™»é™†æˆ–è€…é‡è¿æ“ä½œå¹¶ä¸”æœåŠ¡ç«¯entityåœ¨æ–­çº¿æœŸé—´ä¸€ç›´å¤„äºåœ¨çº¿çŠ¶æ€
+		// åˆ™å¯ä»¥å¿½ç•¥è¿™ä¸ªé”™è¯¯, å› ä¸ºcellappå¯èƒ½ä¸€ç›´åœ¨å‘baseappå‘é€åŒæ­¥æ¶ˆæ¯ï¼Œ å½“å®¢æˆ·ç«¯é‡è¿ä¸Šæ—¶æœªç­‰
+		// æœåŠ¡ç«¯åˆå§‹åŒ–æ­¥éª¤å¼€å§‹åˆ™æ”¶åˆ°åŒæ­¥ä¿¡æ¯, æ­¤æ—¶è¿™é‡Œå°±ä¼šå‡ºé”™ã€‚
 		if(g_kbengine.entityIDAliasIDList.length == 0)
 			return 0;
 		
@@ -2434,7 +2575,7 @@ KBEngine.KBEngineApp = function()
 			entityMessage = KBEngine.bufferedCreateEntityMessage[eid];
 			if(entityMessage != undefined)
 			{
-				console.error("KBENGINE::Client_onUpdatePropertys: entity(" + eid + ") not found!");
+				KBEngine.ERROR_MSG("KBEngineApp::Client_onUpdatePropertys: entity(" + eid + ") not found!");
 				return;
 			}
 			
@@ -2459,7 +2600,7 @@ KBEngine.KBEngineApp = function()
 			var setmethod = propertydata[5];
 			var val = propertydata[4].createFromStream(stream);
 			var oldval = entity[utype];
-			console.info("KBENGINE::Client_onUpdatePropertys: " + entity.className + "(id=" + eid  + " " + propertydata[2] + ", val=" + val + ")!");
+			KBEngine.INFO_MSG("KBEngineApp::Client_onUpdatePropertys: " + entity.className + "(id=" + eid  + " " + propertydata[2] + ", val=" + val + ")!");
 			entity[propertydata[2]] = val;
 			if(setmethod != null)
 			{
@@ -2486,7 +2627,7 @@ KBEngine.KBEngineApp = function()
 		
 		if(entity == undefined)
 		{
-			console.error("KBENGINE::Client_onRemoteMethodCall: entity(" + eid + ") not found!");
+			KBEngine.ERROR_MSG("KBEngineApp::Client_onRemoteMethodCall: entity(" + eid + ") not found!");
 			return;
 		}
 		
@@ -2510,7 +2651,7 @@ KBEngine.KBEngineApp = function()
 		}
 		else
 		{
-			console.error("KBENGINE::Client_onRemoteMethodCall: entity(" + eid + ") not found method(" + methoddata[2] + ")!");
+			KBEngine.ERROR_MSG("KBEngineApp::Client_onRemoteMethodCall: entity(" + eid + ") not found method(" + methoddata[2] + ")!");
 		}
 	}
 	
@@ -2544,7 +2685,7 @@ KBEngine.KBEngineApp = function()
 			isOnGound = stream.readInt8();
 		
 		entityType = KBEngine.moduledefs[entityType].name;
-		console.info("KBENGINE::Client_onEntityEnterWorld: " + entityType + "(" + eid + "), spaceID(" + g_kbengine.spaceID + "), isOnGound(" + isOnGound + ")!");
+		KBEngine.INFO_MSG("KBEngineApp::Client_onEntityEnterWorld: " + entityType + "(" + eid + "), spaceID(" + g_kbengine.spaceID + "), isOnGound(" + isOnGound + ")!");
 		
 		var entity = g_kbengine.entities[eid];
 		if(entity == undefined)
@@ -2552,7 +2693,7 @@ KBEngine.KBEngineApp = function()
 			entityMessage = KBEngine.bufferedCreateEntityMessage[eid];
 			if(entityMessage == undefined)
 			{
-				console.error("KBENGINE::Client_onEntityEnterWorld: entity(" + eid + ") not found!");
+				KBEngine.ERROR_MSG("KBEngineApp::Client_onEntityEnterWorld: entity(" + eid + ") not found!");
 				return;
 			}
 			
@@ -2576,14 +2717,17 @@ KBEngine.KBEngineApp = function()
 			
 			entity.onInit();
 			entity.onEnterWorld();
+			
+			KBEngine.Event.fire("set_direction", entity);
+			KBEngine.Event.fire("set_position", entity);
 		}
 		else
 		{
 			if(!entity.inWorld)
 			{
-				// °²È«Æğ¼û£¬ ÕâÀïÇå¿ÕÒ»ÏÂ
-				// Èç¹û·şÎñ¶ËÉÏÊ¹ÓÃgiveClientToÇĞ»»¿ØÖÆÈ¨
-				// Ö®Ç°µÄÊµÌåÒÑ¾­½øÈëÊÀ½ç£¬ ÇĞ»»ºóµÄÊµÌåÒ²½øÈëÊÀ½ç£¬ ÕâÀï¿ÉÄÜ»á²ĞÁôÖ®Ç°ÄÇ¸öÊµÌå½øÈëÊÀ½çµÄĞÅÏ¢
+				// å®‰å…¨èµ·è§ï¼Œ è¿™é‡Œæ¸…ç©ºä¸€ä¸‹
+				// å¦‚æœæœåŠ¡ç«¯ä¸Šä½¿ç”¨giveClientToåˆ‡æ¢æ§åˆ¶æƒ
+				// ä¹‹å‰çš„å®ä½“å·²ç»è¿›å…¥ä¸–ç•Œï¼Œ åˆ‡æ¢åçš„å®ä½“ä¹Ÿè¿›å…¥ä¸–ç•Œï¼Œ è¿™é‡Œå¯èƒ½ä¼šæ®‹ç•™ä¹‹å‰é‚£ä¸ªå®ä½“è¿›å…¥ä¸–ç•Œçš„ä¿¡æ¯
 				g_kbengine.entityIDAliasIDList = [];
 				g_kbengine.entities = {}
 				g_kbengine.entities[entity.id] = entity;
@@ -2604,7 +2748,7 @@ KBEngine.KBEngineApp = function()
 		var entity = g_kbengine.entities[eid];
 		if(entity == undefined)
 		{
-			console.error("KBENGINE::Client_onEntityLeaveWorld: entity(" + eid + ") not found!");
+			KBEngine.ERROR_MSG("KBEngineApp::Client_onEntityLeaveWorld: entity(" + eid + ") not found!");
 			return;
 		}
 		
@@ -2633,12 +2777,12 @@ KBEngine.KBEngineApp = function()
 
 	this.Client_onEntityDestroyed = function(eid)
 	{
-		console.info("KBENGINE::Client_onEntityDestroyed: entity(" + eid + ")!");
+		KBEngine.INFO_MSG("KBEngineApp::Client_onEntityDestroyed: entity(" + eid + ")!");
 		
 		var entity = g_kbengine.entities[eid];
 		if(entity == undefined)
 		{
-			console.error("KBENGINE::Client_onEntityDestroyed: entity(" + eid + ") not found!");
+			KBEngine.ERROR_MSG("KBEngineApp::Client_onEntityDestroyed: entity(" + eid + ") not found!");
 			return;
 		}
 
@@ -2659,7 +2803,7 @@ KBEngine.KBEngineApp = function()
 		var entity = g_kbengine.entities[eid];
 		if(entity == undefined)
 		{
-			console.error("KBENGINE::Client_onEntityEnterSpace: entity(" + eid + ") not found!");
+			KBEngine.ERROR_MSG("KBEngineApp::Client_onEntityEnterSpace: entity(" + eid + ") not found!");
 			return;
 		}
 		
@@ -2671,7 +2815,7 @@ KBEngine.KBEngineApp = function()
 		var entity = g_kbengine.entities[eid];
 		if(entity == undefined)
 		{
-			console.error("KBENGINE::Client_onEntityLeaveSpace: entity(" + eid + ") not found!");
+			KBEngine.ERROR_MSG("KBEngineApp::Client_onEntityLeaveSpace: entity(" + eid + ") not found!");
 			return;
 		}
 		
@@ -2681,7 +2825,8 @@ KBEngine.KBEngineApp = function()
 
 	this.Client_onKicked = function(failedcode)
 	{
-		console.error("KBENGINE::Client_onKicked: failedcode(" + failedcode + ")!");
+		KBEngine.ERROR_MSG("KBEngineApp::Client_onKicked: failedcode(" + failedcode + ")!");
+		KBEngine.Event.fire("onKicked", failedcode);
 	}
 	
 	this.Client_onSetEntityPosAndDir = function(stream)
@@ -2690,7 +2835,7 @@ KBEngine.KBEngineApp = function()
 		var entity = g_kbengine.entities[eid];
 		if(entity == undefined)
 		{
-			console.error("KBENGINE::Client_onSetEntityPosAndDir: entity(" + eid + ") not found!");
+			KBEngine.ERROR_MSG("KBEngineApp::Client_onSetEntityPosAndDir: entity(" + eid + ") not found!");
 			return;
 		}
 		
@@ -2701,6 +2846,9 @@ KBEngine.KBEngineApp = function()
 		entity.direction[0] = stream.readFloat();
 		entity.direction[1] = stream.readFloat();
 		entity.direction[2] = stream.readFloat();
+		
+		KBEngine.Event.fire("set_direction", entity);
+		KBEngine.Event.fire("set_position", entity);
 	}
 
 	this.Client_onCreateAccountResult = function(stream)
@@ -2710,11 +2858,12 @@ KBEngine.KBEngineApp = function()
 		
 		if(retcode != 0)
 		{
-			console.error("KBENGINE::Client_onCreateAccountResult: " + g_kbengine.username + " create is failed! code=" + retcode + "!");
+			KBEngine.ERROR_MSG("KBEngineApp::Client_onCreateAccountResult: " + g_kbengine.username + " create is failed! code=" + retcode + "!");
 			return;
 		}
 
-		console.info("KBENGINE::Client_onCreateAccountResult: " + g_kbengine.username + " create is successfully!");
+		KBEngine.Event.fire("onCreateAccountResult", retcode, datas);
+		KBEngine.INFO_MSG("KBEngineApp::Client_onCreateAccountResult: " + g_kbengine.username + " create is successfully!");
 	}
 	
 	this.updatePlayerToServer = function()
@@ -2738,10 +2887,11 @@ KBEngine.KBEngineApp = function()
 	
 	this.addSpaceGeometryMapping = function(spaceID, respath)
 	{
-		console.info("KBENGINE::addSpaceGeometryMapping: spaceID(" + spaceID + "), respath(" + respath + ")!");
+		KBEngine.INFO_MSG("KBEngineApp::addSpaceGeometryMapping: spaceID(" + spaceID + "), respath(" + respath + ")!");
 		
 		g_kbengine.spaceID = spaceID;
 		g_kbengine.spaceResPath = respath;
+		KBEngine.Event.fire("addSpaceGeometryMapping", respath);
 	}
 
 	this.clearSpace = function(isAll)
@@ -2789,24 +2939,27 @@ KBEngine.KBEngineApp = function()
 			g_kbengine.Client_setSpaceData(g_kbengine.spaceID, key, value);
 		}
 		
-		console.info("KBENGINE::Client_initSpaceData: spaceID(" + g_kbengine.spaceID + "), datas(" + g_kbengine.spacedata + ")!");
+		KBEngine.INFO_MSG("KBEngineApp::Client_initSpaceData: spaceID(" + g_kbengine.spaceID + "), datas(" + g_kbengine.spacedata + ")!");
 	}
 	
 	this.Client_setSpaceData = function(spaceID, key, value)
 	{
-		console.info("KBENGINE::Client_setSpaceData: spaceID(" + spaceID + "), key(" + key + "), value(" + value + ")!");
+		KBEngine.INFO_MSG("KBEngineApp::Client_setSpaceData: spaceID(" + spaceID + "), key(" + key + "), value(" + value + ")!");
 		
 		g_kbengine.spacedata[key] = value;
 		
 		if(key == "_mapping")
 			g_kbengine.addSpaceGeometryMapping(spaceID, value);
+		
+		KBEngine.Event.fire("onSetSpaceData", spaceID, key, value);
 	}
 	
 	this.Client_delSpaceData = function(spaceID, key)
 	{
-		console.info("KBENGINE::Client_delSpaceData: spaceID(" + spaceID + "), key(" + key + ")!");
+		KBEngine.INFO_MSG("KBEngineApp::Client_delSpaceData: spaceID(" + spaceID + "), key(" + key + ")!");
 		
 		delete g_kbengine.spacedata[key];
+		KBEngine.Event.fire("onDelSpaceData", spaceID, key);
 	}
 	
 	this.Client_getSpaceData = function(spaceID, key)
@@ -2835,7 +2988,7 @@ KBEngine.KBEngineApp = function()
 		var entity = g_kbengine.entities[eid];
 		if(entity == undefined)
 		{
-			console.error("KBENGINE::Client_onUpdateData: entity(" + eid + ") not found!");
+			KBEngine.ERROR_MSG("KBEngineApp::Client_onUpdateData: entity(" + eid + ") not found!");
 			return;
 		}
 	}
@@ -3102,9 +3255,9 @@ KBEngine.KBEngineApp = function()
 	{
 		if(entityID == 0)
 		{
-			// Èç¹ûÎª0ÇÒ¿Í»§¶ËÉÏÒ»²½ÊÇÖØµÇÂ½»òÕßÖØÁ¬²Ù×÷²¢ÇÒ·şÎñ¶ËentityÔÚ¶ÏÏßÆÚ¼äÒ»Ö±´¦ÓÚÔÚÏß×´Ì¬
-			// Ôò¿ÉÒÔºöÂÔÕâ¸ö´íÎó, ÒòÎªcellapp¿ÉÄÜÒ»Ö±ÔÚÏòbaseapp·¢ËÍÍ¬²½ÏûÏ¢£¬ µ±¿Í»§¶ËÖØÁ¬ÉÏÊ±Î´µÈ
-			// ·şÎñ¶Ë³õÊ¼»¯²½Öè¿ªÊ¼ÔòÊÕµ½Í¬²½ĞÅÏ¢, ´ËÊ±ÕâÀï¾Í»á³ö´í¡£
+			// å¦‚æœä¸º0ä¸”å®¢æˆ·ç«¯ä¸Šä¸€æ­¥æ˜¯é‡ç™»é™†æˆ–è€…é‡è¿æ“ä½œå¹¶ä¸”æœåŠ¡ç«¯entityåœ¨æ–­çº¿æœŸé—´ä¸€ç›´å¤„äºåœ¨çº¿çŠ¶æ€
+			// åˆ™å¯ä»¥å¿½ç•¥è¿™ä¸ªé”™è¯¯, å› ä¸ºcellappå¯èƒ½ä¸€ç›´åœ¨å‘baseappå‘é€åŒæ­¥æ¶ˆæ¯ï¼Œ å½“å®¢æˆ·ç«¯é‡è¿ä¸Šæ—¶æœªç­‰
+			// æœåŠ¡ç«¯åˆå§‹åŒ–æ­¥éª¤å¼€å§‹åˆ™æ”¶åˆ°åŒæ­¥ä¿¡æ¯, æ­¤æ—¶è¿™é‡Œå°±ä¼šå‡ºé”™ã€‚
 			return;
 		}
 	}
@@ -3125,33 +3278,33 @@ KBEngine.KBEngineApp = function()
 	{
 		if(failcode != 0)
 		{
-			console.error("KBENGINE::Client_onReqAccountResetPasswordCB: " + g_kbengine.username + " is failed! code=" + failcode + "!");
+			KBEngine.ERROR_MSG("KBEngineApp::Client_onReqAccountResetPasswordCB: " + g_kbengine.username + " is failed! code=" + failcode + "!");
 			return;
 		}
 
-		console.info("KBENGINE::Client_onReqAccountResetPasswordCB: " + g_kbengine.username + " is successfully!");
+		KBEngine.INFO_MSG("KBEngineApp::Client_onReqAccountResetPasswordCB: " + g_kbengine.username + " is successfully!");
 	}
 	
 	this.Client_onReqAccountBindEmailCB = function(failcode)
 	{
 		if(failcode != 0)
 		{
-			console.error("KBENGINE::Client_onReqAccountBindEmailCB: " + g_kbengine.username + " is failed! code=" + failcode + "!");
+			KBEngine.ERROR_MSG("KBEngineApp::Client_onReqAccountBindEmailCB: " + g_kbengine.username + " is failed! code=" + failcode + "!");
 			return;
 		}
 
-		console.info("KBENGINE::Client_onReqAccountBindEmailCB: " + g_kbengine.username + " is successfully!");
+		KBEngine.INFO_MSG("KBEngineApp::Client_onReqAccountBindEmailCB: " + g_kbengine.username + " is successfully!");
 	}
 	
 	this.Client_onReqAccountNewPasswordCB = function(failcode)
 	{
 		if(failcode != 0)
 		{
-			console.error("KBENGINE::Client_onReqAccountNewPasswordCB: " + g_kbengine.username + " is failed! code=" + failcode + "!");
+			KBEngine.ERROR_MSG("KBEngineApp::Client_onReqAccountNewPasswordCB: " + g_kbengine.username + " is failed! code=" + failcode + "!");
 			return;
 		}
 
-		console.info("KBENGINE::Client_onReqAccountNewPasswordCB: " + g_kbengine.username + " is successfully!");
+		KBEngine.INFO_MSG("KBEngineApp::Client_onReqAccountNewPasswordCB: " + g_kbengine.username + " is successfully!");
 	}
 }
 

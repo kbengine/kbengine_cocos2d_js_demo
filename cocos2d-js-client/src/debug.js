@@ -28,7 +28,7 @@ var DebugLayer = cc.LayerColor.extend({
     },
     INFO_MSG:function (str) {
     	this.debug.setString(str);
-    	this.debug.setColor(new cc.Color(255, 255, 255, 255));
+    	this.debug.setColor(new cc.Color(0, 255, 0, 255));
     },
     DEBUG_MSG:function (str) {
     	this.debug.setString(str);

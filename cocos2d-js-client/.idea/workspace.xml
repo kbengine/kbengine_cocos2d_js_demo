@@ -23,11 +23,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="login_scene.js" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="login_scene.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/login_scene.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="3734" max-vertical-offset="6156">
-              <caret line="94" column="63" selection-start-line="94" selection-start-column="63" selection-end-line="94" selection-end-column="63" />
+            <state vertical-scroll-proportion="0.5434381" vertical-offset="2670" max-vertical-offset="9158">
+              <caret line="156" column="27" selection-start-line="156" selection-start-column="27" selection-end-line="156" selection-end-column="27" />
               <folding />
             </state>
           </provider>
@@ -53,11 +53,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="kbengine.js" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="kbengine.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/plugins/kbengine/kbengine.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-7.689464" vertical-offset="45675" max-vertical-offset="60135">
-              <caret line="2185" column="8" selection-start-line="2185" selection-start-column="8" selection-end-line="2185" selection-end-column="8" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="3430" max-vertical-offset="63042">
+              <caret line="200" column="13" selection-start-line="200" selection-start-column="13" selection-end-line="200" selection-end-column="13" />
               <folding />
             </state>
           </provider>
@@ -76,8 +76,8 @@
       <file leaf-file-name="UIText.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/frameworks/cocos2d-html5/extensions/ccui/uiwidgets/UIText.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="722" max-vertical-offset="9823">
-              <caret line="38" column="81" selection-start-line="38" selection-start-column="76" selection-end-line="38" selection-end-column="81" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="9386">
+              <caret line="31" column="38" selection-start-line="31" selection-start-column="24" selection-end-line="31" selection-end-column="38" />
               <folding />
             </state>
           </provider>
@@ -347,14 +347,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/frameworks/cocos2d-html5/extensions/ccui/uiwidgets/UIText.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="9386">
-          <caret line="38" column="81" selection-start-line="38" selection-start-column="76" selection-end-line="38" selection-end-column="81" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/debug.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="969">
@@ -379,18 +371,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/login_scene.js">
+    <entry file="file://$PROJECT_DIR$/frameworks/cocos2d-html5/extensions/ccui/uiwidgets/UIText.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="3734" max-vertical-offset="6156">
-          <caret line="94" column="63" selection-start-line="94" selection-start-column="63" selection-end-line="94" selection-end-column="63" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="9386">
+          <caret line="31" column="38" selection-start-line="31" selection-start-column="24" selection-end-line="31" selection-end-column="38" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/plugins/kbengine/kbengine.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-7.689464" vertical-offset="45675" max-vertical-offset="60135">
-          <caret line="2185" column="8" selection-start-line="2185" selection-start-column="8" selection-end-line="2185" selection-end-column="8" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="3430" max-vertical-offset="63042">
+          <caret line="200" column="13" selection-start-line="200" selection-start-column="13" selection-end-line="200" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/login_scene.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5434381" vertical-offset="2670" max-vertical-offset="9158">
+          <caret line="156" column="27" selection-start-line="156" selection-start-column="27" selection-end-line="156" selection-end-column="27" />
           <folding />
         </state>
       </provider>
