@@ -1,26 +1,96 @@
+var KBEngine = KBEngine || {};
+
+/*-----------------------------------------------------------------------------------------
+					    	JavaScript Inheritance
+-----------------------------------------------------------------------------------------*/
+/* Simple JavaScript Inheritance
+ * By John Resig http://ejohn.org/
+ * MIT Licensed.
+ */
+KBEngine.Class = function(){};
+KBEngine.Class.extend = function (prop) {
+    var _super = this.prototype;
+
+    // Instantiate a base class (but only create the instance,
+    // don't run the init constructor)
+    initializing = true;
+    var prototype = Object.create(_super);
+    initializing = false;
+    fnTest = /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/;
+
+    // Copy the properties over onto the new prototype
+    for (var name in prop) {
+        // Check if we're overwriting an existing function
+        prototype[name] = typeof prop[name] == "function" &&
+            typeof _super[name] == "function" && fnTest.test(prop[name]) ?
+            (function (name, fn) {
+                return function () {
+                    var tmp = this._super;
+
+                    // Add a new ._super() method that is the same method
+                    // but on the super-class
+                    this._super = _super[name];
+
+                    // The method only need to be bound temporarily, so we
+                    // remove it when we're done executing
+                    var ret = fn.apply(this, arguments);
+                    this._super = tmp;
+
+                    return ret;
+                };
+            })(name, prop[name]) :
+            prop[name];
+    }
+
+    // The dummy class constructor
+    function Class() {
+        // All construction is actually done in the init method
+        if (!initializing) {
+            if (!this.ctor) {
+                if (this.__nativeObj)
+                    console.info("No ctor function found!");
+            }
+            else {
+                this.ctor.apply(this, arguments);
+            }
+        }
+    }
+
+    // Populate our constructed prototype object
+    Class.prototype = prototype;
+
+    // Enforce the constructor to be what we expect
+    Class.prototype.constructor = Class;
+
+    // And make this class extendable
+    Class.extend = arguments.callee;
+
+    return Class;
+};
+
 /*-----------------------------------------------------------------------------------------
 												global
 -----------------------------------------------------------------------------------------*/
-var PACKET_MAX_SIZE	= 1500;
-var PACKET_MAX_SIZE_TCP = 1460;
-var PACKET_MAX_SIZE_UDP = 1472;
+KBEngine.PACKET_MAX_SIZE		= 1500;
+KBEngine.PACKET_MAX_SIZE_TCP	= 1460;
+KBEngine.PACKET_MAX_SIZE_UDP	= 1472;
 
-var MESSAGE_ID_LENGTH = 2;
-var MESSAGE_LENGTH_LENGTH = 2;
+KBEngine.MESSAGE_ID_LENGTH		= 2;
+KBEngine.MESSAGE_LENGTH_LENGTH	= 2;
 
-var CLIENT_NO_FLOAT = 0;
-var KBE_FLT_MAX = 3.402823466e+38;
+KBEngine.CLIENT_NO_FLOAT		= 0;
+KBEngine.KBE_FLT_MAX			= 3.402823466e+38;
 
 /*-----------------------------------------------------------------------------------------
 												number64bits
 -----------------------------------------------------------------------------------------*/
-function KBE_INT64(hi, lo)
+KBEngine.INT64 = function(hi, lo)
 {
 	this.hi = hi;
 	this.lo = lo;
 }
 
-function KBE_UINT64(hi, lo)
+KBEngine.UINT64 = function(hi, lo)
 {
 	this.hi = hi;
 	this.lo = lo;
@@ -29,7 +99,7 @@ function KBE_UINT64(hi, lo)
 /*-----------------------------------------------------------------------------------------
 												memorystream
 -----------------------------------------------------------------------------------------*/
-function KBE_MEMORYSTREAM(size_or_buffer)
+KBEngine.MemoryStream = function(size_or_buffer)
 {
 	if(size_or_buffer instanceof ArrayBuffer)
 	{
@@ -69,7 +139,7 @@ function KBE_MEMORYSTREAM(size_or_buffer)
 
 	this.readInt64 = function()
 	{
-		return new KBE_INT64(this.readInt32(), this.readInt32());
+		return new KBEngine.INT64(this.readInt32(), this.readInt32());
 	}
 	
 	this.readUint8 = function()
@@ -95,7 +165,7 @@ function KBE_MEMORYSTREAM(size_or_buffer)
 
 	this.readUint64 = function()
 	{
-		return new KBE_UINT64(this.readUint32(), this.readUint32());
+		return new KBEngine.UINT64(this.readUint32(), this.readUint32());
 	}
 	
 	this.readFloat = function()
@@ -149,7 +219,7 @@ function KBE_MEMORYSTREAM(size_or_buffer)
 			i++;
 			
 			if(this.rpos + i >= this.buffer.byteLength)
-				throw(new Error("KBE_MEMORYSTREAM::readString: rpos(" + (this.rpos + i) + ")>=" + 
+				throw(new Error("KBEngine.MemoryStream::readString: rpos(" + (this.rpos + i) + ")>=" + 
 					this.buffer.byteLength + " overflow!"));
 		}
 		
@@ -169,7 +239,7 @@ function KBE_MEMORYSTREAM(size_or_buffer)
 	{
 		var buf = new Uint8Array(this.buffer, this.rpos, this.buffer.byteLength - this.rpos);
 		this.rpos = this.buffer.byteLength;
-		return new KBE_MEMORYSTREAM(buf);
+		return new KBEngine.MemoryStream(buf);
 	}
 	
 	this.readPackXZ = function()
@@ -368,10 +438,10 @@ function KBE_MEMORYSTREAM(size_or_buffer)
 /*-----------------------------------------------------------------------------------------
 												bundle
 -----------------------------------------------------------------------------------------*/
-function KBE_BUNDLE()
+KBEngine.Bundle = function()
 {
 	this.memorystreams = new Array();
-	this.stream = new KBE_MEMORYSTREAM(PACKET_MAX_SIZE_TCP);
+	this.stream = new KBEngine.MemoryStream(KBEngine.PACKET_MAX_SIZE_TCP);
 	
 	this.numMessage = 0;
 	this.messageLengthBuffer = null;
@@ -388,7 +458,7 @@ function KBE_BUNDLE()
 		
 		if(this.msgtype.length == -1)
 		{
-			this.messageLengthBuffer = new Uint8Array(this.stream.buffer, this.stream.wpos + MESSAGE_ID_LENGTH, 2);
+			this.messageLengthBuffer = new Uint8Array(this.stream.buffer, this.stream.wpos + KBEngine.MESSAGE_ID_LENGTH, 2);
 		}
 		
 		this.writeUint16(msgtype.id);
@@ -442,7 +512,7 @@ function KBE_BUNDLE()
 		}
 		
 		this.memorystreams = new Array();
-		this.stream = new KBE_MEMORYSTREAM(PACKET_MAX_SIZE_TCP);
+		this.stream = new KBEngine.MemoryStream(KBEngine.PACKET_MAX_SIZE_TCP);
 	}
 	
 	//---------------------------------------------------------------------------------
@@ -451,7 +521,7 @@ function KBE_BUNDLE()
 		if(v > this.stream.space())
 		{
 			this.memorystreams.push(this.stream);
-			this.stream = new KBE_MEMORYSTREAM(PACKET_MAX_SIZE_TCP);
+			this.stream = new KBEngine.MemoryStream(KBEngine.PACKET_MAX_SIZE_TCP);
 		}
 
 		this.messageLength += v;
@@ -534,129 +604,129 @@ function KBE_BUNDLE()
 /*-----------------------------------------------------------------------------------------
 												messages
 -----------------------------------------------------------------------------------------*/
-var g_reader = new KBE_MEMORYSTREAM(0);
-var datatype2id = {};
-datatype2id["STRING"] = 1;
-datatype2id["STD::STRING"] = 1;
+KBEngine.reader = new KBEngine.MemoryStream(0);
+KBEngine.datatype2id = {};
+KBEngine.datatype2id["STRING"] = 1;
+KBEngine.datatype2id["STD::STRING"] = 1;
 
-datatype2id["UINT8"] = 2;
-datatype2id["BOOL"] = 2;
-datatype2id["DATATYPE"] = 2;
-datatype2id["CHAR"] = 2;
-datatype2id["DETAIL_TYPE"] = 2;
-datatype2id["MAIL_TYPE"] = 2;
+KBEngine.datatype2id["UINT8"] = 2;
+KBEngine.datatype2id["BOOL"] = 2;
+KBEngine.datatype2id["DATATYPE"] = 2;
+KBEngine.datatype2id["CHAR"] = 2;
+KBEngine.datatype2id["DETAIL_TYPE"] = 2;
+KBEngine.datatype2id["MAIL_TYPE"] = 2;
 
-datatype2id["UINT16"] = 3;
-datatype2id["UNSIGNED SHORT"] = 3;
-datatype2id["SERVER_ERROR_CODE"] = 3;
-datatype2id["ENTITY_TYPE"] = 3;
-datatype2id["ENTITY_PROPERTY_UID"] = 3;
-datatype2id["ENTITY_METHOD_UID"] = 3;
-datatype2id["ENTITY_SCRIPT_UID"] = 3;
-datatype2id["DATATYPE_UID"] = 3;
+KBEngine.datatype2id["UINT16"] = 3;
+KBEngine.datatype2id["UNSIGNED SHORT"] = 3;
+KBEngine.datatype2id["SERVER_ERROR_CODE"] = 3;
+KBEngine.datatype2id["ENTITY_TYPE"] = 3;
+KBEngine.datatype2id["ENTITY_PROPERTY_UID"] = 3;
+KBEngine.datatype2id["ENTITY_METHOD_UID"] = 3;
+KBEngine.datatype2id["ENTITY_SCRIPT_UID"] = 3;
+KBEngine.datatype2id["DATATYPE_UID"] = 3;
 
-datatype2id["UINT32"] = 4;
-datatype2id["UINT"] = 4;
-datatype2id["UNSIGNED INT"] = 4;
-datatype2id["ARRAYSIZE"] = 4;
-datatype2id["SPACE_ID"] = 4;
-datatype2id["GAME_TIME"] = 4;
-datatype2id["TIMER_ID"] = 4;
+KBEngine.datatype2id["UINT32"] = 4;
+KBEngine.datatype2id["UINT"] = 4;
+KBEngine.datatype2id["UNSIGNED INT"] = 4;
+KBEngine.datatype2id["ARRAYSIZE"] = 4;
+KBEngine.datatype2id["SPACE_ID"] = 4;
+KBEngine.datatype2id["GAME_TIME"] = 4;
+KBEngine.datatype2id["TIMER_ID"] = 4;
 
-datatype2id["UINT64"] = 5;
-datatype2id["DBID"] = 5;
-datatype2id["COMPONENT_ID"] = 5;
+KBEngine.datatype2id["UINT64"] = 5;
+KBEngine.datatype2id["DBID"] = 5;
+KBEngine.datatype2id["COMPONENT_ID"] = 5;
 
-datatype2id["INT8"] = 6;
-datatype2id["COMPONENT_ORDER"] = 6;
+KBEngine.datatype2id["INT8"] = 6;
+KBEngine.datatype2id["COMPONENT_ORDER"] = 6;
 
-datatype2id["INT16"] = 7;
-datatype2id["SHORT"] = 7;
+KBEngine.datatype2id["INT16"] = 7;
+KBEngine.datatype2id["SHORT"] = 7;
 
-datatype2id["INT32"] = 8;
-datatype2id["INT"] = 8;
-datatype2id["ENTITY_ID"] = 8;
-datatype2id["CALLBACK_ID"] = 8;
-datatype2id["COMPONENT_TYPE"] = 8;
+KBEngine.datatype2id["INT32"] = 8;
+KBEngine.datatype2id["INT"] = 8;
+KBEngine.datatype2id["ENTITY_ID"] = 8;
+KBEngine.datatype2id["CALLBACK_ID"] = 8;
+KBEngine.datatype2id["COMPONENT_TYPE"] = 8;
 
-datatype2id["INT64"] = 9;
+KBEngine.datatype2id["INT64"] = 9;
 
-datatype2id["PYTHON"] = 10;
-datatype2id["PY_DICT"] = 10;
-datatype2id["PY_TUPLE"] = 10;
-datatype2id["PY_LIST"] = 10;
-datatype2id["MAILBOX"] = 10;
+KBEngine.datatype2id["PYTHON"] = 10;
+KBEngine.datatype2id["PY_DICT"] = 10;
+KBEngine.datatype2id["PY_TUPLE"] = 10;
+KBEngine.datatype2id["PY_LIST"] = 10;
+KBEngine.datatype2id["MAILBOX"] = 10;
 
-datatype2id["BLOB"] = 11;
+KBEngine.datatype2id["BLOB"] = 11;
 
-datatype2id["UNICODE"] = 12;
+KBEngine.datatype2id["UNICODE"] = 12;
 
-datatype2id["FLOAT"] = 13;
+KBEngine.datatype2id["FLOAT"] = 13;
 
-datatype2id["DOUBLE"] = 14;
+KBEngine.datatype2id["DOUBLE"] = 14;
 
-datatype2id["VECTOR2"] = 15;
+KBEngine.datatype2id["VECTOR2"] = 15;
 
-datatype2id["VECTOR3"] = 16;
+KBEngine.datatype2id["VECTOR3"] = 16;
 
-datatype2id["VECTOR4"] = 17;
+KBEngine.datatype2id["VECTOR4"] = 17;
 
-datatype2id["FIXED_DICT"] = 18;
+KBEngine.datatype2id["FIXED_DICT"] = 18;
 
-datatype2id["ARRAY"] = 19;
+KBEngine.datatype2id["ARRAY"] = 19;
 
 
-bindwriter = function(writer, argType)
+KBEngine.bindwriter = function(writer, argType)
 {
-	if(argType == datatype2id["UINT8"])
+	if(argType == KBEngine.datatype2id["UINT8"])
 	{
 		return writer.writeUint8;
 	}
-	else if(argType == datatype2id["UINT16"])
+	else if(argType == KBEngine.datatype2id["UINT16"])
 	{
 		return writer.writeUint16;
 	}
-	else if(argType == datatype2id["UINT32"])
+	else if(argType == KBEngine.datatype2id["UINT32"])
 	{
 		return writer.writeUint32;
 	}
-	else if(argType == datatype2id["UINT64"])
+	else if(argType == KBEngine.datatype2id["UINT64"])
 	{
 		return writer.writeUint64;
 	}
-	else if(argType == datatype2id["INT8"])
+	else if(argType == KBEngine.datatype2id["INT8"])
 	{
 		return writer.writeInt8;
 	}
-	else if(argType == datatype2id["INT16"])
+	else if(argType == KBEngine.datatype2id["INT16"])
 	{
 		return writer.writeInt16;
 	}
-	else if(argType == datatype2id["INT32"])
+	else if(argType == KBEngine.datatype2id["INT32"])
 	{
 		return writer.writeInt32;
 	}
-	else if(argType == datatype2id["INT64"])
+	else if(argType == KBEngine.datatype2id["INT64"])
 	{
 		return writer.writeInt64;
 	}
-	else if(argType == datatype2id["FLOAT"])
+	else if(argType == KBEngine.datatype2id["FLOAT"])
 	{
 		return writer.writeFloat;
 	}
-	else if(argType == datatype2id["DOUBLE"])
+	else if(argType == KBEngine.datatype2id["DOUBLE"])
 	{
 		return writer.writeDouble;
 	}
-	else if(argType == datatype2id["STRING"])
+	else if(argType == KBEngine.datatype2id["STRING"])
 	{
 		return writer.writeString;
 	}
-	else if(argType == datatype2id["FIXED_DICT"])
+	else if(argType == KBEngine.datatype2id["FIXED_DICT"])
 	{
 		return writer.writeStream;
 	}
-	else if(argType == datatype2id["ARRAY"])
+	else if(argType == KBEngine.datatype2id["ARRAY"])
 	{
 		return writer.writeStream;
 	}
@@ -666,91 +736,91 @@ bindwriter = function(writer, argType)
 	}
 }
 
-bindReader = function(argType)
+KBEngine.bindReader = function(argType)
 {
-	if(argType == datatype2id["UINT8"])
+	if(argType == KBEngine.datatype2id["UINT8"])
 	{
-		return g_reader.readUint8;
+		return KBEngine.reader.readUint8;
 	}
-	else if(argType == datatype2id["UINT16"])
+	else if(argType == KBEngine.datatype2id["UINT16"])
 	{
-		return g_reader.readUint16;
+		return KBEngine.reader.readUint16;
 	}
-	else if(argType == datatype2id["UINT32"])
+	else if(argType == KBEngine.datatype2id["UINT32"])
 	{
-		return g_reader.readUint32;
+		return KBEngine.reader.readUint32;
 	}
-	else if(argType == datatype2id["UINT64"])
+	else if(argType == KBEngine.datatype2id["UINT64"])
 	{
-		return g_reader.readUint64;
+		return KBEngine.reader.readUint64;
 	}
-	else if(argType == datatype2id["INT8"])
+	else if(argType == KBEngine.datatype2id["INT8"])
 	{
-		return g_reader.readInt8;
+		return KBEngine.reader.readInt8;
 	}
-	else if(argType == datatype2id["INT16"])
+	else if(argType == KBEngine.datatype2id["INT16"])
 	{
-		return g_reader.readInt16;
+		return KBEngine.reader.readInt16;
 	}
-	else if(argType == datatype2id["INT32"])
+	else if(argType == KBEngine.datatype2id["INT32"])
 	{
-		return g_reader.readInt32;
+		return KBEngine.reader.readInt32;
 	}
-	else if(argType == datatype2id["INT64"])
+	else if(argType == KBEngine.datatype2id["INT64"])
 	{
-		return g_reader.readInt64;
+		return KBEngine.reader.readInt64;
 	}
-	else if(argType == datatype2id["FLOAT"])
+	else if(argType == KBEngine.datatype2id["FLOAT"])
 	{
-		return g_reader.readFloat;
+		return KBEngine.reader.readFloat;
 	}
-	else if(argType == datatype2id["DOUBLE"])
+	else if(argType == KBEngine.datatype2id["DOUBLE"])
 	{
-		return g_reader.readDouble;
+		return KBEngine.reader.readDouble;
 	}
-	else if(argType == datatype2id["STRING"])
+	else if(argType == KBEngine.datatype2id["STRING"])
 	{
-		return g_reader.readString;
+		return KBEngine.reader.readString;
 	}
-	else if(argType == datatype2id["PYTHON"])
+	else if(argType == KBEngine.datatype2id["PYTHON"])
 	{
-		return g_reader.readStream;
+		return KBEngine.reader.readStream;
 	}
-	else if(argType == datatype2id["VECTOR2"])
+	else if(argType == KBEngine.datatype2id["VECTOR2"])
 	{
-		return g_reader.readStream;
+		return KBEngine.reader.readStream;
 	}
-	else if(argType == datatype2id["VECTOR3"])
+	else if(argType == KBEngine.datatype2id["VECTOR3"])
 	{
-		return g_reader.readStream;
+		return KBEngine.reader.readStream;
 	}
-	else if(argType == datatype2id["VECTOR4"])
+	else if(argType == KBEngine.datatype2id["VECTOR4"])
 	{
-		return g_reader.readStream;
+		return KBEngine.reader.readStream;
 	}
-	else if(argType == datatype2id["BLOB"])
+	else if(argType == KBEngine.datatype2id["BLOB"])
 	{
-		return g_reader.readStream;
+		return KBEngine.reader.readStream;
 	}
-	else if(argType == datatype2id["UNICODE"])
+	else if(argType == KBEngine.datatype2id["UNICODE"])
 	{
-		return g_reader.readStream;
+		return KBEngine.reader.readStream;
 	}
-	else if(argType == datatype2id["FIXED_DICT"])
+	else if(argType == KBEngine.datatype2id["FIXED_DICT"])
 	{
-		return g_reader.readStream;
+		return KBEngine.reader.readStream;
 	}
-	else if(argType == datatype2id["ARRAY"])
+	else if(argType == KBEngine.datatype2id["ARRAY"])
 	{
-		return g_reader.readStream;
+		return KBEngine.reader.readStream;
 	}
 	else
 	{
-		return g_reader.readStream;
+		return KBEngine.reader.readStream;
 	}
 }
 	
-function KBE_MESSAGE(id, name, length, argstype, args, handler)
+KBEngine.Message = function(id, name, length, argstype, args, handler)
 {
 	this.id = id;
 	this.name = name;
@@ -760,7 +830,7 @@ function KBE_MESSAGE(id, name, length, argstype, args, handler)
 	// 绑定执行
 	for(i=0; i<args.length; i++)
 	{
-		args[i] = bindReader(args[i]);
+		args[i] = KBEngine.bindReader(args[i]);
 	}
 	
 	this.args = args;
@@ -784,7 +854,7 @@ function KBE_MESSAGE(id, name, length, argstype, args, handler)
 	{
 		if(this.handler == null)
 		{
-			console.error("KBE_MESSAGE::handleMessage: interface(" + this.name + "/" + this.id + ") no implement!");  
+			console.error("KBEngine.Message::handleMessage: interface(" + this.name + "/" + this.id + ") no implement!");  
 			return;
 		}
 
@@ -803,49 +873,55 @@ function KBE_MESSAGE(id, name, length, argstype, args, handler)
 }
 
 // 上行消息
-var g_messages = {};
-g_messages["loginapp"] = {};
-g_messages["baseapp"] = {};
-var g_clientmessages = {};
+KBEngine.messages = {};
+KBEngine.messages["loginapp"] = {};
+KBEngine.messages["baseapp"] = {};
+KBEngine.clientmessages = {};
 
-g_messages["Loginapp_importClientMessages"] = new KBE_MESSAGE(5, "importClientMessages", 0, 0, new Array(), null);
-g_messages["Baseapp_importClientMessages"] = new KBE_MESSAGE(207, "importClientMessages", 0, 0, new Array(), null);
-g_messages["Baseapp_importClientEntityDef"] = new KBE_MESSAGE(208, "importClientEntityDef", 0, 0, new Array(), null);
-g_messages["onImportClientMessages"] = new KBE_MESSAGE(518, "onImportClientMessages", -1, -1, new Array(), null);
+KBEngine.messages["Loginapp_importClientMessages"] = new KBEngine.Message(5, "importClientMessages", 0, 0, new Array(), null);
+KBEngine.messages["Baseapp_importClientMessages"] = new KBEngine.Message(207, "importClientMessages", 0, 0, new Array(), null);
+KBEngine.messages["Baseapp_importClientEntityDef"] = new KBEngine.Message(208, "importClientEntityDef", 0, 0, new Array(), null);
+KBEngine.messages["onImportClientMessages"] = new KBEngine.Message(518, "onImportClientMessages", -1, -1, new Array(), null);
 
-g_bufferedCreateEntityMessage = {};
+KBEngine.bufferedCreateEntityMessage = {};
 
 /*-----------------------------------------------------------------------------------------
 												entity
 -----------------------------------------------------------------------------------------*/
-function KBEENTITY()
-{
-	this.id = 0;
-	this.className = "";
-	this.position = [0.0, 0.0, 0.0];
-	this.direction = [0.0, 0.0, 0.0];
-	this.velocity = 0.0
+KBEngine.Entity = KBEngine.Class.extend({
+	init : function()
+	{
+		this.id = 0;
+		this.className = "";
+		this.position = [0.0, 0.0, 0.0];
+		this.direction = [0.0, 0.0, 0.0];
+		this.velocity = 0.0
+			
+		this.cell = null;
+		this.base = null;
 		
-	this.cell = null;
-	this.base = null;
-	
-	this.inWorld = false;
-	
-	KBEENTITY.prototype.baseCall = function()
+		this.inWorld = false;
+	},
+
+	onInit : function()
+	{
+	},
+		
+	baseCall : function()
 	{
 		if(arguments.length < 1)
 		{
-			console.error('KBEENTITY::baseCall: not fount interfaceName!');  
+			console.error('KBEngine.Entity::baseCall: not fount interfaceName!');  
 			return;
 		}
 		
-		var method = g_moduledefs[this.className].base_methods[arguments[0]];
+		var method = KBEngine.moduledefs[this.className].base_methods[arguments[0]];
 		var methodID = method[0];
 		var args = method[3];
 		
 		if(arguments.length - 1 != args.length)
 		{
-			console.error("KBEENTITY::baseCall: args(" + (arguments.length - 1) + "!= " + args.length + ") size is error!");  
+			console.error("KBEngine.Entity::baseCall: args(" + (arguments.length - 1) + "!= " + args.length + ") size is error!");  
 			return;
 		}
 		
@@ -861,29 +937,29 @@ function KBEENTITY()
 		}
 		catch(e)
 		{
-			console.error('KBEENTITY::baseCall: args is error!');  
+			console.error('KBEngine.Entity::baseCall: args is error!');  
 			this.base.bundle = null;
 			return;
 		}
 		
 		this.base.postMail();
-	}
+	},
 	
-	KBEENTITY.prototype.cellCall = function()
+	cellCall : function()
 	{
 		if(arguments.length < 1)
 		{
-			console.error('KBEENTITY::cellCall: not fount interfaceName!');  
+			console.error('KBEngine.Entity::cellCall: not fount interfaceName!');  
 			return;
 		}
 		
-		var method = g_moduledefs[this.className].cell_methods[arguments[0]];
+		var method = KBEngine.moduledefs[this.className].cell_methods[arguments[0]];
 		var methodID = method[0];
 		var args = method[3];
 		
 		if(arguments.length - 1 != args.length)
 		{
-			console.error("KBEENTITY::cellCall: args(" + (arguments.length - 1) + "!= " + args.length + ") size is error!");  
+			console.error("KBEngine.Entity::cellCall: args(" + (arguments.length - 1) + "!= " + args.length + ") size is error!");  
 			return;
 		}
 		
@@ -899,71 +975,71 @@ function KBEENTITY()
 		}
 		catch(e)
 		{
-			console.error('KBEENTITY::cellCall: args is error!');  
+			console.error('KBEngine.Entity::cellCall: args is error!');  
 			this.cell.bundle = null;
 			return;
 		}
 		
 		this.cell.postMail();
-	}
+	},
 	
-	KBEENTITY.prototype.onEnterWorld = function()
+	onEnterWorld : function()
 	{
 		console.info(this.className + '::onEnterWorld: ' + this.id); 
 		this.inWorld = true;
-	}
+	},
 	
-	KBEENTITY.prototype.onLeaveWorld = function()
+	onLeaveWorld : function()
 	{
 		console.info(this.className + '::onLeaveWorld: ' + this.id); 
 		this.inWorld = false;
-	}
+	},
 	
-	KBEENTITY.prototype.onEnterSpace = function()
+	onEnterSpace : function()
 	{
 		console.info(this.className + '::onEnterSpace: ' + this.id); 
-	}
+	},
 	
-	KBEENTITY.prototype.onLeaveSpace = function()
+	onLeaveSpace : function()
 	{
 		console.info(this.className + '::onLeaveSpace: ' + this.id); 
 	}
-}
+});
 
 /*-----------------------------------------------------------------------------------------
 												entity
 -----------------------------------------------------------------------------------------*/
-var MAILBOX_TYPE_CELL = 0;
-var MAILBOX_TYPE_BASE = 1;
+KBEngine.MAILBOX_TYPE_CELL = 0;
+KBEngine.MAILBOX_TYPE_BASE = 1;
 
-function KBEMAILBOX()
+KBEngine.Mailbox = function()
 {
 	this.id = 0;
 	this.className = "";
-	this.type = MAILBOX_TYPE_CELL;
+	this.type = KBEngine.MAILBOX_TYPE_CELL;
 	this.networkInterface = g_kbengine;
 	
 	this.bundle = null;
 	
 	this.isBase = function()
 	{
-		return this.type == MAILBOX_TYPE_BASE;
+		return this.type == KBEngine.MAILBOX_TYPE_BASE;
 	}
 
 	this.isCell = function()
 	{
-		return this.type == MAILBOX_TYPE_CELL;
+		return this.type == KBEngine.MAILBOX_TYPE_CELL;
 	}
 	
 	this.newMail = function()
 	{  
 		if(this.bundle == null)
-			this.bundle = new KBE_BUNDLE();
+			this.bundle = new KBEngine.Bundle();
 		
-		if(this.type == MAILBOX_TYPE_CELL)
-			this.bundle.newMessage(g_messages.Baseapp_onRemoteCallCellMethodFromClient);
+		if(this.type == KBEngine.MAILBOX_TYPE_CELL)
+			this.bundle.newMessage(KBEngine.messages.Baseapp_onRemoteCallCellMethodFromClient);
 		else
-			this.bundle.newMessage(g_messages.Base_onRemoteMethodCall);
+			this.bundle.newMessage(KBEngine.messages.Base_onRemoteMethodCall);
 
 		this.bundle.writeInt32(this.id);
 		
@@ -985,8 +1061,8 @@ function KBEMAILBOX()
 /*-----------------------------------------------------------------------------------------
 												entitydef
 -----------------------------------------------------------------------------------------*/
-var g_moduledefs = {};
-var g_datatypes = {};
+KBEngine.moduledefs = {};
+KBEngine.datatypes = {};
 
 function KBEDATATYPE_UINT8()
 {
@@ -996,7 +1072,7 @@ function KBEDATATYPE_UINT8()
 	
 	this.createFromStream = function(stream)
 	{
-		return g_reader.readUint8.call(stream);
+		return KBEngine.reader.readUint8.call(stream);
 	}
 	
 	this.addToStream = function(stream, v)
@@ -1018,7 +1094,7 @@ function KBEDATATYPE_UINT16()
 	
 	this.createFromStream = function(stream)
 	{
-		return g_reader.readUint16.call(stream);
+		return KBEngine.reader.readUint16.call(stream);
 	}
 	
 	this.addToStream = function(stream, v)
@@ -1040,7 +1116,7 @@ function KBEDATATYPE_UINT32()
 	
 	this.createFromStream = function(stream)
 	{
-		return g_reader.readUint32.call(stream);
+		return KBEngine.reader.readUint32.call(stream);
 	}
 	
 	this.addToStream = function(stream, v)
@@ -1062,7 +1138,7 @@ function KBEDATATYPE_UINT64()
 	
 	this.createFromStream = function(stream)
 	{
-		return g_reader.readUint64.call(stream);
+		return KBEngine.reader.readUint64.call(stream);
 	}
 	
 	this.addToStream = function(stream, v)
@@ -1084,7 +1160,7 @@ function KBEDATATYPE_INT8()
 	
 	this.createFromStream = function(stream)
 	{
-		return g_reader.readInt8.call(stream);
+		return KBEngine.reader.readInt8.call(stream);
 	}
 	
 	this.addToStream = function(stream, v)
@@ -1106,7 +1182,7 @@ function KBEDATATYPE_INT16()
 	
 	this.createFromStream = function(stream)
 	{
-		return g_reader.readInt16.call(stream);
+		return KBEngine.reader.readInt16.call(stream);
 	}
 	
 	this.addToStream = function(stream, v)
@@ -1128,7 +1204,7 @@ function KBEDATATYPE_INT32()
 	
 	this.createFromStream = function(stream)
 	{
-		return g_reader.readInt32.call(stream);
+		return KBEngine.reader.readInt32.call(stream);
 	}
 	
 	this.addToStream = function(stream, v)
@@ -1150,7 +1226,7 @@ function KBEDATATYPE_INT64()
 	
 	this.createFromStream = function(stream)
 	{
-		return g_reader.readInt64.call(stream);
+		return KBEngine.reader.readInt64.call(stream);
 	}
 	
 	this.addToStream = function(stream, v)
@@ -1172,7 +1248,7 @@ function KBEDATATYPE_FLOAT()
 	
 	this.createFromStream = function(stream)
 	{
-		return g_reader.readFloat.call(stream);
+		return KBEngine.reader.readFloat.call(stream);
 	}
 	
 	this.addToStream = function(stream, v)
@@ -1194,7 +1270,7 @@ function KBEDATATYPE_DOUBLE()
 	
 	this.createFromStream = function(stream)
 	{
-		return g_reader.readDouble.call(stream);
+		return KBEngine.reader.readDouble.call(stream);
 	}
 	
 	this.addToStream = function(stream, v)
@@ -1216,7 +1292,7 @@ function KBEDATATYPE_STRING()
 	
 	this.createFromStream = function(stream)
 	{
-		return g_reader.readString.call(stream);
+		return KBEngine.reader.readString.call(stream);
 	}
 	
 	this.addToStream = function(stream, v)
@@ -1241,7 +1317,7 @@ function KBEDATATYPE_VECTOR(size)
 	this.createFromStream = function(stream)
 	{
 		var data = new Array(this.itemsize);
-		var size = g_reader.readUint32.call(stream);
+		var size = KBEngine.reader.readUint32.call(stream);
 		if(size != this.itemsize)
 		{
 			console.error("KBEDATATYPE_VECTOR::createFromStream: size(" + size + ") != thisSize(" + this.itemsize + ") !");
@@ -1250,10 +1326,10 @@ function KBEDATATYPE_VECTOR(size)
 		
 		for(var i=0; i<this.itemsize; i++)
 		{
-			if(CLIENT_NO_FLOAT)
-				data[i] = g_reader.readInt32.call(stream);
+			if(KBEngine.CLIENT_NO_FLOAT)
+				data[i] = KBEngine.reader.readInt32.call(stream);
 			else
-				data[i] = g_reader.readFloat.call(stream);
+				data[i] = KBEngine.reader.readFloat.call(stream);
 		}
 		
 		return data;
@@ -1265,7 +1341,7 @@ function KBEDATATYPE_VECTOR(size)
 		
 		for(var i=0; i<this.itemsize; i++)
 		{
-			if(CLIENT_NO_FLOAT)
+			if(KBEngine.CLIENT_NO_FLOAT)
 				stream.writeInt32(v[i]);
 			else
 				stream.writeFloat(v[i]);
@@ -1306,7 +1382,7 @@ function KBEDATATYPE_UNICODE()
 	
 	this.createFromStream = function(stream)
 	{
-		return g_reader.readBlob.call(stream);
+		return KBEngine.reader.readBlob.call(stream);
 	}
 	
 	this.addToStream = function(stream, v)
@@ -1348,7 +1424,7 @@ function KBEDATATYPE_BLOB()
 	
 	this.createFromStream = function(stream)
 	{
-		var size = g_reader.readUint32.call(stream);
+		var size = KBEngine.reader.readUint32.call(stream);
 		var buf = new Uint8Array(stream.buffer, stream.rpos, size);
 		stream.rpos += size;
 		return buf;
@@ -1372,7 +1448,7 @@ function KBEDATATYPE_ARRAY()
 	this.bind = function()
 	{
 		if(!isNaN(this.type))
-			this.type = g_datatypes[this.type];
+			this.type = KBEngine.datatypes[this.type];
 		else
 			this.type.bind();
 	}
@@ -1418,7 +1494,7 @@ function KBEDATATYPE_FIXED_DICT()
 			var utype = this.dicttype[itemkey];
 			
 			if(!isNaN(utype))
-				this.dicttype[itemkey] = g_datatypes[utype];
+				this.dicttype[itemkey] = KBEngine.datatypes[utype];
 			else
 				this.dicttype[itemkey].bind();
 		}
@@ -1449,32 +1525,32 @@ function KBEDATATYPE_FIXED_DICT()
 	}
 }
 
-g_datatypes["UINT8"] = new KBEDATATYPE_UINT8();
-g_datatypes["UINT16"] = new KBEDATATYPE_UINT16();
-g_datatypes["UINT32"] = new KBEDATATYPE_UINT32();
-g_datatypes["UINT64"] = new KBEDATATYPE_UINT64();
+KBEngine.datatypes["UINT8"] = new KBEDATATYPE_UINT8();
+KBEngine.datatypes["UINT16"] = new KBEDATATYPE_UINT16();
+KBEngine.datatypes["UINT32"] = new KBEDATATYPE_UINT32();
+KBEngine.datatypes["UINT64"] = new KBEDATATYPE_UINT64();
 
-g_datatypes["INT8"] = new KBEDATATYPE_INT8();
-g_datatypes["INT16"] = new KBEDATATYPE_INT16();
-g_datatypes["INT32"] = new KBEDATATYPE_INT32();
-g_datatypes["INT64"] = new KBEDATATYPE_INT64();
+KBEngine.datatypes["INT8"] = new KBEDATATYPE_INT8();
+KBEngine.datatypes["INT16"] = new KBEDATATYPE_INT16();
+KBEngine.datatypes["INT32"] = new KBEDATATYPE_INT32();
+KBEngine.datatypes["INT64"] = new KBEDATATYPE_INT64();
 
-g_datatypes["FLOAT"] = new KBEDATATYPE_FLOAT();
-g_datatypes["DOUBLE"] = new KBEDATATYPE_DOUBLE();
+KBEngine.datatypes["FLOAT"] = new KBEDATATYPE_FLOAT();
+KBEngine.datatypes["DOUBLE"] = new KBEDATATYPE_DOUBLE();
 
-g_datatypes["STRING"] = new KBEDATATYPE_STRING();
-g_datatypes["VECTOR2"] = new KBEDATATYPE_VECTOR(2);
-g_datatypes["VECTOR3"] = new KBEDATATYPE_VECTOR(3);
-g_datatypes["VECTOR4"] = new KBEDATATYPE_VECTOR(4);
-g_datatypes["PYTHON"] = new KBEDATATYPE_PYTHON();
-g_datatypes["UNICODE"] = new KBEDATATYPE_UNICODE();
-g_datatypes["MAILBOX"] = new KBEDATATYPE_MAILBOX();
-g_datatypes["BLOB"] = new KBEDATATYPE_BLOB();
+KBEngine.datatypes["STRING"] = new KBEDATATYPE_STRING();
+KBEngine.datatypes["VECTOR2"] = new KBEDATATYPE_VECTOR(2);
+KBEngine.datatypes["VECTOR3"] = new KBEDATATYPE_VECTOR(3);
+KBEngine.datatypes["VECTOR4"] = new KBEDATATYPE_VECTOR(4);
+KBEngine.datatypes["PYTHON"] = new KBEDATATYPE_PYTHON();
+KBEngine.datatypes["UNICODE"] = new KBEDATATYPE_UNICODE();
+KBEngine.datatypes["MAILBOX"] = new KBEDATATYPE_MAILBOX();
+KBEngine.datatypes["BLOB"] = new KBEDATATYPE_BLOB();
 
 /*-----------------------------------------------------------------------------------------
 												system
 -----------------------------------------------------------------------------------------*/
-function KBENGINE()
+KBEngine.KBEngineApp = function()
 {
 	this.username = "testhtml51";
 	this.password = "123456";
@@ -1516,12 +1592,12 @@ function KBENGINE()
 	
 	this.hello = function()
 	{  
-		var bundle = new KBE_BUNDLE();
+		var bundle = new KBEngine.Bundle();
 		
 		if(g_kbengine.currserver == "loginapp")
-			bundle.newMessage(g_messages.Loginapp_hello);
+			bundle.newMessage(KBEngine.messages.Loginapp_hello);
 		else
-			bundle.newMessage(g_messages.Baseapp_hello);
+			bundle.newMessage(KBEngine.messages.Baseapp_hello);
 		
 		bundle.writeString(g_kbengine.clientVersion);
 		bundle.writeString(g_kbengine.clientScriptVersion);
@@ -1568,13 +1644,13 @@ function KBENGINE()
 	
 	this.onmessage = function(msg)
 	{ 
-		var stream = new KBE_MEMORYSTREAM(msg.data);
+		var stream = new KBEngine.MemoryStream(msg.data);
 		stream.wpos = msg.data.byteLength;
 		
 		while(stream.rpos < stream.wpos)
 		{
 			var msgid = stream.readUint16();
-			var msgHandler = g_clientmessages[msgid];
+			var msgHandler = KBEngine.clientmessages[msgid];
 			
 			if(!msgHandler)
 			{
@@ -1629,19 +1705,19 @@ function KBENGINE()
 		{
 			if(g_kbengine.currserver == "loginapp")
 			{
-				if(g_messages.Loginapp_onClientActiveTick != undefined)
+				if(KBEngine.messages.Loginapp_onClientActiveTick != undefined)
 				{
-					var bundle = new KBE_BUNDLE();
-					bundle.newMessage(g_messages.Loginapp_onClientActiveTick);
+					var bundle = new KBEngine.Bundle();
+					bundle.newMessage(KBEngine.messages.Loginapp_onClientActiveTick);
 					bundle.send(g_kbengine);
 				}
 			}
 			else
 			{
-				if(g_messages.Baseapp_onClientActiveTick != undefined)
+				if(KBEngine.messages.Baseapp_onClientActiveTick != undefined)
 				{
-					var bundle = new KBE_BUNDLE();
-					bundle.newMessage(g_messages.Baseapp_onClientActiveTick);
+					var bundle = new KBEngine.Bundle();
+					bundle.newMessage(KBEngine.messages.Baseapp_onClientActiveTick);
 					bundle.send(g_kbengine);
 				}
 			}
@@ -1660,8 +1736,8 @@ function KBENGINE()
 		
 		if(!g_kbengine.loginappMessageImported)
 		{
-			var bundle = new KBE_BUNDLE();
-			bundle.newMessage(g_messages.Loginapp_importClientMessages);
+			var bundle = new KBEngine.Bundle();
+			bundle.newMessage(KBEngine.messages.Loginapp_importClientMessages);
 			bundle.send(g_kbengine);
 			g_kbengine.socket.onmessage = g_kbengine.Client_onImportClientMessages;  
 			console.info("KBENGINE::onOpenLoginapp_login: start importClientMessages ...");
@@ -1680,8 +1756,8 @@ function KBENGINE()
 		
 		if(!g_kbengine.loginappMessageImported)
 		{
-			var bundle = new KBE_BUNDLE();
-			bundle.newMessage(g_messages.Loginapp_importClientMessages);
+			var bundle = new KBEngine.Bundle();
+			bundle.newMessage(KBEngine.messages.Loginapp_importClientMessages);
 			bundle.send(g_kbengine);
 			g_kbengine.socket.onmessage = g_kbengine.Client_onImportClientMessages;  
 			console.info("KBENGINE::onOpenLoginapp_createAccount: start importClientMessages ...");
@@ -1716,8 +1792,8 @@ function KBENGINE()
 			if(!g_kbengine.entitydefImported)
 			{
 				console.info("KBENGINE::onImportClientMessagesCompleted: start importEntityDef ...");
-				var bundle = new KBE_BUNDLE();
-				bundle.newMessage(g_messages.Baseapp_importClientEntityDef);
+				var bundle = new KBEngine.Bundle();
+				bundle.newMessage(KBEngine.messages.Baseapp_importClientEntityDef);
 				bundle.send(g_kbengine);
 			}
 			else
@@ -1751,22 +1827,22 @@ function KBENGINE()
 				datatype.dicttype[keyname] = keyutype;
 			};
 			
-			g_datatypes[name] = datatype;
+			KBEngine.datatypes[name] = datatype;
 		}
 		else if(valname == "ARRAY")
 		{
 			var uitemtype = stream.readUint16();
 			var datatype = new KBEDATATYPE_ARRAY();
 			datatype.type = uitemtype;
-			g_datatypes[name] = datatype;
+			KBEngine.datatypes[name] = datatype;
 		}
 		else
 		{
-			g_datatypes[name] = g_datatypes[valname];
+			KBEngine.datatypes[name] = KBEngine.datatypes[valname];
 		}
 
-		g_datatypes[utype] = g_datatypes[name];
-		datatype2id[name] = datatype2id[valname];
+		KBEngine.datatypes[utype] = KBEngine.datatypes[name];
+		KBEngine.datatype2id[name] = KBEngine.datatype2id[valname];
 	}
 	
 	this.Client_onImportClientEntityDef = function(stream)
@@ -1780,11 +1856,11 @@ function KBENGINE()
 			g_kbengine.createDataTypeFromStream(stream, true);
 		};
 	
-		for(datatype in g_datatypes)
+		for(datatype in KBEngine.datatypes)
 		{
-			if(isNaN(datatype) && g_datatypes[datatype] != undefined)
+			if(isNaN(datatype) && KBEngine.datatypes[datatype] != undefined)
 			{
-				g_datatypes[datatype].bind();
+				KBEngine.datatypes[datatype].bind();
 			}
 		}
 		
@@ -1800,14 +1876,14 @@ function KBENGINE()
 			console.info("KBENGINE::Client_onImportClientEntityDef: import(" + scriptmethod_name + "), propertys(" + propertysize + "), " +
 					"clientMethods(" + methodsize + "), baseMethods(" + base_methodsize + "), cellMethods(" + cell_methodsize + ")!");
 			
-			g_moduledefs[scriptmethod_name] = {};
-			var currModuleDefs = g_moduledefs[scriptmethod_name];
+			KBEngine.moduledefs[scriptmethod_name] = {};
+			var currModuleDefs = KBEngine.moduledefs[scriptmethod_name];
 			currModuleDefs["name"] = scriptmethod_name;
 			currModuleDefs["propertys"] = {};
 			currModuleDefs["methods"] = {};
 			currModuleDefs["base_methods"] = {};
 			currModuleDefs["cell_methods"] = {};
-			g_moduledefs[scriptUtype] = currModuleDefs;
+			KBEngine.moduledefs[scriptUtype] = currModuleDefs;
 			
 			var self_propertys = currModuleDefs["propertys"];
 			var self_methods = currModuleDefs["methods"];
@@ -1816,7 +1892,7 @@ function KBENGINE()
 			
 			try
 			{
-				var Class = eval("KBE" + scriptmethod_name);
+				var Class = eval(scriptmethod_name);
 			}
 			catch(e)
 			{
@@ -1831,7 +1907,7 @@ function KBENGINE()
 				var aliasID = stream.readInt16();
 				var name = stream.readString();
 				var defaultValStr = stream.readString();
-				var utype = g_datatypes[stream.readUint16()];
+				var utype = KBEngine.datatypes[stream.readUint16()];
 				var setmethod = null;
 				if(Class != undefined)
 				{
@@ -1870,7 +1946,7 @@ function KBENGINE()
 				while(argssize > 0)
 				{
 					argssize--;
-					args.push(g_datatypes[stream.readUint16()]);
+					args.push(KBEngine.datatypes[stream.readUint16()]);
 				};
 				
 				var savedata = [methodUtype, aliasID, name, args];
@@ -1903,7 +1979,7 @@ function KBENGINE()
 				while(argssize > 0)
 				{
 					argssize--;
-					args.push(g_datatypes[stream.readUint16()]);
+					args.push(KBEngine.datatypes[stream.readUint16()]);
 				};
 				
 				self_base_methods[name] = [methodUtype, aliasID, name, args];
@@ -1923,7 +1999,7 @@ function KBENGINE()
 				while(argssize > 0)
 				{
 					argssize--;
-					args.push(g_datatypes[stream.readUint16()]);
+					args.push(KBEngine.datatypes[stream.readUint16()]);
 				};
 				
 				self_cell_methods[name] = [methodUtype, aliasID, name, args];
@@ -1932,11 +2008,11 @@ function KBENGINE()
 			
 			try
 			{
-				defmethod = eval("KBE" + scriptmethod_name);
+				defmethod = eval(scriptmethod_name);
 			}
 			catch(e)
 			{
-				console.error("KBENGINE::Client_onImportClientEntityDef: module(KBE" + scriptmethod_name + ") not found!");
+				console.error("KBENGINE::Client_onImportClientEntityDef: module(" + scriptmethod_name + ") not found!");
 				defmethod = undefined;
 			}
 			
@@ -1963,7 +2039,7 @@ function KBENGINE()
 				
 				if(defmethod != undefined && defmethod.prototype[name] == undefined)
 				{
-					console.warn("KBE" + scriptmethod_name + ":: method(" + name + ") no implement!");
+					console.warn(scriptmethod_name + ":: method(" + name + ") no implement!");
 				}
 			};
 		}
@@ -1992,10 +2068,10 @@ function KBENGINE()
 	
 	this.Client_onImportClientMessages = function(msg)
 	{
-		var stream = new KBE_MEMORYSTREAM(msg.data);
+		var stream = new KBEngine.MemoryStream(msg.data);
 		var msgid = stream.readUint16();
 
-		if(msgid == g_messages.onImportClientMessages.id)
+		if(msgid == KBEngine.messages.onImportClientMessages.id)
 		{
 			var msglen = stream.readUint16();
 			var msgcount = stream.readUint16();
@@ -2036,16 +2112,16 @@ function KBENGINE()
 			
 				if(msgname.length > 0)
 				{
-					g_messages[msgname] = new KBE_MESSAGE(msgid, msgname, msglen, argtype, argstypes, handler);
+					KBEngine.messages[msgname] = new KBEngine.Message(msgid, msgname, msglen, argtype, argstypes, handler);
 					
 					if(isClientMethod)
-						g_clientmessages[msgid] = g_messages[msgname];
+						KBEngine.clientmessages[msgid] = KBEngine.messages[msgname];
 					else
-						g_messages[g_kbengine.currserver][msgid] = g_messages[msgname];
+						KBEngine.messages[g_kbengine.currserver][msgid] = KBEngine.messages[msgname];
 				}
 				else
 				{
-					g_messages[g_kbengine.currserver][msgid] = new KBE_MESSAGE(msgid, msgname, msglen, argtype, argstypes, handler);
+					KBEngine.messages[g_kbengine.currserver][msgid] = new KBEngine.Message(msgid, msgname, msglen, argtype, argstypes, handler);
 				}
 			};
 
@@ -2073,8 +2149,8 @@ function KBENGINE()
 		}
 		else
 		{
-			var bundle = new KBE_BUNDLE();
-			bundle.newMessage(g_messages.Loginapp_reqCreateAccount);
+			var bundle = new KBEngine.Bundle();
+			bundle.newMessage(KBEngine.messages.Loginapp_reqCreateAccount);
 			bundle.writeString(g_kbengine.username);
 			bundle.writeString(g_kbengine.password);
 			bundle.writeBlob("");
@@ -2082,20 +2158,20 @@ function KBENGINE()
 		}
 	}
 	
-	this.bind_email = function()
+	this.bind_email = function(mailstr)
 	{  
-		var bundle = new KBE_BUNDLE();
-		bundle.newMessage(g_messages.Baseapp_reqAccountBindEmail);
+		var bundle = new KBEngine.Bundle();
+		bundle.newMessage(KBEngine.messages.Baseapp_reqAccountBindEmail);
 		bundle.writeInt32(g_kbengine.entity_id);
 		bundle.writeString(g_kbengine.password);
-		bundle.writeString("kbesrv@gmail.com");
+		bundle.writeString(mailstr);
 		bundle.send(g_kbengine);
 	}
 	
 	this.new_password = function(oldpassword, newpassword)
 	{
-		var bundle = new KBE_BUNDLE();
-		bundle.newMessage(g_messages.Baseapp_reqAccountNewPassword);
+		var bundle = new KBEngine.Bundle();
+		bundle.newMessage(KBEngine.messages.Baseapp_reqAccountNewPassword);
 		bundle.writeInt32(g_kbengine.entity_id);
 		bundle.writeString(oldpassword);
 		bundle.writeString(newpassword);
@@ -2120,8 +2196,8 @@ function KBENGINE()
 		}
 		else
 		{
-			var bundle = new KBE_BUNDLE();
-			bundle.newMessage(g_messages.Loginapp_login);
+			var bundle = new KBEngine.Bundle();
+			bundle.newMessage(KBEngine.messages.Loginapp_login);
 			bundle.writeInt8(3); // clientType
 			bundle.writeBlob("");
 			bundle.writeString(g_kbengine.username);
@@ -2138,8 +2214,8 @@ function KBENGINE()
 		
 		if(!g_kbengine.loginappMessageImported)
 		{
-			var bundle = new KBE_BUNDLE();
-			bundle.newMessage(g_messages.Loginapp_importClientMessages);
+			var bundle = new KBEngine.Bundle();
+			bundle.newMessage(KBEngine.messages.Loginapp_importClientMessages);
 			bundle.send(g_kbengine);
 			g_kbengine.socket.onmessage = g_kbengine.Client_onImportClientMessages;  
 			console.info("KBENGINE::onOpenLoginapp_resetpassword: start importClientMessages ...");
@@ -2166,8 +2242,8 @@ function KBENGINE()
 		}
 		else
 		{
-			var bundle = new KBE_BUNDLE();
-			bundle.newMessage(g_messages.Loginapp_reqAccountResetPassword);
+			var bundle = new KBEngine.Bundle();
+			bundle.newMessage(KBEngine.messages.Loginapp_reqAccountResetPassword);
 			bundle.writeString(g_kbengine.username);
 			bundle.send(g_kbengine);
 		}
@@ -2180,8 +2256,8 @@ function KBENGINE()
 		
 		if(!g_kbengine.baseappMessageImported)
 		{
-			var bundle = new KBE_BUNDLE();
-			bundle.newMessage(g_messages.Baseapp_importClientMessages);
+			var bundle = new KBEngine.Bundle();
+			bundle.newMessage(KBEngine.messages.Baseapp_importClientMessages);
 			bundle.send(g_kbengine);
 			g_kbengine.socket.onmessage = g_kbengine.Client_onImportClientMessages;  
 		}
@@ -2201,8 +2277,8 @@ function KBENGINE()
 		}
 		else
 		{
-			var bundle = new KBE_BUNDLE();
-			bundle.newMessage(g_messages.Baseapp_loginGateway);
+			var bundle = new KBEngine.Bundle();
+			bundle.newMessage(KBEngine.messages.Baseapp_loginGateway);
 			bundle.writeString(g_kbengine.username);
 			bundle.writeString(g_kbengine.password);
 			bundle.send(g_kbengine);
@@ -2221,8 +2297,8 @@ function KBENGINE()
 		console.info("KBENGINE::onReOpenBaseapp: successfully!");
 		g_kbengine.currserver = "baseapp";
 		
-		var bundle = new KBE_BUNDLE();
-		bundle.newMessage(g_messages.Baseapp_reLoginGateway);
+		var bundle = new KBEngine.Bundle();
+		bundle.newMessage(KBEngine.messages.Baseapp_reLoginGateway);
 		bundle.writeString(g_kbengine.username);
 		bundle.writeString(g_kbengine.password);
 		bundle.writeUint64(g_kbengine.entity_uuid);
@@ -2279,11 +2355,10 @@ function KBENGINE()
 	this.entityclass = {};
 	this.getentityclass = function(entityType)
 	{
-		entityType = "KBE" + entityType;
 		var runclass = g_kbengine.entityclass[entityType];
 		if(runclass == undefined)
 		{
-			runclass = eval(entityType);
+			runclass = eval("KBEngine." + entityType);
 			if(runclass == undefined)
 			{
 				console.error("KBENGINE::getentityclass: entityType(" + entityType + ") is error!");
@@ -2319,14 +2394,14 @@ function KBENGINE()
 		entity.id = eid;
 		entity.className = entityType;
 		
-		entity.base = new KBEMAILBOX();
+		entity.base = new KBEngine.Mailbox();
 		entity.base.id = eid;
 		entity.base.className = entityType;
-		entity.base.type = MAILBOX_TYPE_BASE;
+		entity.base.type = KBEngine.MAILBOX_TYPE_BASE;
 		
 		g_kbengine.entities[eid] = entity;
 		
-		entity.__init__();
+		entity.onInit();
 	}
 	
 	this.getAoiEntityIDFromStream = function(stream)
@@ -2356,21 +2431,21 @@ function KBENGINE()
 		
 		if(entity == undefined)
 		{
-			entityMessage = g_bufferedCreateEntityMessage[eid];
+			entityMessage = KBEngine.bufferedCreateEntityMessage[eid];
 			if(entityMessage != undefined)
 			{
 				console.error("KBENGINE::Client_onUpdatePropertys: entity(" + eid + ") not found!");
 				return;
 			}
 			
-			var stream1 = new KBE_MEMORYSTREAM(stream.buffer);
+			var stream1 = new KBEngine.MemoryStream(stream.buffer);
 			stream1.wpos = stream.wpos;
 			stream1.rpos = stream.rpos - 4;
-			g_bufferedCreateEntityMessage[eid] = stream1;
+			KBEngine.bufferedCreateEntityMessage[eid] = stream1;
 			return;
 		}
 		
-		var currModule = g_moduledefs[entity.className];
+		var currModule = KBEngine.moduledefs[entity.className];
 		var pdatas = currModule.propertys;
 		while(stream.length() > 0)
 		{
@@ -2416,12 +2491,12 @@ function KBENGINE()
 		}
 		
 		var methodUtype = 0;
-		if(g_moduledefs[entity.className].useMethodDescrAlias)
+		if(KBEngine.moduledefs[entity.className].useMethodDescrAlias)
 			methodUtype = stream.readUint8();
 		else
 			methodUtype = stream.readUint16();
 		
-		var methoddata = g_moduledefs[entity.className].methods[methodUtype];
+		var methoddata = KBEngine.moduledefs[entity.className].methods[methodUtype];
 		var args = [];
 		var argsdata = methoddata[3];
 		for(var i=0; i<argsdata.length; i++)
@@ -2458,7 +2533,7 @@ function KBENGINE()
 			g_kbengine.entityIDAliasIDList.push(eid)
 		
 		var entityType;
-		if(g_moduledefs.Length > 255)
+		if(KBEngine.moduledefs.Length > 255)
 			entityType = stream.readUint16();
 		else
 			entityType = stream.readUint8();
@@ -2468,13 +2543,13 @@ function KBENGINE()
 		if(stream.length() > 0)
 			isOnGound = stream.readInt8();
 		
-		entityType = g_moduledefs[entityType].name;
+		entityType = KBEngine.moduledefs[entityType].name;
 		console.info("KBENGINE::Client_onEntityEnterWorld: " + entityType + "(" + eid + "), spaceID(" + g_kbengine.spaceID + "), isOnGound(" + isOnGound + ")!");
 		
 		var entity = g_kbengine.entities[eid];
 		if(entity == undefined)
 		{
-			entityMessage = g_bufferedCreateEntityMessage[eid];
+			entityMessage = KBEngine.bufferedCreateEntityMessage[eid];
 			if(entityMessage == undefined)
 			{
 				console.error("KBENGINE::Client_onEntityEnterWorld: entity(" + eid + ") not found!");
@@ -2489,17 +2564,17 @@ function KBENGINE()
 			entity.id = eid;
 			entity.className = entityType;
 			
-			entity.cell = new KBEMAILBOX();
+			entity.cell = new KBEngine.Mailbox();
 			entity.cell.id = eid;
 			entity.cell.className = entityType;
-			entity.cell.type = MAILBOX_TYPE_CELL;
+			entity.cell.type = KBEngine.MAILBOX_TYPE_CELL;
 			
 			g_kbengine.entities[eid] = entity;
 			
 			g_kbengine.Client_onUpdatePropertys(entityMessage);
-			delete g_bufferedCreateEntityMessage[eid];
+			delete KBEngine.bufferedCreateEntityMessage[eid];
 			
-			entity.__init__();
+			entity.onInit();
 			entity.onEnterWorld();
 		}
 		else
@@ -2648,8 +2723,8 @@ function KBENGINE()
 		if(player == undefined || player.inWorld == false || g_kbengine.spaceID == 0)
 			return;
 		
-		var bundle = new KBE_BUNDLE();
-		bundle.newMessage(g_messages.Baseapp_onUpdateDataFromClient);
+		var bundle = new KBEngine.Bundle();
+		bundle.newMessage(KBEngine.messages.Baseapp_onUpdateDataFromClient);
 		bundle.writeFloat(player.position[0]);
 		bundle.writeFloat(player.position[1]);
 		bundle.writeFloat(player.position[2]);
@@ -2783,7 +2858,7 @@ function KBENGINE()
 		var y = stream.readInt8();
 		var p = stream.readInt8();
 		
-		g_kbengine._updateVolatileData(eid, 0.0, 0.0, 0.0, y, p, KBE_FLT_MAX);
+		g_kbengine._updateVolatileData(eid, 0.0, 0.0, 0.0, y, p, KBEngine.KBE_FLT_MAX);
 	}
 	
 	this.Client_onUpdateData_yr = function(stream)
@@ -2793,7 +2868,7 @@ function KBENGINE()
 		var y = stream.readInt8();
 		var r = stream.readInt8();
 		
-		g_kbengine._updateVolatileData(eid, 0.0, 0.0, 0.0, y, KBE_FLT_MAX, r);
+		g_kbengine._updateVolatileData(eid, 0.0, 0.0, 0.0, y, KBEngine.KBE_FLT_MAX, r);
 	}
 	
 	this.Client_onUpdateData_pr = function(stream)
@@ -2803,7 +2878,7 @@ function KBENGINE()
 		var p = stream.readInt8();
 		var r = stream.readInt8();
 		
-		g_kbengine._updateVolatileData(eid, 0.0, 0.0, 0.0, KBE_FLT_MAX, p, r);
+		g_kbengine._updateVolatileData(eid, 0.0, 0.0, 0.0, KBEngine.KBE_FLT_MAX, p, r);
 	}
 	
 	this.Client_onUpdateData_y = function(stream)
@@ -2812,7 +2887,7 @@ function KBENGINE()
 		
 		var y = stream.readPackY();
 		
-		g_kbengine._updateVolatileData(eid, 0.0, 0.0, 0.0, y, KBE_FLT_MAX, KBE_FLT_MAX);
+		g_kbengine._updateVolatileData(eid, 0.0, 0.0, 0.0, y, KBEngine.KBE_FLT_MAX, KBEngine.KBE_FLT_MAX);
 	}
 	
 	this.Client_onUpdateData_p = function(stream)
@@ -2821,7 +2896,7 @@ function KBENGINE()
 		
 		var p = stream.readInt8();
 		
-		g_kbengine._updateVolatileData(eid, 0.0, 0.0, 0.0, KBE_FLT_MAX, p, KBE_FLT_MAX);
+		g_kbengine._updateVolatileData(eid, 0.0, 0.0, 0.0, KBEngine.KBE_FLT_MAX, p, KBEngine.KBE_FLT_MAX);
 	}
 	
 	this.Client_onUpdateData_r = function(stream)
@@ -2830,7 +2905,7 @@ function KBENGINE()
 		
 		var r = stream.readInt8();
 		
-		g_kbengine._updateVolatileData(eid, 0.0, 0.0, 0.0, KBE_FLT_MAX, KBE_FLT_MAX, r);
+		g_kbengine._updateVolatileData(eid, 0.0, 0.0, 0.0, KBEngine.KBE_FLT_MAX, KBEngine.KBE_FLT_MAX, r);
 	}
 	
 	this.Client_onUpdateData_xz = function(stream)
@@ -2839,7 +2914,7 @@ function KBENGINE()
 		
 		var xz = stream.readPackXZ();
 		
-		g_kbengine._updateVolatileData(eid, xz[0], 0.0, xz[1], KBE_FLT_MAX, KBE_FLT_MAX, KBE_FLT_MAX);
+		g_kbengine._updateVolatileData(eid, xz[0], 0.0, xz[1], KBEngine.KBE_FLT_MAX, KBEngine.KBE_FLT_MAX, KBEngine.KBE_FLT_MAX);
 	}
 	
 	this.Client_onUpdateData_xz_ypr = function(stream)
@@ -2864,7 +2939,7 @@ function KBENGINE()
 		var y = stream.readInt8();
 		var p = stream.readInt8();
 		
-		g_kbengine._updateVolatileData(eid, xz[0], 0.0, xz[1], y, p, KBE_FLT_MAX);
+		g_kbengine._updateVolatileData(eid, xz[0], 0.0, xz[1], y, p, KBEngine.KBE_FLT_MAX);
 	}
 	
 	this.Client_onUpdateData_xz_yr = function(stream)
@@ -2876,7 +2951,7 @@ function KBENGINE()
 		var y = stream.readInt8();
 		var r = stream.readInt8();
 		
-		g_kbengine._updateVolatileData(eid, xz[0], 0.0, xz[1], y, KBE_FLT_MAX, r);
+		g_kbengine._updateVolatileData(eid, xz[0], 0.0, xz[1], y, KBEngine.KBE_FLT_MAX, r);
 	}
 	
 	this.Client_onUpdateData_xz_pr = function(stream)
@@ -2888,7 +2963,7 @@ function KBENGINE()
 		var p = stream.readInt8();
 		var r = stream.readInt8();
 		
-		g_kbengine._updateVolatileData(eid, xz[0], 0.0, xz[1], KBE_FLT_MAX, p, r);
+		g_kbengine._updateVolatileData(eid, xz[0], 0.0, xz[1], KBEngine.KBE_FLT_MAX, p, r);
 	}
 	
 	this.Client_onUpdateData_xz_y = function(stream)
@@ -2899,7 +2974,7 @@ function KBENGINE()
 
 		var y = stream.readInt8();
 		
-		g_kbengine._updateVolatileData(eid, xz[0], 0.0, xz[1], y, KBE_FLT_MAX, KBE_FLT_MAX);
+		g_kbengine._updateVolatileData(eid, xz[0], 0.0, xz[1], y, KBEngine.KBE_FLT_MAX, KBEngine.KBE_FLT_MAX);
 	}
 	
 	this.Client_onUpdateData_xz_p = function(stream)
@@ -2910,7 +2985,7 @@ function KBENGINE()
 
 		var p = stream.readInt8();
 		
-		g_kbengine._updateVolatileData(eid, xz[0], 0.0, xz[1], KBE_FLT_MAX, p, KBE_FLT_MAX);
+		g_kbengine._updateVolatileData(eid, xz[0], 0.0, xz[1], KBEngine.KBE_FLT_MAX, p, KBEngine.KBE_FLT_MAX);
 	}
 	
 	this.Client_onUpdateData_xz_r = function(stream)
@@ -2921,7 +2996,7 @@ function KBENGINE()
 
 		var r = stream.readInt8();
 		
-		g_kbengine._updateVolatileData(eid, xz[0], 0.0, xz[1], KBE_FLT_MAX, KBE_FLT_MAX, r);
+		g_kbengine._updateVolatileData(eid, xz[0], 0.0, xz[1], KBEngine.KBE_FLT_MAX, KBEngine.KBE_FLT_MAX, r);
 	}
 	
 	this.Client_onUpdateData_xyz = function(stream)
@@ -2931,7 +3006,7 @@ function KBENGINE()
 		var xz = stream.readPackXZ();
 		var y = stream.readPackY();
 		
-		g_kbengine._updateVolatileData(eid, xz[0], y, xz[1], KBE_FLT_MAX, KBE_FLT_MAX, KBE_FLT_MAX);
+		g_kbengine._updateVolatileData(eid, xz[0], y, xz[1], KBEngine.KBE_FLT_MAX, KBEngine.KBE_FLT_MAX, KBEngine.KBE_FLT_MAX);
 	}
 	
 	this.Client_onUpdateData_xyz_ypr = function(stream)
@@ -2958,7 +3033,7 @@ function KBENGINE()
 		var yaw = stream.readInt8();
 		var p = stream.readInt8();
 		
-		g_kbengine._updateVolatileData(eid, xz[0], y, xz[1], yaw, p, KBE_FLT_MAX);
+		g_kbengine._updateVolatileData(eid, xz[0], y, xz[1], yaw, p, KBEngine.KBE_FLT_MAX);
 	}
 	
 	this.Client_onUpdateData_xyz_yr = function(stream)
@@ -2971,7 +3046,7 @@ function KBENGINE()
 		var yaw = stream.readInt8();
 		var r = stream.readInt8();
 		
-		g_kbengine._updateVolatileData(eid, xz[0], y, xz[1], yaw, KBE_FLT_MAX, r);
+		g_kbengine._updateVolatileData(eid, xz[0], y, xz[1], yaw, KBEngine.KBE_FLT_MAX, r);
 	}
 	
 	this.Client_onUpdateData_xyz_pr = function(stream)
@@ -2984,7 +3059,7 @@ function KBENGINE()
 		var p = stream.readInt8();
 		var r = stream.readInt8();
 		
-		g_kbengine._updateVolatileData(eid, x, y, z, KBE_FLT_MAX, p, r);
+		g_kbengine._updateVolatileData(eid, x, y, z, KBEngine.KBE_FLT_MAX, p, r);
 	}
 	
 	this.Client_onUpdateData_xyz_y = function(stream)
@@ -2996,7 +3071,7 @@ function KBENGINE()
 		
 		var yaw = stream.readInt8();
 		
-		g_kbengine._updateVolatileData(eid, xz[0], y, xz[1], yaw, KBE_FLT_MAX, KBE_FLT_MAX);
+		g_kbengine._updateVolatileData(eid, xz[0], y, xz[1], yaw, KBEngine.KBE_FLT_MAX, KBEngine.KBE_FLT_MAX);
 	}
 	
 	this.Client_onUpdateData_xyz_p = function(stream)
@@ -3008,7 +3083,7 @@ function KBENGINE()
 		
 		var p = stream.readInt8();
 		
-		g_kbengine._updateVolatileData(eid, xz[0], y, xz[1], KBE_FLT_MAX, p, KBE_FLT_MAX);
+		g_kbengine._updateVolatileData(eid, xz[0], y, xz[1], KBEngine.KBE_FLT_MAX, p, KBEngine.KBE_FLT_MAX);
 	}
 	
 	this.Client_onUpdateData_xyz_r = function(stream)
@@ -3020,7 +3095,7 @@ function KBENGINE()
 		
 		var p = stream.readInt8();
 		
-		g_kbengine._updateVolatileData(eid, xz[0], y, xz[1], r, KBE_FLT_MAX, KBE_FLT_MAX);
+		g_kbengine._updateVolatileData(eid, xz[0], y, xz[1], r, KBEngine.KBE_FLT_MAX, KBEngine.KBE_FLT_MAX);
 	}
 	
 	this._updateVolatileData = function(entityID, x, y, z, yaw, pitch, roll)
@@ -3080,5 +3155,5 @@ function KBENGINE()
 	}
 }
 
-var g_kbengine = new KBENGINE();
+var g_kbengine = new KBEngine.KBEngineApp();
 setInterval(g_kbengine.update, 100);

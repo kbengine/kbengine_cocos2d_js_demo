@@ -1,14 +1,10 @@
 /*-----------------------------------------------------------------------------------------
 												entity
 -----------------------------------------------------------------------------------------*/
-function KBEGate()
+KBEngine.Gate = KBEngine.GameObject.extend(
 {
-	this.__init__ = function()
+	init : function()
 	{
-		KBEGameObject.prototype.__init__.call(this);
-	}
-	
-	this.__init__();
-}
-
-KBEGate.prototype = new KBEGameObject();
+		this._super();
+  	}
+});

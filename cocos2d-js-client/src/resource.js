@@ -1,5 +1,5 @@
 var res = {
-    HelloWorld_png : "res/HelloWorld.png",
+    login_background_png : "res/login_background.png",
     CloseNormal_png : "res/CloseNormal.png",
     CloseSelected_png : "res/CloseSelected.png"
 };

@@ -1,14 +1,10 @@
 /*-----------------------------------------------------------------------------------------
 												entity
 -----------------------------------------------------------------------------------------*/
-function KBENPC()
+KBEngine.Monster = KBEngine.GameObject.extend(
 {
-	this.__init__ = function()
+	init : function()
 	{
-		KBEGameObject.prototype.__init__.call(this);
-	}
-	
-	this.__init__();
-}
-
-KBENPC.prototype = new KBEGameObject();
+		this._super();
+  	}
+});

@@ -1,14 +1,10 @@
 /*-----------------------------------------------------------------------------------------
 												entity
 -----------------------------------------------------------------------------------------*/
-function KBEMonster()
-{
-	this.__init__ = function()
+KBEngine.GameObject = KBEngine.Entity.extend({	
+	init: function()
 	{
-		KBEGameObject.prototype.__init__.call(this);
-	}
-	
-	this.__init__();
-}
+		this._super();
+  	}
+});
 
-KBEMonster.prototype = new KBEGameObject();

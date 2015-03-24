@@ -1,12 +1,12 @@
 /*-----------------------------------------------------------------------------------------
 												entity
 -----------------------------------------------------------------------------------------*/
-function KBEGameObject()
-{	
-	KBEGameObject.prototype.__init__ = function()
+KBEngine.Avatar = KBEngine.GameObject.extend(
+{
+	init : function()
 	{
-	}
-}
+		this._super();
+  	}
+});
 
-KBEGameObject.prototype = new KBEENTITY();
 

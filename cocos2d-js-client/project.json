@@ -8,18 +8,19 @@
     "renderMode" : 1,
     "engineDir":"frameworks/cocos2d-html5",
 
-    "modules" : ["cocos2d"],
+    "modules" : ["cocos2d", "extensions", "external"],
 
     "jsList" : [
 	"plugins/kbengine/kbengine.js",
-        "plugins/kbengine/kbe_gameobject.js",
-        "plugins/kbengine/kbe_account.js",
-        "plugins/kbengine/kbe_avatar.js",
-        "plugins/kbengine/kbe_monster.js",
-        "plugins/kbengine/kbe_npc.js",
-        "plugins/kbengine/kbe_gate.js",
+        "plugins/kbengine/GameObject.js",
+        "plugins/kbengine/Account.js",
+        "plugins/kbengine/Avatar.js",
+        "plugins/kbengine/Monster.js",
+        "plugins/kbengine/NPC.js",
+        "plugins/kbengine/Gate.js",
 
+	"src/debug.js",
         "src/resource.js",
-        "src/app.js"
+        "src/login_scene.js"
     ]
 }
