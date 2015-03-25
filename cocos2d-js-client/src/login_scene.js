@@ -205,6 +205,11 @@ var LoginSceneLayer = cc.LayerColor.extend({
     onLoginSuccessfully : function(rndUUID, eid, accountEntity)
     {
     	this.debug.INFO_MSG("login is successfully!(登陆成功!)");
+    	
+	    //load resources
+	    cc.LoaderScene.preload(g_resources, function () {
+	        cc.director.runScene(new SelAvatarScene());
+	    }, this);
     },
 
     login_baseapp : function()

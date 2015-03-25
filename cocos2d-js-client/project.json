@@ -21,6 +21,7 @@
 
 	"src/debug.js",
         "src/resource.js",
-        "src/login_scene.js"
+        "src/login_scene.js",
+	"src/selavatar_scene.js"
     ]
 }

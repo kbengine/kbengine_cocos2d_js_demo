@@ -206,7 +206,7 @@ KBEngine.Event = function()
 			}
 			else
 			{
-				info.callbackfn.apply(info.classinst, arguments);
+				info.callbackfn.apply(info.classinst, ars);
 			}
 		}
 	}
