@@ -385,7 +385,7 @@ var LoginBtnLayer = cc.LayerColor.extend({
             	}
             	
                 this._rootLayer.debug.ERROR_MSG("connect to server...");
-                g_kbengine.login(this._rootLayer.username, this._rootLayer.password);
+                KBEngine.Event.fire("login", this._rootLayer.username, this._rootLayer.password);
                 break;
             case ccui.Widget.TOUCH_MOVED:
                 break;
@@ -430,16 +430,14 @@ var RegisterBtnLayer = cc.LayerColor.extend({
     touchEvent: function (sender, type) {
         switch (type) {
             case ccui.Widget.TOUCH_BEGAN:
-                this._rootLayer.debug.ERROR_MSG("Touch Down");
+                this._rootLayer.debug.ERROR_MSG("connect to server...");
+            	KBEngine.Event.fire("createAccount", this._rootLayer.username, this._rootLayer.password);
                 break;
             case ccui.Widget.TOUCH_MOVED:
-                this._rootLayer.debug.ERROR_MSG("Touch Move");
                 break;
             case ccui.Widget.TOUCH_ENDED:
-                this._rootLayer.debug.ERROR_MSG("Touch Up");
                 break;
             case ccui.Widget.TOUCH_CANCELED:
-                this._rootLayer.debug.ERROR_MSG("Touch Cancelled");
                 break;
             default:
                 break;

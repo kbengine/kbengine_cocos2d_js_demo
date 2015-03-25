@@ -165,7 +165,7 @@ KBEngine.Event = function()
 					var info = evtlst[i];
 					if(info.classinst == classinst)
 					{
-						delete evtlst[i];
+						evtlst.splice(i, 1);
 						found = true;
 						break;
 					}
@@ -184,15 +184,18 @@ KBEngine.Event = function()
 			KBEngine.ERROR_MSG('KBEngine.Event::fire: not found eventName!');  
 			return;
 		}
-		
+
 		var evtName = arguments[0];
-		delete arguments[0];
 		var evtlst = this._events[evtName];
 		
 		if(evtlst == undefined)
 		{
 			return;			
 		}
+		
+		var ars = [];
+		for(var i=1; i<arguments.length; i++) 
+			ars.push(arguments[i]);
 		
 		for(var i=0; i<evtlst.length; i++)
 		{
@@ -1703,8 +1706,13 @@ KBEngine.KBEngineApp = function()
 		this.isOnGound = false;
 		this.component = "client";
 	}
-	
-	this.reset();
+
+	this.installEvents = function()
+	{
+		KBEngine.Event.register("createAccount", this, "createAccount");
+		KBEngine.Event.register("login", this, "login");
+		KBEngine.Event.register("relogin_baseapp", this, "relogin_baseapp");
+	}
 	
 	this.hello = function()
 	{  
@@ -3309,4 +3317,6 @@ KBEngine.KBEngineApp = function()
 }
 
 var g_kbengine = new KBEngine.KBEngineApp();
+g_kbengine.reset();
+g_kbengine.installEvents();
 setInterval(g_kbengine.update, 100);
