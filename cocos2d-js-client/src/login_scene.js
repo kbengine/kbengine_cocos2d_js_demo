@@ -206,6 +206,7 @@ var LoginSceneLayer = cc.LayerColor.extend({
     {
     	this.debug.INFO_MSG("login is successfully!(登陆成功!)");
     	
+    	// 切换到选人场景
 	    //load resources
 	    cc.LoaderScene.preload(g_resources, function () {
 	        cc.director.runScene(new SelAvatarScene());
