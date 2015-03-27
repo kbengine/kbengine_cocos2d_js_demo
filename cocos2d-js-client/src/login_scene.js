@@ -78,9 +78,9 @@ var LoginSceneLayer = cc.LayerColor.extend({
             boundingHeight: 50,
             textAlign:cc.TEXT_ALIGNMENT_LEFT,
             fontSize: 10,
-            anchorX: 0.5,
+            anchorX: 0,
             anchorY: -1,
-            x: 60,
+            x: 5,
             y: size.height - 30
         });
         this.serverVersion.setColor(new cc.Color(0, 255, 0, 255));
@@ -94,9 +94,9 @@ var LoginSceneLayer = cc.LayerColor.extend({
             textAlign:cc.TEXT_ALIGNMENT_LEFT,
             fontName: "Arial",
             fontSize: 10,
-            anchorX: 0.5,
+            anchorX: 0,
             anchorY: -1,
-            x: 60,
+            x: 5,
             y: size.height - 45
         });
         this.serverScriptVersion.setColor(new cc.Color(0, 255, 0, 255));
@@ -110,9 +110,9 @@ var LoginSceneLayer = cc.LayerColor.extend({
             textAlign:cc.TEXT_ALIGNMENT_LEFT,
             fontName: "Arial",
             fontSize: 10,
-            anchorX: 0.5,
+            anchorX: 0,
             anchorY: -1,
-            x: 60,
+            x: 5,
             y: size.height - 60
         });
         this.clientVersion.setColor(new cc.Color(0, 255, 0, 255));
@@ -126,9 +126,9 @@ var LoginSceneLayer = cc.LayerColor.extend({
             textAlign:cc.TEXT_ALIGNMENT_LEFT,
             fontName: "Arial",
             fontSize: 10,
-            anchorX: 0.5,
+            anchorX: 0,
             anchorY: -1,
-            x: 60,
+            x: 5,
             y: size.height - 75
         });
         this.clientScriptVersion.setColor(new cc.Color(0, 255, 0, 255));
@@ -356,7 +356,7 @@ var LoginBtnLayer = cc.LayerColor.extend({
         // Create the text button
         var textButton = new ccui.Button();
         textButton.setTouchEnabled(true);
-        textButton.loadTextures("res/ui/backtotopnormal.png", "res/ui/backtotoppressed.png", "");
+        textButton.loadTextures("res/ui/btn_up.png", "res/ui/btn_down.png", "");
         textButton.setTitleText("Login");
         textButton.x = size.width / 2.0 - 30;
         textButton.y = size.height / 2.0 - 100;
@@ -414,7 +414,7 @@ var RegisterBtnLayer = cc.LayerColor.extend({
         // Create the text button
         var textButton = new ccui.Button();
         textButton.setTouchEnabled(true);
-        textButton.loadTextures("res/ui/backtotopnormal.png", "res/ui/backtotoppressed.png", "");
+        textButton.loadTextures("res/ui/btn_up.png", "res/ui/btn_down.png", "");
         textButton.setTitleText("Register");
         textButton.x = size.width / 2.0 + 80;
         textButton.y = size.height / 2.0 - 100;
