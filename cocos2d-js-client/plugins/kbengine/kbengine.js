@@ -3342,7 +3342,11 @@ KBEngine.destroy = function()
 	if(KBEngine.idInterval != undefined)
 		clearInterval(KBEngine.idInterval);
 	
+	if(KBEngine.app == undefined)
+		return;
+		
 	KBEngine.app.uninstallEvents();
 	KBEngine.app.reset();
+	KBEngine.app = undefined;
 }
 
