@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="64" height="48" tilewidth="16" tileheight="16">
+ <tileset firstgid="1" name="wood" tilewidth="16" tileheight="16">
+  <image source="wood.png" width="256" height="256"/>
+ </tileset>
+ <tileset firstgid="257" name="spritesheet" tilewidth="16" tileheight="16">
+  <image source="spritesheet.png" width="844" height="1554"/>
+ </tileset>
+ <layer name="块层 2" width="64" height="48">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC93XZ9uQAwCG4TeEJKuiKCIju00oKlT2TlZDUaSUkkiFSmVFZe9VtoiU0ZAtaRmF9tAiIoScfsV99Hw4P14/4CpVUlKyBVuyFaXZmm3YljJsR1m2pxw7sCM7UWoz73dmF8pTgYrsym5UojK7swdVqMqe7EW1AvR7sw/V2Zf92J8DqMGBHMTBHMKhHMbh1CxAX4va1KEu9ajPERxJA47iaI6hIY04luMK0DemCU05nhM4kWY0pwUncTKncCqncTpnFKA/k7M4m3M4l/Noyfm04gIu5CIu5hJa06YAfVvacSnt6cBlXE5HOnEFV9KZq+hCV64uQN+N7lxDD3pyLb24jt5czw304Ub60o/+Behv4mZuYQADGcStDGYIQ7mN27mDO7mLYQXo7+YehjOCkdzLfdzPAzzIQzzMIzzKYzxegP4JnuQpnuYZnmUUo3mO53mBF3mJl3mFVwvQj+E1Xmcsb/Am43iL8Uzgbd7hXd5jIpMK0E9mCu8zlQ/4kI/4mE/4lM/4nGl8wXS+LEA/g5nMYjZz+Iqv+YZvmcs8vuN7fmA+CwrQL2QRi1nCUpaxnBX8yEpWsZo1rOUnfi5Av45f+JX1/MbvbOAP/uQvNvI3//Avm/h/Pjf3Pv3f6T793+k+/d/pPv3f6T793+k+/d/pPv3f6T793+k+/d/pPv3f6T793+k+/d/pPv3f6T793+k+/d/pPv3f6T793+k+/d/pPv3f6T793+k+/d/pPv3f6T793+k+/d/pPv3f6T793+k+/d/pPv3f6T793+k+/d/pPv3f6T793+n+P8J9KJYAMAAA
+  </data>
+ </layer>
+ <layer name="块层 1" width="64" height="48">
+  <data encoding="base64" compression="gzip">
+   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
+  </data>
+ </layer>
+ <layer name="块层 3" width="64" height="48">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3PQRGAMBAEwf0kBsATeAVPIIW4uKKuW8FMAgAAAPAf10juUV1R51nvb+P/bSb7rK6oc6z3s/E/AAAAAAAAdPcBGug95AAwAAA=
+  </data>
+ </layer>
+</map>

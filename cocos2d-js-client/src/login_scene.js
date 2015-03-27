@@ -25,6 +25,19 @@ var LoginSceneLayer = cc.LayerColor.extend({
     	
     	// 安装这个场景需要监听的KBE事件
         this.installEvents();
+        
+        // 创建场景
+        this.start_map = cc.TMXTiledMap.create("res/img/2/start.tmx"); 
+        this.addChild(this.start_map, 1); 
+        
+        var size = cc.winSize;
+		this.start_map.attr({
+            x: size.width / 2,
+            y: size.height / 2,
+            anchorX: 0.5,
+            anchorY: 0.5
+        });
+        	        
         return true;
     },
 

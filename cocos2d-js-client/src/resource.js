@@ -158,7 +158,8 @@ var g_resources = [
 "res/img/2/wood.png",
 "res/img/2/wood2.png",
 "res/img/2/wood3.png",
-
+"res/img/2/start.tmx",
+	
 "res/img/3/achievements.png",
 "res/img/3/agent.png",
 "res/img/3/axe.png",
