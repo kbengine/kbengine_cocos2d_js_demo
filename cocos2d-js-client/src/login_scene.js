@@ -104,7 +104,7 @@ var LoginSceneLayer = cc.LayerColor.extend({
 
         this.clientVersion = new ccui.Text();
         this.clientVersion.attr({
-            string: "clientVersion: " + g_kbengine.clientVersion,
+            string: "clientVersion: " + KBEngine.app.clientVersion,
             boundingWidth: 200,
             boundingHeight: 50,
             textAlign:cc.TEXT_ALIGNMENT_LEFT,
@@ -120,7 +120,7 @@ var LoginSceneLayer = cc.LayerColor.extend({
 
         this.clientScriptVersion = new ccui.Text();
         this.clientScriptVersion.attr({
-            string: "clientScriptVersion: " + g_kbengine.clientScriptVersion,
+            string: "clientScriptVersion: " + KBEngine.app.clientScriptVersion,
             boundingWidth: 200,
             boundingHeight: 50,
             textAlign:cc.TEXT_ALIGNMENT_LEFT,
@@ -243,8 +243,8 @@ var LoginSceneLayer = cc.LayerColor.extend({
     },
     	 	
     update : function (dt) {
-        this.serverScriptVersion.setString("serverScriptVersion: " + g_kbengine.serverScriptVersion);
-        this.serverVersion.setString("serverVersion: " + g_kbengine.serverVersion);
+        this.serverScriptVersion.setString("serverScriptVersion: " + KBEngine.app.serverScriptVersion);
+        this.serverVersion.setString("serverVersion: " + KBEngine.app.serverVersion);
     }
 });
 

@@ -6,7 +6,7 @@ KBEngine.Account = KBEngine.GameObject.extend(
 	__init__ : function()
 	{
 		this._super();
-		KBEngine.Event.fire("onLoginSuccessfully", g_kbengine.entity_uuid, this.id, this);
+		KBEngine.Event.fire("onLoginSuccessfully", KBEngine.app.entity_uuid, this.id, this);
 		
 		this.avatars = {};
 		this.baseCall("reqAvatarList");
