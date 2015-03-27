@@ -170,6 +170,7 @@ var g_resources = [
 "res/img/3/boss.png",
 "res/img/3/chest.png",
 "res/img/3/clotharmor.png",
+"res/img/3/cocosjs_demo_map1.tmx",
 "res/img/3/coder.png",
 "res/img/3/crab.png",
 "res/img/3/death.png",
@@ -245,7 +246,9 @@ var g_resources = [
 "res/img/common/spinner.gif",
 "res/img/common/thingy.png",
 
-"res/maps/cocosjs_demo_map1.tmx",
+"res/maps/spritesheet.png",
+"res/maps/start.tmx",
+"res/maps/wood.png",
 
 "res/sprites/agent.json",
 "res/sprites/arrow.json",
@@ -319,6 +322,6 @@ var g_resources = [
 "res/sprites/villager.json",
 "res/sprites/wizard.json",
 
-"res/ui/backtotopnormal.png",
-"res/ui/backtotoppressed.png"
+"res/ui/btn_down.png",
+"res/ui/btn_up.png"
 ];

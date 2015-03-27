@@ -361,6 +361,7 @@ var LoginBtnLayer = cc.LayerColor.extend({
         textButton.x = size.width / 2.0 - 30;
         textButton.y = size.height / 2.0 - 100;
         textButton.addTouchEventListener(this.touchEvent ,this);
+        textButton.setScale(0.2);
         this.addChild(textButton, 1);
 
         return true;
@@ -419,6 +420,7 @@ var RegisterBtnLayer = cc.LayerColor.extend({
         textButton.x = size.width / 2.0 + 80;
         textButton.y = size.height / 2.0 - 100;
         textButton.addTouchEventListener(this.touchEvent ,this);
+        textButton.setScale(0.2);
         this.addChild(textButton, 1);
 
         return true;

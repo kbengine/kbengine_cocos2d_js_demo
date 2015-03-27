@@ -17,9 +17,17 @@ var WorldSceneLayer = cc.LayerColor.extend({
         this.installEvents();
         
         // 创建场景
-        this.cocosjs_demo_map1 = cc.TMXTiledMap.create("res/maps/cocosjs_demo_map1.tmx"); 
-        this.addChild(this.cocosjs_demo_map1); 
-        this.mapWidth = this.cocosjs_demo_map1.getContentSize().width; 
+        this.cocosjs_demo_map1 = cc.TMXTiledMap.create("res/img/3/cocosjs_demo_map1.tmx"); 
+        this.addChild(this.cocosjs_demo_map1, 1); 
+        
+        var size = cc.winSize;
+		this.cocosjs_demo_map1.attr({
+            x: size.width / 2,
+            y: size.height / 2,
+            anchorX: 0.5,
+            anchorY: 0.5
+        });
+        	        
         return true;
     },
     
