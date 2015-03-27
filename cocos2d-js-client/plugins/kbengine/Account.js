@@ -3,15 +3,12 @@
 -----------------------------------------------------------------------------------------*/
 KBEngine.Account = KBEngine.GameObject.extend(
 {
-	init : function()
+	__init__ : function()
 	{
 		this._super();
-		this.avatars = {};
-  	},
-
-	onInit : function()
-	{
 		KBEngine.Event.fire("onLoginSuccessfully", g_kbengine.entity_uuid, this.id, this);
+		
+		this.avatars = {};
 		this.baseCall("reqAvatarList");
 	},
 		

@@ -3,7 +3,7 @@
 -----------------------------------------------------------------------------------------*/
 KBEngine.NPC = KBEngine.GameObject.extend(
 {
-	init : function()
+	__init__ : function()
 	{
 		this._super();
   	}

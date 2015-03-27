@@ -1,8 +1,9 @@
 /*-----------------------------------------------------------------------------------------
 												entity
 -----------------------------------------------------------------------------------------*/
-KBEngine.GameObject = KBEngine.Entity.extend({	
-	init: function()
+KBEngine.GameObject = KBEngine.Entity.extend(
+{	
+	__init__ : function()
 	{
 		this._super();
   	}

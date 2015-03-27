@@ -8,36 +8,66 @@ var LoginSceneLayer = cc.LayerColor.extend({
     debug:null,
     username:"",
     password:"",
-    ctor:function () {
+    ctor:function () 
+    {
         //////////////////////////////
         // super init first
         this._super();
 		
 		// 设置背景颜色 灰色
 		this.setColor(new cc.Color(128, 128, 128, 255));
+        
+		// 激活 update
+        this.schedule(this.update, 0.1, cc.repeatForever, 0.1);
+    
+    	// 初始化UI
+    	this.initUI();
+    	
+    	// 安装这个场景需要监听的KBE事件
+        this.installEvents();
+        return true;
+    },
 
-        // 2. add a menu item with "X" image, which is clicked to quit the program
-        //    you may modify it.
+    onExit: function () {
+    },
+    	
+    installEvents : function()
+    {
+		// common
+		KBEngine.Event.register("onKicked", this, "onKicked");
+		KBEngine.Event.register("onDisableConnect", this, "onDisableConnect");
+		KBEngine.Event.register("onConnectStatus", this, "onConnectStatus");
+	    	
+		// login
+		KBEngine.Event.register("onCreateAccountResult", this, "onCreateAccountResult");
+		KBEngine.Event.register("onLoginFailed", this, "onLoginFailed");
+		KBEngine.Event.register("onVersionNotMatch", this, "onVersionNotMatch");
+		KBEngine.Event.register("onScriptVersionNotMatch", this, "onScriptVersionNotMatch");
+		KBEngine.Event.register("onLoginGatewayFailed", this, "onLoginGatewayFailed");
+		KBEngine.Event.register("onLoginSuccessfully", this, "onLoginSuccessfully");
+		KBEngine.Event.register("login_baseapp", this, "login_baseapp");
+		KBEngine.Event.register("Loginapp_importClientMessages", this, "Loginapp_importClientMessages");
+		KBEngine.Event.register("Baseapp_importClientMessages", this, "Baseapp_importClientMessages");
+		KBEngine.Event.register("Baseapp_importClientEntityDef", this, "Baseapp_importClientEntityDef");
+		
+		KBEngine.Event.register("onImportClientMessages", this, "onImportClientMessages");
+		KBEngine.Event.register("onImportClientEntityDef", this, "onImportClientEntityDef");
+		KBEngine.Event.register("onImportServerErrorsDescr", this, "onImportServerErrorsDescr");
+		
+		// selavatars
+		//KBEngine.Event.register("onReqAvatarList", this, "onReqAvatarList");
+		//KBEngine.Event.register("onCreateAvatarResult", this, "onCreateAvatarResult");
+		//KBEngine.Event.register("onRemoveAvatar", this, "onRemoveAvatar");
+    },
+
+	initUI : function()
+    {
         // ask the window size
         var size = cc.winSize;
 
-        // add a "close" icon to exit the progress. it's an autorelease object
-        var closeItem = new cc.MenuItemImage(
-            res.CloseNormal_png,
-            res.CloseSelected_png,
-            function () {
-                cc.log("Menu is clicked!");
-            }, this);
-        closeItem.attr({
-            x: size.width - 20,
-            y: 20,
-            anchorX: 0.5,
-            anchorY: 0.5
-        });
-
         // debug
-        this.debug = new DebugLayer();
-        this.addChild(this.debug, 1);
+        new GUIDebugLayer();
+        this.addChild(GUIDebugLayer.debug, 1);
 
         // serverVersion
         this.serverVersion = new ccui.Text();
@@ -102,45 +132,9 @@ var LoginSceneLayer = cc.LayerColor.extend({
             y: size.height - 75
         });
         this.clientScriptVersion.setColor(new cc.Color(0, 255, 0, 255));
-        this.addChild(this.clientScriptVersion, 2);
-        
-		// 激活 update
-        this.schedule(this.update, 0.1, cc.repeatForever, 0.1);
-    
-    	// 安装这个场景需要监听的KBE事件
-        this.installEvents();
-        return true;
+        this.addChild(this.clientScriptVersion, 2);    	
     },
-    
-    installEvents : function()
-    {
-		// common
-		KBEngine.Event.register("onKicked", this, "onKicked");
-		KBEngine.Event.register("onDisableConnect", this, "onDisableConnect");
-		KBEngine.Event.register("onConnectStatus", this, "onConnectStatus");
-	    	
-		// login
-		KBEngine.Event.register("onCreateAccountResult", this, "onCreateAccountResult");
-		KBEngine.Event.register("onLoginFailed", this, "onLoginFailed");
-		KBEngine.Event.register("onVersionNotMatch", this, "onVersionNotMatch");
-		KBEngine.Event.register("onScriptVersionNotMatch", this, "onScriptVersionNotMatch");
-		KBEngine.Event.register("onLoginGatewayFailed", this, "onLoginGatewayFailed");
-		KBEngine.Event.register("onLoginSuccessfully", this, "onLoginSuccessfully");
-		KBEngine.Event.register("login_baseapp", this, "login_baseapp");
-		KBEngine.Event.register("Loginapp_importClientMessages", this, "Loginapp_importClientMessages");
-		KBEngine.Event.register("Baseapp_importClientMessages", this, "Baseapp_importClientMessages");
-		KBEngine.Event.register("Baseapp_importClientEntityDef", this, "Baseapp_importClientEntityDef");
-		
-		KBEngine.Event.register("onImportClientMessages", this, "onImportClientMessages");
-		KBEngine.Event.register("onImportClientEntityDef", this, "onImportClientEntityDef");
-		KBEngine.Event.register("onImportServerErrorsDescr", this, "onImportServerErrorsDescr");
-		
-		// selavatars
-		//KBEngine.Event.register("onReqAvatarList", this, "onReqAvatarList");
-		//KBEngine.Event.register("onCreateAvatarResult", this, "onCreateAvatarResult");
-		//KBEngine.Event.register("onRemoveAvatar", this, "onRemoveAvatar");
-    },
-
+    	
 	onKicked : function(failedcode)
 	{
 	},
@@ -152,26 +146,26 @@ var LoginSceneLayer = cc.LayerColor.extend({
 	onConnectStatus : function(success)
 	{
 		if(!success)
-			this.debug.ERROR_MSG("connect(" + g_kbengine.ip + ":" + g_kbengine.port + ") is error! (连接错误)");
+			GUIDebugLayer.debug.ERROR_MSG("connect(" + g_kbengine.ip + ":" + g_kbengine.port + ") is error! (连接错误)");
 		else
-			this.debug.INFO_MSG("connect successfully, please wait...(连接成功，请等候...)");
+			GUIDebugLayer.debug.INFO_MSG("connect successfully, please wait...(连接成功，请等候...)");
 	},
 
     onCreateAccountResult : function(retcode, datas)
     {
 		if(retcode != 0)
 		{
-			this.debug.ERROR_MSG("createAccount is error(注册账号错误)! err=" + retcode);
+			GUIDebugLayer.debug.ERROR_MSG("createAccount is error(注册账号错误)! err=" + retcode);
 			return;
 		}
 		
 		if(KBEngineApp.validEmail(stringAccount))
 		{
-			this.debug.INFO_MSG("createAccount is successfully, Please activate your Email!(注册账号成功，请激活Email!)");
+			GUIDebugLayer.debug.INFO_MSG("createAccount is successfully, Please activate your Email!(注册账号成功，请激活Email!)");
 		}
 		else
 		{
-			this.debug.INFO_MSG("createAccount is successfully!(注册账号成功!)");
+			GUIDebugLayer.debug.INFO_MSG("createAccount is successfully!(注册账号成功!)");
 		}    	
     },
     	    
@@ -179,73 +173,73 @@ var LoginSceneLayer = cc.LayerColor.extend({
     {
 		if(failedcode == 20)
 		{
-			this.debug.ERROR_MSG("login is failed(登陆失败), err=" + failedcode + ", " + g_kbengine.serverdatas);
+			GUIDebugLayer.debug.ERROR_MSG("login is failed(登陆失败), err=" + failedcode + ", " + g_kbengine.serverdatas);
 		}
 		else
 		{
-			this.debug.ERROR_MSG("login is failed(登陆失败), err=" + failedcode);
+			GUIDebugLayer.debug.ERROR_MSG("login is failed(登陆失败), err=" + failedcode);
 		}    	
     },
 
     onVersionNotMatch : function(clientVersion, serverVersion)
     {
-    	this.debug.ERROR_MSG("version not match(curr=" + clientVersion + ", srv=" + serverVersion + " )(版本不匹配)");	
+    	GUIDebugLayer.debug.ERROR_MSG("version not match(curr=" + clientVersion + ", srv=" + serverVersion + " )(版本不匹配)");	
     },
 
     onScriptVersionNotMatch : function(clientScriptVersion, serverScriptVersion)
     {
-    	this.debug.ERROR_MSG("scriptVersion not match(curr=" + clientScriptVersion + ", srv=" + serverScriptVersion + " )(脚本版本不匹配)");	
+    	GUIDebugLayer.debug.ERROR_MSG("scriptVersion not match(curr=" + clientScriptVersion + ", srv=" + serverScriptVersion + " )(脚本版本不匹配)");	
     },
 
     onLoginGatewayFailed : function(failedcode)
     {
-    	this.debug.ERROR_MSG("loginGateway is failed(登陆网关失败), err=" + failedcode);	
+    	GUIDebugLayer.debug.ERROR_MSG("loginGateway is failed(登陆网关失败), err=" + failedcode);	
     },
     	
     onLoginSuccessfully : function(rndUUID, eid, accountEntity)
     {
-    	this.debug.INFO_MSG("login is successfully!(登陆成功!)");
+    	GUIDebugLayer.debug.INFO_MSG("login is successfully!(登陆成功!)");
     	
     	// 切换到选人场景
 	    //load resources
 	    cc.LoaderScene.preload(g_resources, function () {
-	        cc.director.runScene(new SelAvatarScene());
+	        cc.director.runScene(new WorldScene());
 	    }, this);
     },
 
     login_baseapp : function()
     {
-    	this.debug.INFO_MSG("connect to loginGateway, please wait...(连接到网关， 请稍后...)");
+    	GUIDebugLayer.debug.INFO_MSG("connect to loginGateway, please wait...(连接到网关， 请稍后...)");
     },
 
     Loginapp_importClientMessages : function()
     {
-    	this.debug.INFO_MSG("Loginapp_importClientMessages ...");
+    	GUIDebugLayer.debug.INFO_MSG("Loginapp_importClientMessages ...");
     },
 
     Baseapp_importClientMessages : function()
     {
-    	this.debug.INFO_MSG("Baseapp_importClientMessages ...");
+    	GUIDebugLayer.debug.INFO_MSG("Baseapp_importClientMessages ...");
     },
     	
     Baseapp_importClientEntityDef : function()
     {
-    	this.debug.INFO_MSG("Baseapp_importClientEntityDef ...");
+    	GUIDebugLayer.debug.INFO_MSG("Baseapp_importClientEntityDef ...");
     },
 
     onImportClientMessages : function(currserver, stream)
     {
-    	this.debug.INFO_MSG("importClientMessages successfully!");
+    	GUIDebugLayer.debug.INFO_MSG("importClientMessages successfully!");
     },
 
     onImportClientEntityDef : function(stream)
     {
-    	this.debug.INFO_MSG("importClientEntityDef successfully!");
+    	GUIDebugLayer.debug.INFO_MSG("importClientEntityDef successfully!");
     },
     	
     onImportServerErrorsDescr : function(stream)
     {
-    	this.debug.INFO_MSG("importServerErrorsDescr successfully!");
+    	GUIDebugLayer.debug.INFO_MSG("importServerErrorsDescr successfully!");
     },
     	 	
     update : function (dt) {
@@ -380,17 +374,17 @@ var LoginBtnLayer = cc.LayerColor.extend({
             case ccui.Widget.TOUCH_BEGAN:
             	if(this._rootLayer.username.length < 3)
             	{
-            		this._rootLayer.debug.ERROR_MSG("username is error, length < 3!(账号或者密码错误，长度必须大于等于3!)");
+            		GUIDebugLayer.debug.ERROR_MSG("username is error, length < 3!(账号或者密码错误，长度必须大于等于3!)");
             		return;
             	}
  
              	if(this._rootLayer.password.length < 3)
             	{
-            		this._rootLayer.debug.ERROR_MSG("password is error, length < 3!(账号或者密码错误，长度必须大于等于3!)");
+            		GUIDebugLayer.debug.ERROR_MSG("password is error, length < 3!(账号或者密码错误，长度必须大于等于3!)");
             		return;
             	}
             	
-                this._rootLayer.debug.ERROR_MSG("connect to server...");
+                GUIDebugLayer.debug.ERROR_MSG("connect to server...");
                 KBEngine.Event.fire("login", this._rootLayer.username, this._rootLayer.password);
                 break;
             case ccui.Widget.TOUCH_MOVED:
@@ -436,7 +430,7 @@ var RegisterBtnLayer = cc.LayerColor.extend({
     touchEvent: function (sender, type) {
         switch (type) {
             case ccui.Widget.TOUCH_BEGAN:
-                this._rootLayer.debug.ERROR_MSG("connect to server...");
+                GUIDebugLayer.debug.ERROR_MSG("connect to server...");
             	KBEngine.Event.fire("createAccount", this._rootLayer.username, this._rootLayer.password);
                 break;
             case ccui.Widget.TOUCH_MOVED:

@@ -1,5 +1,6 @@
 
-var DebugLayer = cc.LayerColor.extend({
+var GUIDebugLayer = cc.LayerColor.extend(
+{
     sprite:null,
     debug:null,
     ctor:function () {
@@ -7,6 +8,8 @@ var DebugLayer = cc.LayerColor.extend({
         // super init first
         this._super();
 		
+		GUIDebugLayer.debug = this;
+
 		// 设置背景颜色 灰色
 		this.setColor(new cc.Color(128, 128, 128, 255));
 
@@ -15,7 +18,6 @@ var DebugLayer = cc.LayerColor.extend({
         this.debug.attr({
             string: "",
             fontName: "Arial",
-            textAlign:cc.TEXT_ALIGNMENT_LEFT,
             fontSize: 10,
             anchorX: 0.5,
             anchorY: -1,
@@ -26,6 +28,10 @@ var DebugLayer = cc.LayerColor.extend({
         this.addChild(this.debug, 20);
         return true;
     },
+
+    onExit: function () {
+    },
+
     INFO_MSG:function (str) {
     	this.debug.setString(str);
     	this.debug.setColor(new cc.Color(0, 255, 0, 255));
@@ -43,3 +49,4 @@ var DebugLayer = cc.LayerColor.extend({
     	this.debug.setColor(new cc.Color(255, 255, 0, 255));
     }
 });
+

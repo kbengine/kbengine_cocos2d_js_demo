@@ -106,7 +106,7 @@ KBEngine.INFO_MSG = function(s)
 
 KBEngine.DEBUG_MSG = function(s)
 {
-	console.info(s);
+	console.debug(s);
 }
 
 KBEngine.ERROR_MSG = function(s)
@@ -152,7 +152,7 @@ KBEngine.Event = function()
 		evtlst.push(info);
 	}
 	
-	this.deregister = function(evtName, classinst, callbackfn)
+	this.deregister = function(evtName, classinst)
 	{
 		for(itemkey in this._events)
 		{
@@ -1022,7 +1022,7 @@ KBEngine.Entity = KBEngine.Class.extend(
 		this.inWorld = false;
 	},
 
-	onInit : function()
+	__init__ : function()
 	{
 	},
 		
@@ -1713,6 +1713,13 @@ KBEngine.KBEngineApp = function()
 		KBEngine.Event.register("login", this, "login");
 		KBEngine.Event.register("relogin_baseapp", this, "relogin_baseapp");
 	}
+
+	this.uninstallEvents = function()
+	{
+		KBEngine.Event.deregister("relogin_baseapp", this);
+		KBEngine.Event.deregister("login", this);
+		KBEngine.Event.deregister("createAccount", this);
+	}
 	
 	this.hello = function()
 	{  
@@ -1754,6 +1761,7 @@ KBEngine.KBEngineApp = function()
 		catch(e)
 		{  
 			KBEngine.ERROR_MSG('WebSocket init error!');  
+			KBEngine.Event.fire("onConnectStatus", false);
 			return;  
 		}
 		
@@ -2550,7 +2558,7 @@ KBEngine.KBEngineApp = function()
 		
 		g_kbengine.entities[eid] = entity;
 		
-		entity.onInit();
+		entity.__init__();
 	}
 	
 	this.getAoiEntityIDFromStream = function(stream)
@@ -2723,7 +2731,7 @@ KBEngine.KBEngineApp = function()
 			g_kbengine.Client_onUpdatePropertys(entityMessage);
 			delete KBEngine.bufferedCreateEntityMessage[eid];
 			
-			entity.onInit();
+			entity.__init__();
 			entity.onEnterWorld();
 			
 			KBEngine.Event.fire("set_direction", entity);

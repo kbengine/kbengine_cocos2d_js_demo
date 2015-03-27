@@ -19,9 +19,9 @@
         "plugins/kbengine/NPC.js",
         "plugins/kbengine/Gate.js",
 
-	"src/debug.js",
+	"src/gui_debug.js",
         "src/resource.js",
         "src/login_scene.js",
-	"src/selavatar_scene.js"
+	"src/world_scene.js"
     ]
 }
