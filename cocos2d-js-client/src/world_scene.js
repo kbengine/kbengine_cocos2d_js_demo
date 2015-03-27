@@ -15,6 +15,11 @@ var WorldSceneLayer = cc.LayerColor.extend({
 
     	// 安装这个场景需要监听的KBE事件
         this.installEvents();
+        
+        // 创建场景
+        this.cocosjs_demo_map1 = cc.TMXTiledMap.create("res/maps/cocosjs_demo_map1.tmx"); 
+        this.addChild(this.cocosjs_demo_map1); 
+        this.mapWidth = this.cocosjs_demo_map1.getContentSize().width; 
         return true;
     },
     

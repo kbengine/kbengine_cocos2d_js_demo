@@ -146,7 +146,7 @@ var LoginSceneLayer = cc.LayerColor.extend({
 	onConnectStatus : function(success)
 	{
 		if(!success)
-			GUIDebugLayer.debug.ERROR_MSG("connect(" + g_kbengine.ip + ":" + g_kbengine.port + ") is error! (连接错误)");
+			GUIDebugLayer.debug.ERROR_MSG("connect(" + KBEngine.app.ip + ":" + KBEngine.app.port + ") is error! (连接错误)");
 		else
 			GUIDebugLayer.debug.INFO_MSG("connect successfully, please wait...(连接成功，请等候...)");
 	},
@@ -173,7 +173,7 @@ var LoginSceneLayer = cc.LayerColor.extend({
     {
 		if(failedcode == 20)
 		{
-			GUIDebugLayer.debug.ERROR_MSG("login is failed(登陆失败), err=" + failedcode + ", " + g_kbengine.serverdatas);
+			GUIDebugLayer.debug.ERROR_MSG("login is failed(登陆失败), err=" + failedcode + ", " + KBEngine.app.serverdatas);
 		}
 		else
 		{
@@ -201,10 +201,7 @@ var LoginSceneLayer = cc.LayerColor.extend({
     	GUIDebugLayer.debug.INFO_MSG("login is successfully!(登陆成功!)");
     	
     	// 切换到选人场景
-	    //load resources
-	    cc.LoaderScene.preload(g_resources, function () {
-	        cc.director.runScene(new WorldScene());
-	    }, this);
+	    cc.director.runScene(new WorldScene());
     },
 
     login_baseapp : function()
