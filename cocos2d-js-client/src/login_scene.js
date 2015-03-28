@@ -1,5 +1,5 @@
 
-var LoginSceneLayer = cc.LayerColor.extend({
+var LoginSceneLayer = cc.Layer.extend({
     sprite:null,
     clientScriptVersion:null,
     serverVersion:null,
@@ -13,9 +13,6 @@ var LoginSceneLayer = cc.LayerColor.extend({
         //////////////////////////////
         // super init first
         this._super();
-		
-		// 设置背景颜色 灰色
-		this.setColor(new cc.Color(128, 128, 128, 255));
         
 		// 激活 update
         this.schedule(this.update, 0.1, cc.repeatForever, 0.1);
@@ -80,7 +77,7 @@ var LoginSceneLayer = cc.LayerColor.extend({
 
         // debug
         new GUIDebugLayer();
-        this.addChild(GUIDebugLayer.debug, 1);
+        this.addChild(GUIDebugLayer.debug, 100);
 
         // serverVersion
         this.serverVersion = new ccui.Text();
@@ -90,11 +87,11 @@ var LoginSceneLayer = cc.LayerColor.extend({
             boundingWidth: 200,
             boundingHeight: 50,
             textAlign:cc.TEXT_ALIGNMENT_LEFT,
-            fontSize: 10,
+            fontSize: 15,
             anchorX: 0,
             anchorY: -1,
             x: 5,
-            y: size.height - 30
+            y: size.height - 50
         });
         this.serverVersion.setColor(new cc.Color(0, 255, 0, 255));
         this.addChild(this.serverVersion, 20);
@@ -106,11 +103,11 @@ var LoginSceneLayer = cc.LayerColor.extend({
             boundingHeight: 50,
             textAlign:cc.TEXT_ALIGNMENT_LEFT,
             fontName: "Arial",
-            fontSize: 10,
+            fontSize: 15,
             anchorX: 0,
             anchorY: -1,
             x: 5,
-            y: size.height - 45
+            y: size.height - 70
         });
         this.serverScriptVersion.setColor(new cc.Color(0, 255, 0, 255));
         this.addChild(this.serverScriptVersion, 2);
@@ -122,11 +119,11 @@ var LoginSceneLayer = cc.LayerColor.extend({
             boundingHeight: 50,
             textAlign:cc.TEXT_ALIGNMENT_LEFT,
             fontName: "Arial",
-            fontSize: 10,
+            fontSize: 15,
             anchorX: 0,
             anchorY: -1,
             x: 5,
-            y: size.height - 60
+            y: size.height - 95
         });
         this.clientVersion.setColor(new cc.Color(0, 255, 0, 255));
         this.addChild(this.clientVersion, 2);
@@ -138,11 +135,11 @@ var LoginSceneLayer = cc.LayerColor.extend({
             boundingHeight: 50,
             textAlign:cc.TEXT_ALIGNMENT_LEFT,
             fontName: "Arial",
-            fontSize: 10,
+            fontSize: 15,
             anchorX: 0,
             anchorY: -1,
             x: 5,
-            y: size.height - 75
+            y: size.height - 115
         });
         this.clientScriptVersion.setColor(new cc.Color(0, 255, 0, 255));
         this.addChild(this.clientScriptVersion, 2);    	
@@ -258,7 +255,7 @@ var LoginSceneLayer = cc.LayerColor.extend({
     }
 });
 
-var UserNameLayer = cc.LayerColor.extend({
+var UserNameLayer = cc.Layer.extend({
     sprite:null,
     _rootLayer:null,
     ctor:function (rootLayer) {
@@ -266,9 +263,6 @@ var UserNameLayer = cc.LayerColor.extend({
         // super init first
         this._super();
         this._rootLayer = rootLayer;
-
-        // 设置背景颜色 灰色
-        //this.setColor(new cc.Color(128, 128, 128, 255));
 
         var size = cc.winSize;
 
@@ -304,7 +298,7 @@ var UserNameLayer = cc.LayerColor.extend({
 });
 
 
-var PasswordLayer = cc.LayerColor.extend({
+var PasswordLayer = cc.Layer.extend({
     sprite:null,
     _rootLayer:null,
     ctor:function (rootLayer) {
@@ -312,9 +306,6 @@ var PasswordLayer = cc.LayerColor.extend({
         // super init first
         this._super();
         this._rootLayer = rootLayer;
-
-        // 设置背景颜色 灰色
-        //this.setColor(new cc.Color(128, 128, 128, 255));
 
         var size = cc.winSize;
 

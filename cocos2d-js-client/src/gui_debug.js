@@ -1,5 +1,5 @@
 
-var GUIDebugLayer = cc.LayerColor.extend(
+var GUIDebugLayer = cc.Layer.extend(
 {
     sprite:null,
     debug:null,
@@ -10,19 +10,16 @@ var GUIDebugLayer = cc.LayerColor.extend(
 		
 		GUIDebugLayer.debug = this;
 
-		// 设置背景颜色 灰色
-		this.setColor(new cc.Color(128, 128, 128, 255));
-
         var size = cc.winSize;
         this.debug = new ccui.Text();
         this.debug.attr({
             string: "",
             fontName: "Arial",
-            fontSize: 10,
+            fontSize: 20,
             anchorX: 0.5,
             anchorY: -1,
             x: size.width / 2,
-            y: size.height - 30
+            y: size.height - 150
         });
         this.debug.setColor(new cc.Color(255, 0, 0, 255));
         this.addChild(this.debug, 20);
