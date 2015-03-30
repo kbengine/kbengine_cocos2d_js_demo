@@ -150,7 +150,7 @@ var LoginSceneLayer = cc.Layer.extend({
             boundingWidth: 200,
             boundingHeight: 50,
             textAlign:cc.TEXT_ALIGNMENT_LEFT,
-            fontName: "Arial",
+            fontName: "graphicpixel-webfont",
             fontSize: 20,
             anchorX: 0,
             anchorY: -1,
@@ -308,6 +308,8 @@ var UserNameLayer = cc.Layer.extend({
         this._box.setDelegate(this);
         this._box.setFontColor(cc.color(0, 0, 0));
         this._box.setFontSize(20);
+        this._box.setFontName("graphicpixel-webfont");
+        this._box.setPlaceholderFontName("graphicpixel-webfont");
         this._box.setMaxLength(15);
         this.addChild(this._box, 2);
 
@@ -362,6 +364,8 @@ var PasswordLayer = cc.Layer.extend({
         this._box.setFontColor(cc.color(0, 0, 0));
         this._box.setFontSize(20);
         this._box.setMaxLength(15);
+        this._box.setFontName("graphicpixel-webfont");
+        this._box.setPlaceholderFontName("graphicpixel-webfont");
         this.addChild(this._box, 2);
 
         return true;
@@ -404,6 +408,7 @@ var LoginBtnLayer = cc.LayerColor.extend({
         textButton.setTouchEnabled(true);
         textButton.loadTextures("res/ui/btn_up.png", "res/ui/btn_down.png", "");
         textButton.setTitleText("Login");
+        textButton.setTitleFontName("graphicpixel-webfont");
         textButton.x = size.width / 2.0 - 100;
         textButton.y = size.height / 2.0 - 150;
         textButton.addTouchEventListener(this.touchEvent ,this);
@@ -459,6 +464,7 @@ var RegisterBtnLayer = cc.LayerColor.extend({
 
         // Create the text button
         var textButton = new ccui.Button();
+        textButton.setTitleFontName("graphicpixel-webfont");
         textButton.setTouchEnabled(true);
         textButton.loadTextures("res/ui/btn_up.png", "res/ui/btn_down.png", "");
         textButton.setTitleText("Register");
