@@ -159,6 +159,13 @@ var LoginSceneLayer = cc.Layer.extend({
         });
         this.introduction.setColor(new cc.Color(0, 0, 0, 255));
         this.addChild(this.introduction, 2);
+        
+		this.logo = new cc.Sprite("res/ui/logo.png");
+		this.logo.attr({
+            x: size.width / 2 - 30,
+            y: size.height - 100			
+		});
+        this.addChild(this.logo, 2);        
     },
     	
 	onKicked : function(failedcode)

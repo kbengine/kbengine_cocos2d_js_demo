@@ -323,7 +323,10 @@ var g_resources = [
 "res/sprites/villager.json",
 "res/sprites/wizard.json",
 
+"res/fonts/graphicpixel-webfont.ttf",
+	
 "res/ui/btn_down.png",
 "res/ui/login_input.png",
-"res/ui/btn_up.png"
+"res/ui/btn_up.png",
+"res/ui/logo.png"	
 ];
