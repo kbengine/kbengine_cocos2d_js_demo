@@ -6,6 +6,9 @@
  <tileset firstgid="257" name="spritesheet" tilewidth="16" tileheight="16">
   <image source="spritesheet.png" width="844" height="1554"/>
  </tileset>
+ <tileset firstgid="5301" name="guard" tilewidth="16" tileheight="16">
+  <image source="guard.png" width="100" height="48"/>
+ </tileset>
  <layer name="块层 2" width="64" height="48">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAC93XZ9uQAwCG4TeEJKuiKCIju00oKlT2TlZDUaSUkkiFSmVFZe9VtoiU0ZAtaRmF9tAiIoScfsV99Hw4P14/4CpVUlKyBVuyFaXZmm3YljJsR1m2pxw7sCM7UWoz73dmF8pTgYrsym5UojK7swdVqMqe7EW1AvR7sw/V2Zf92J8DqMGBHMTBHMKhHMbh1CxAX4va1KEu9ajPERxJA47iaI6hIY04luMK0DemCU05nhM4kWY0pwUncTKncCqncTpnFKA/k7M4m3M4l/Noyfm04gIu5CIu5hJa06YAfVvacSnt6cBlXE5HOnEFV9KZq+hCV64uQN+N7lxDD3pyLb24jt5czw304Ub60o/+Behv4mZuYQADGcStDGYIQ7mN27mDO7mLYQXo7+YehjOCkdzLfdzPAzzIQzzMIzzKYzxegP4JnuQpnuYZnmUUo3mO53mBF3mJl3mFVwvQj+E1Xmcsb/Am43iL8Uzgbd7hXd5jIpMK0E9mCu8zlQ/4kI/4mE/4lM/4nGl8wXS+LEA/g5nMYjZz+Iqv+YZvmcs8vuN7fmA+CwrQL2QRi1nCUpaxnBX8yEpWsZo1rOUnfi5Av45f+JX1/MbvbOAP/uQvNvI3//Avm/h/Pjf3Pv3f6T793+k+/d/pPv3f6T793+k+/d/pPv3f6T793+k+/d/pPv3f6T793+k+/d/pPv3f6T793+k+/d/pPv3f6T793+k+/d/pPv3f6T793+k+/d/pPv3f6T793+k+/d/pPv3f6T793+k+/d/pPv3f6T793+k+/d/pPv3f6T793+n+P8J9KJYAMAAA
@@ -19,6 +22,11 @@
  <layer name="块层 3" width="64" height="48">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAC+3PQRGAMBAEwf0kBsATeAVPIIW4uKKuW8FMAgAAAPAf10juUV1R51nvb+P/bSb7rK6oc6z3s/E/AAAAAAAAdPcBGug95AAwAAA=
+  </data>
+ </layer>
+ <layer name="块层 4" width="64" height="48">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3PsQ2AMBRDwT9E9t8CUgAFZDE8BChF7iT3flUAAAAAAPCtrVXtWW+zn8xxpPvMrkX773Q/2Vi0HwAAAAAA/vICqwsiOAAwAAA=
   </data>
  </layer>
 </map>

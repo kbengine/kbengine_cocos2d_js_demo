@@ -142,7 +142,23 @@ var LoginSceneLayer = cc.Layer.extend({
             y: size.height - 115
         });
         this.clientScriptVersion.setColor(new cc.Color(0, 255, 0, 255));
-        this.addChild(this.clientScriptVersion, 2);    	
+        this.addChild(this.clientScriptVersion, 2);
+
+        this.introduction = new ccui.Text();
+        this.introduction.attr({
+            string: "A Massively Multiplayer Adventure",
+            boundingWidth: 200,
+            boundingHeight: 50,
+            textAlign:cc.TEXT_ALIGNMENT_LEFT,
+            fontName: "Arial",
+            fontSize: 20,
+            anchorX: 0,
+            anchorY: -1,
+            x: size.width / 2 - 140,
+            y: size.height - 350
+        });
+        this.introduction.setColor(new cc.Color(0, 0, 0, 255));
+        this.addChild(this.introduction, 2);
     },
     	
 	onKicked : function(failedcode)
@@ -198,12 +214,13 @@ var LoginSceneLayer = cc.Layer.extend({
 
     onScriptVersionNotMatch : function(clientScriptVersion, serverScriptVersion)
     {
-    	GUIDebugLayer.debug.ERROR_MSG("scriptVersion not match(curr=" + clientScriptVersion + ", srv=" + serverScriptVersion + " )(脚本版本不匹配)");	
+    	GUIDebugLayer.debug.ERROR_MSG("scriptVersion not match(curr=" + clientScriptVersion + ", srv=" + serverScriptVersion + " )(脚本版本不匹配)");
     },
 
     onLoginGatewayFailed : function(failedcode)
     {
     	GUIDebugLayer.debug.ERROR_MSG("loginGateway is failed(登陆网关失败), err=" + failedcode);	
+    	this.removeChild(this.connectStateLayer);
     },
     	
     onLoginSuccessfully : function(rndUUID, eid, accountEntity)
@@ -254,7 +271,7 @@ var LoginSceneLayer = cc.Layer.extend({
         this.serverVersion.setString("serverVersion: " + KBEngine.app.serverVersion);
     }
 });
-
+    
 var UserNameLayer = cc.Layer.extend({
     sprite:null,
     _rootLayer:null,
@@ -273,27 +290,37 @@ var UserNameLayer = cc.Layer.extend({
 
         // 设置账号名密码编辑框
         // Create the textfield
-        var textField = new ccui.TextField();
-        textField.setMaxLengthEnabled(true);
-        textField.setMaxLength(15);
-        textField.setTouchEnabled(true);
-        textField.fontName = "Arial";
-        textField.fontSize = 15;
-        textField.placeHolder = "input username";
-        textField.x = this.width / 2;
-        textField.y = this.height / 2;
-        textField.addEventListener(this.textFieldEvent, this);
-        this.addChild(textField, 1);
+        this._box = new cc.EditBox(cc.size(288, 34), new cc.Scale9Sprite("res/ui/login_input.png"));
+        this._box.setString("");
+        this._box.x = this.width / 2 - 20;
+        this._box.y = this.height / 2 - 50;
+        //this._box.setInputFlag(cc.EDITBOX_INPUT_FLAG_PASSWORD);
+        this._box.setPlaceHolder("Input Username");
+        this._box.setPlaceholderFontColor(cc.color(128, 128, 128));
+        this._box.setPlaceholderFontSize(20);
+        this._box.setDelegate(this);
+        this._box.setFontColor(cc.color(0, 0, 0));
+        this._box.setFontSize(20);
+        this._box.setMaxLength(15);
+        this.addChild(this._box, 2);
 
         return true;
     },
 
-    textFieldEvent: function (sender, type) {
-        var textField = sender;
-        if(textField.placeHolder == "input username")
-            textField.placeHolder = "|";
+	editBoxEditingDidBegin: function (editBox) {
+        this._rootLayer.username = editBox.getString();        
+    },
 
-        this._rootLayer.username = textField.getString();
+    editBoxEditingDidEnd: function (editBox) {
+        this._rootLayer.username = editBox.getString();   
+    },
+
+    editBoxTextChanged: function (editBox, text) {
+        this._rootLayer.username = editBox.getString();   
+    },
+
+    editBoxReturn: function (editBox) {
+        this._rootLayer.username = editBox.getString();   
     }
 });
 
@@ -312,33 +339,41 @@ var PasswordLayer = cc.Layer.extend({
         this.width = 150;
         this.height = 20;
         this.x = size.width / 2 - 50;
-        this.y = size.height / 2 - 50;
+        this.y = size.height / 2 - 60;
 
         // 设置账号名密码编辑框
         // Create the textfield
-        var textField = new ccui.TextField();
-        textField.setMaxLengthEnabled(true);
-        textField.setMaxLength(15);
-        textField.setPasswordEnabled(true);
-        textField.setPasswordStyleText("*");
-        textField.setTouchEnabled(true);
-        textField.fontName = "Arial";
-        textField.fontSize = 15;
-        textField.placeHolder = "input password";
-        textField.x = this.width / 2;
-        textField.y = this.height / 2;
-        textField.addEventListener(this.textFieldEvent, this);
-        this.addChild(textField, 1);
+        this._box = new cc.EditBox(cc.size(288, 34), new cc.Scale9Sprite("res/ui/login_input.png"));
+        this._box.setString("");
+        this._box.x = this.width / 2 - 20;
+        this._box.y = this.height / 2 - 50;
+        this._box.setInputFlag(cc.EDITBOX_INPUT_FLAG_PASSWORD);
+        this._box.setPlaceHolder("Input Password");
+        this._box.setPlaceholderFontColor(cc.color(128, 128, 128));
+        this._box.setPlaceholderFontSize(20);
+        this._box.setDelegate(this);
+        this._box.setFontColor(cc.color(0, 0, 0));
+        this._box.setFontSize(20);
+        this._box.setMaxLength(15);
+        this.addChild(this._box, 2);
 
         return true;
     },
 
-    textFieldEvent: function (sender, type) {
-        var textField = sender;
-        if(textField.placeHolder == "input password")
-            textField.placeHolder = "|";
+	editBoxEditingDidBegin: function (editBox) {
+        this._rootLayer.password = editBox.getString();        
+    },
 
-        this._rootLayer.password = textField.getString();
+    editBoxEditingDidEnd: function (editBox) {
+        this._rootLayer.password = editBox.getString();   
+    },
+
+    editBoxTextChanged: function (editBox, text) {
+        this._rootLayer.password = editBox.getString();   
+    },
+
+    editBoxReturn: function (editBox) {
+        this._rootLayer.password = editBox.getString();   
     }
 });
 
@@ -362,10 +397,9 @@ var LoginBtnLayer = cc.LayerColor.extend({
         textButton.setTouchEnabled(true);
         textButton.loadTextures("res/ui/btn_up.png", "res/ui/btn_down.png", "");
         textButton.setTitleText("Login");
-        textButton.x = size.width / 2.0 - 30;
-        textButton.y = size.height / 2.0 - 100;
+        textButton.x = size.width / 2.0 - 100;
+        textButton.y = size.height / 2.0 - 150;
         textButton.addTouchEventListener(this.touchEvent ,this);
-        textButton.setScale(0.2);
         this.addChild(textButton, 1);
 
         return true;
@@ -386,7 +420,7 @@ var LoginBtnLayer = cc.LayerColor.extend({
             		return;
             	}
             	
-                GUIDebugLayer.debug.ERROR_MSG("connect to server...");
+                GUIDebugLayer.debug.INFO_MSG("connect to server...");
                 KBEngine.Event.fire("login", this._rootLayer.username, this._rootLayer.password);
                 break;
             case ccui.Widget.TOUCH_MOVED:
@@ -421,10 +455,9 @@ var RegisterBtnLayer = cc.LayerColor.extend({
         textButton.setTouchEnabled(true);
         textButton.loadTextures("res/ui/btn_up.png", "res/ui/btn_down.png", "");
         textButton.setTitleText("Register");
-        textButton.x = size.width / 2.0 + 80;
-        textButton.y = size.height / 2.0 - 100;
+        textButton.x = size.width / 2.0 + 100;
+        textButton.y = size.height / 2.0 - 150;
         textButton.addTouchEventListener(this.touchEvent ,this);
-        textButton.setScale(0.2);
         this.addChild(textButton, 1);
 
         return true;
@@ -456,7 +489,7 @@ var LoginScene = cc.Scene.extend({
         // 创建基本场景层
         var layer = new LoginSceneLayer();
         this.addChild(layer);
-
+		
 		// 创建用户名输入框UI层
         var userNameLayer = new UserNameLayer(layer);
         this.addChild(userNameLayer, 1);
