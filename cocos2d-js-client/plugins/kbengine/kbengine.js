@@ -1501,7 +1501,9 @@ KBEngine.DATATYPE_UNICODE = function()
 	
 	this.createFromStream = function(stream)
 	{
-		return KBEngine.reader.readBlob.call(stream);
+		var v = KBEngine.reader.readBlob.call(stream);
+		KBEngine.INFO_MSG("KBEngineApp::onOpenLoginapp_login: start importClientMessages ...------------" + v);
+		return new String(v, "utf-8");
 	}
 	
 	this.addToStream = function(stream, v)

@@ -11,9 +11,6 @@ var WorldSceneLayer = cc.Layer.extend({
 
     	// 安装这个场景需要监听的KBE事件
         this.installEvents();
-        
-        // 创建场景
-        this.createScene();
         return true;
     },
 
@@ -36,7 +33,8 @@ var WorldSceneLayer = cc.Layer.extend({
 		KBEngine.Event.register("onKicked", this, "onKicked");
 		KBEngine.Event.register("onDisableConnect", this, "onDisableConnect");
 		KBEngine.Event.register("onConnectStatus", this, "onConnectStatus");
-
+		KBEngine.Event.register("addSpaceGeometryMapping", this, "addSpaceGeometryMapping");
+		
 		// selavatars
 		//KBEngine.Event.register("onReqAvatarList", this, "onReqAvatarList");
 		//KBEngine.Event.register("onCreateAvatarResult", this, "onCreateAvatarResult");
@@ -59,6 +57,14 @@ var WorldSceneLayer = cc.Layer.extend({
 			GUIDebugLayer.debug.INFO_MSG("connect successfully, please wait...(连接成功，请等候...)");
 	},
 
+	addSpaceGeometryMapping : function(resPath)
+	{
+		GUIDebugLayer.debug.INFO_MSG("scene = " + resPath);
+		
+        // 创建场景
+        this.createScene();		
+	},
+		
     /* -----------------------------------------------------------------------/
     							其他系统相关
     /------------------------------------------------------------------------ */

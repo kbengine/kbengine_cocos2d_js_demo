@@ -22,6 +22,7 @@ KBEngine.Account = KBEngine.GameObject.extend(
 		}
 		
 		console.info("KBEAccount::onCreateAvatarResult: avatarsize=" + this.avatars.values.length);
+		KBEngine.Event.fire("onCreateAvatarResult", retcode, info, this.avatars);
 	},
 		
 	onReqAvatarList : function(infos)
@@ -32,9 +33,17 @@ KBEngine.Account = KBEngine.GameObject.extend(
 		{
 			console.info("KBEAccount::onReqAvatarList: name" + i + "=" + this.avatars.values[i].name);
 		}
+		
+		KBEngine.Event.fire("onReqAvatarList", this.avatars);
+	},
+	
+	onRemoveAvatar  : function(dbid)
+	{
+		delete this.avatars[dbid];
+		console.info("Account::onRemoveAvatar: dbid=" + dbid);
+		KBEngine.Event.fire("onRemoveAvatar", dbid, this.avatars);
 	},
 		
-
 	reqCreateAvatar : function(roleType, name)
 	{
 		this.baseCall("reqCreateAvatar", roleType, name);

@@ -8,6 +8,11 @@ var StartSceneLayer = cc.Layer.extend({
     debug:null,
     usernamebox:null,
     passwordbox:null,
+    logintButton:null,
+    registerButton:null,
+    playButton:null,
+    playerNameBox:null,
+    playerNameLabel:null,
     ctor:function () 
     {
         //////////////////////////////
@@ -136,7 +141,7 @@ var StartSceneLayer = cc.Layer.extend({
         this.usernamebox.x = this.width / 2;
         this.usernamebox.y = this.height / 2 - 50;
         //this.usernamebox.setInputFlag(cc.EDITBOX_INPUT_FLAG_PASSWORD);
-        this.usernamebox.setPlaceHolder("Input Username");
+        this.usernamebox.setPlaceHolder("Input username");
         this.usernamebox.setPlaceholderFontColor(cc.color(128, 128, 128));
         this.usernamebox.setPlaceholderFontSize(20);
         this.usernamebox.setDelegate(this);
@@ -154,14 +159,14 @@ var StartSceneLayer = cc.Layer.extend({
         this.passwordbox.x = this.width / 2;
         this.passwordbox.y = this.height / 2 - 100;
         this.passwordbox.setInputFlag(cc.EDITBOX_INPUT_FLAG_PASSWORD);
-        this.passwordbox.setPlaceHolder("Input Password");
+        this.passwordbox.setPlaceHolder("Input password");
         this.passwordbox.setPlaceholderFontColor(cc.color(128, 128, 128));
         this.passwordbox.setPlaceholderFontSize(20);
         this.passwordbox.setDelegate(this);
         this.passwordbox.setFontColor(cc.color(0, 0, 0));
         this.passwordbox.setFontSize(20);
         this.passwordbox.setMaxLength(15);
-        this.passwordbox.setFontName("graphicpixel-webfont");
+        //this.passwordbox.setFontName("graphicpixel-webfont");
         this.passwordbox.setPlaceholderFontName("graphicpixel-webfont");
         this.addChild(this.passwordbox, 2);      
         
@@ -200,6 +205,70 @@ var StartSceneLayer = cc.Layer.extend({
         this.addChild(this.playButton, 2);
     },
 
+	showCreatePlayerUI : function(isShow)
+	{
+		if(isShow)
+		{
+			if(this.playerNameBox != null)
+				return;
+			
+	        // 角色取名框
+	        // Create the textfield
+	        this.playerNameBox = new cc.EditBox(cc.size(288, 34), new cc.Scale9Sprite("res/ui/login_input.png"));
+	        this.playerNameBox.setString("");
+	        this.playerNameBox.x = this.width / 2;
+	        this.playerNameBox.y = this.height / 2 - 50;
+	        this.playerNameBox.setPlaceHolder("Name your character");
+	        this.playerNameBox.setPlaceholderFontColor(cc.color(128, 128, 128));
+	        this.playerNameBox.setPlaceholderFontSize(20);
+	        this.playerNameBox.setDelegate(this);
+	        this.playerNameBox.setFontColor(cc.color(0, 0, 0));
+	        this.playerNameBox.setFontSize(20);
+	        this.playerNameBox.setFontName("graphicpixel-webfont");
+	        this.playerNameBox.setPlaceholderFontName("graphicpixel-webfont");
+	        this.playerNameBox.setMaxLength(15);
+	        this.addChild(this.playerNameBox, 2);      
+		}
+		else
+		{
+			if(this.playerNameBox != null)
+				this.removeChild(this.playerNameBox);
+			
+			this.playerNameBox = null;
+		}
+	},
+
+	showPlayerInfoUI : function(info)
+	{
+		if(info != null)
+		{
+			if(this.playerNameLabel != null)
+				return;
+			
+	        this.playerNameLabel = new ccui.Text();
+	        this.playerNameLabel.attr({
+	            string: info.name,
+	            boundingWidth: 200,
+	            boundingHeight: 50,
+	            textAlign:cc.TEXT_ALIGNMENT_LEFT,
+	            fontName: "graphicpixel-webfont",
+	            fontSize: 20,
+	            x: size.width / 2 - 200,
+	            y: size.height - 300
+	        });
+	        this.playerNameLabel.setColor(new cc.Color(0, 255, 255, 255));
+	        this.addChild(this.playerNameLabel, 2);    
+		}
+		else
+		{
+			if(this.playerNameLabel != null)
+				this.removeChild(this.playerNameLabel);
+			
+			this.playerNameLabel = null;
+		}
+	},
+		
+			
 	editBoxEditingDidBegin: function (editBox) {
 		/*
 		if(this.usernamebox == editBox)
@@ -228,17 +297,17 @@ var StartSceneLayer = cc.Layer.extend({
             case ccui.Widget.TOUCH_ENDED:
             	if(this.usernamebox.getString().length < 3)
             	{
-            		GUIDebugLayer.debug.ERROR_MSG("username is error, length < 3!(账号或者密码错误，长度必须大于等于3!)");
+            		GUIDebugLayer.debug.ERROR_MSG("Username is error, length < 3!(账号或者密码错误，长度必须大于等于3!)");
             		return;
             	}
  
              	if(this.passwordbox.getString().length < 3)
             	{
-            		GUIDebugLayer.debug.ERROR_MSG("password is error, length < 3!(账号或者密码错误，长度必须大于等于3!)");
+            		GUIDebugLayer.debug.ERROR_MSG("Password is error, length < 3!(账号或者密码错误，长度必须大于等于3!)");
             		return;
             	}
             	
-                GUIDebugLayer.debug.INFO_MSG("connect to server...");
+                GUIDebugLayer.debug.INFO_MSG("Connect to server...");
                 KBEngine.Event.fire("login", this.usernamebox.getString(), this.passwordbox.getString());            
                 break;
             case ccui.Widget.TOUCH_CANCELED:
@@ -256,7 +325,7 @@ var StartSceneLayer = cc.Layer.extend({
             case ccui.Widget.TOUCH_MOVED:
                 break;
             case ccui.Widget.TOUCH_ENDED:
-                GUIDebugLayer.debug.INFO_MSG("connect to server...");
+                GUIDebugLayer.debug.INFO_MSG("Connect to server...");
             	KBEngine.Event.fire("createAccount", this.usernamebox.getString(), this.passwordbox.getString());            
                 break;
             case ccui.Widget.TOUCH_CANCELED:
@@ -274,7 +343,26 @@ var StartSceneLayer = cc.Layer.extend({
             case ccui.Widget.TOUCH_MOVED:
                 break;
             case ccui.Widget.TOUCH_ENDED:
-				GUIDebugLayer.debug.INFO_MSG("loading...");
+            
+				// 如果没有角色那么请求创建一个角色
+				if(KBEngine.app.player().avatars.values.length <= 0)
+				{
+					if(this.playerNameBox.getString() < 3)
+					{
+						GUIDebugLayer.debug.ERROR_MSG("The name of the Avatar is wrong, length < 3!(角色名称错误，长度必须大于等于3!)");
+						return;
+					}
+					
+					GUIDebugLayer.debug.INFO_MSG("Create avatar(创建角色)...");
+					KBEngine.app.player().reqCreateAvatar(1, this.playerNameBox.getString());
+					return;
+				}
+		
+				GUIDebugLayer.debug.INFO_MSG("Loading(加载中)...");
+				
+				// 选择这个角色进入游戏
+				KBEngine.app.player().selectAvatarGame(KBEngine.app.player().avatars.values[0].dbid);
+						
 				// 切换到场景
 				cc.director.runScene(new WorldScene());
                 break;
@@ -312,9 +400,9 @@ var StartSceneLayer = cc.Layer.extend({
 		KBEngine.Event.register("onImportServerErrorsDescr", this, "onImportServerErrorsDescr");
 		
 		// selavatars
-		//KBEngine.Event.register("onReqAvatarList", this, "onReqAvatarList");
-		//KBEngine.Event.register("onCreateAvatarResult", this, "onCreateAvatarResult");
-		//KBEngine.Event.register("onRemoveAvatar", this, "onRemoveAvatar");
+		KBEngine.Event.register("onReqAvatarList", this, "onReqAvatarList");
+		KBEngine.Event.register("onCreateAvatarResult", this, "onCreateAvatarResult");
+		KBEngine.Event.register("onRemoveAvatar", this, "onRemoveAvatar");
     },
     	    
 	onKicked : function(failedcode)
@@ -328,26 +416,63 @@ var StartSceneLayer = cc.Layer.extend({
 	onConnectStatus : function(success)
 	{
 		if(!success)
-			GUIDebugLayer.debug.ERROR_MSG("connect(" + KBEngine.app.ip + ":" + KBEngine.app.port + ") is error! (连接错误)");
+			GUIDebugLayer.debug.ERROR_MSG("Connect(" + KBEngine.app.ip + ":" + KBEngine.app.port + ") is error! (连接错误)");
 		else
-			GUIDebugLayer.debug.INFO_MSG("connect successfully, please wait...(连接成功，请等候...)");
+			GUIDebugLayer.debug.INFO_MSG("Connect successfully, please wait...(连接成功，请等候...)");
 	},
 
+	onReqAvatarList : function(avatars)
+	{
+		if(avatars.values.length <= 0)
+		{
+			this.showCreatePlayerUI(true);
+			return;
+		}
+		
+		this.showPlayerInfoUI(avatars.values[0]);
+	},
+
+	onCreateAvatarResult : function(retcode, info, avatars)
+	{
+		if(retcode == 0)
+		{
+			this.showCreatePlayerUI(false);
+			
+			GUIDebugLayer.debug.INFO_MSG("Loading(加载)...");
+			
+			// 选择这个角色进入游戏
+			KBEngine.app.player().selectAvatarGame(info.dbid);
+			
+			// 切换到场景
+			cc.director.runScene(new WorldScene());	
+			return;			
+		}
+		else
+		{
+			GUIDebugLayer.debug.ERROR_MSG("Create Avatar is error(" + retcode + ")! (创建角色错误)");
+		}
+	},
+		
+	onRemoveAvatar : function(dbid, avatars)
+	{
+		this.showCreatePlayerUI(true);
+	},
+				
     onCreateAccountResult : function(retcode, datas)
     {
 		if(retcode != 0)
 		{
-			GUIDebugLayer.debug.ERROR_MSG("createAccount is error(注册账号错误)! err=" + retcode);
+			GUIDebugLayer.debug.ERROR_MSG("CreateAccount is error(注册账号错误)! err=" + retcode);
 			return;
 		}
 		
-		if(KBEngineApp.validEmail(stringAccount))
+		//if(KBEngineApp.validEmail(stringAccount))
+		//{
+		//	GUIDebugLayer.debug.INFO_MSG("createAccount is successfully, Please activate your Email!(注册账号成功，请激活Email!)");
+		//}
+		//else
 		{
-			GUIDebugLayer.debug.INFO_MSG("createAccount is successfully, Please activate your Email!(注册账号成功，请激活Email!)");
-		}
-		else
-		{
-			GUIDebugLayer.debug.INFO_MSG("createAccount is successfully!(注册账号成功!)");
+			GUIDebugLayer.debug.INFO_MSG("CreateAccount is successfully!(注册账号成功!)");
 		}    	
     },
     	    
@@ -355,36 +480,36 @@ var StartSceneLayer = cc.Layer.extend({
     {
 		if(failedcode == 20)
 		{
-			GUIDebugLayer.debug.ERROR_MSG("login is failed(登陆失败), err=" + failedcode + ", " + KBEngine.app.serverdatas);
+			GUIDebugLayer.debug.ERROR_MSG("Login is failed(登陆失败), err=" + failedcode + ", " + KBEngine.app.serverdatas);
 		}
 		else
 		{
-			GUIDebugLayer.debug.ERROR_MSG("login is failed(登陆失败), err=" + failedcode);
+			GUIDebugLayer.debug.ERROR_MSG("Login is failed(登陆失败), err=" + failedcode);
 		}    	
     },
 
     onVersionNotMatch : function(clientVersion, serverVersion)
     {
-    	GUIDebugLayer.debug.ERROR_MSG("version not match(curr=" + clientVersion + ", srv=" + serverVersion + " )(版本不匹配)");	
+    	GUIDebugLayer.debug.ERROR_MSG("Version not match(curr=" + clientVersion + ", srv=" + serverVersion + " )(版本不匹配)");	
         this.serverScriptVersion.setString("serverScriptVersion: " + KBEngine.app.serverScriptVersion);
         this.serverVersion.setString("serverVersion: " + KBEngine.app.serverVersion);	    	
     },
 
     onScriptVersionNotMatch : function(clientScriptVersion, serverScriptVersion)
     {
-    	GUIDebugLayer.debug.ERROR_MSG("scriptVersion not match(curr=" + clientScriptVersion + ", srv=" + serverScriptVersion + " )(脚本版本不匹配)");
+    	GUIDebugLayer.debug.ERROR_MSG("ScriptVersion not match(curr=" + clientScriptVersion + ", srv=" + serverScriptVersion + " )(脚本版本不匹配)");
         this.serverScriptVersion.setString("serverScriptVersion: " + KBEngine.app.serverScriptVersion);
         this.serverVersion.setString("serverVersion: " + KBEngine.app.serverVersion);	    	
     },
 
     onLoginGatewayFailed : function(failedcode)
     {
-    	GUIDebugLayer.debug.ERROR_MSG("loginGateway is failed(登陆网关失败), err=" + failedcode);	
+    	GUIDebugLayer.debug.ERROR_MSG("LoginGateway is failed(登陆网关失败), err=" + failedcode);	
     },
     	
     onLoginSuccessfully : function(rndUUID, eid, accountEntity)
     {
-    	GUIDebugLayer.debug.INFO_MSG("login is successfully!(登陆成功!)");
+    	GUIDebugLayer.debug.INFO_MSG("Login is successfully!(登陆成功!)");
     	
         this.usernamebox.visible = false;
         this.passwordbox.visible = false;
@@ -398,7 +523,7 @@ var StartSceneLayer = cc.Layer.extend({
 
     login_baseapp : function()
     {
-    	GUIDebugLayer.debug.INFO_MSG("connect to loginGateway, please wait...(连接到网关， 请稍后...)");
+    	GUIDebugLayer.debug.INFO_MSG("Connect to loginGateway, please wait...(连接到网关， 请稍后...)");
     },
 
     Loginapp_importClientMessages : function()
