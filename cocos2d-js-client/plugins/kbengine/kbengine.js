@@ -1025,7 +1025,12 @@ KBEngine.Entity = KBEngine.Class.extend(
 	__init__ : function()
 	{
 	},
-		
+
+	isPlayer : function()
+	{
+		return this.id == KBEngine.app.entity_id;
+	},
+
 	baseCall : function()
 	{
 		if(arguments.length < 1)
@@ -1126,7 +1131,7 @@ KBEngine.Entity = KBEngine.Class.extend(
 });
 
 /*-----------------------------------------------------------------------------------------
-												entity
+												mailbox
 -----------------------------------------------------------------------------------------*/
 KBEngine.MAILBOX_TYPE_CELL = 0;
 KBEngine.MAILBOX_TYPE_BASE = 1;
@@ -1501,9 +1506,7 @@ KBEngine.DATATYPE_UNICODE = function()
 	
 	this.createFromStream = function(stream)
 	{
-		var v = KBEngine.reader.readBlob.call(stream);
-		KBEngine.INFO_MSG("KBEngineApp::onOpenLoginapp_login: start importClientMessages ...------------" + v);
-		return new String(v, "utf-8");
+		return KBEngine.reader.readBlob.call(stream);
 	}
 	
 	this.addToStream = function(stream, v)
@@ -1669,44 +1672,79 @@ KBEngine.datatypes["MAILBOX"]	= new KBEngine.DATATYPE_MAILBOX();
 KBEngine.datatypes["BLOB"]		= new KBEngine.DATATYPE_BLOB();
 
 /*-----------------------------------------------------------------------------------------
-												system
+												KBEngine args
 -----------------------------------------------------------------------------------------*/
-KBEngine.KBEngineApp = function()
+KBEngine.KBEngineArgs = function()
 {
+	this.ip = "127.0.0.1";
+	this.port = 20013;
+	this.updateHZ = 100;
+}
+
+/*-----------------------------------------------------------------------------------------
+												KBEngine app
+-----------------------------------------------------------------------------------------*/
+KBEngine.KBEngineApp = function(kbengineArgs)
+{
+	KBEngine.app = this;
+	
+	this.args = kbengineArgs;
+	
 	this.username = "testhtml51";
 	this.password = "123456";
 	this.loginappMessageImported = false;
 	this.baseappMessageImported = false;
 	this.entitydefImported = false;
-	KBEngine.app = this;
 	
+	// 登录loginapp的地址
+	this.ip = this.args.ip;
+	this.port = this.args.port;
+	
+	// 服务端分配的baseapp地址
+	this.baseappIP = "";
+	this.baseappPort = 0;
+			
 	this.reset = function()
 	{  
 		this.socket = null;
-		this.ip = "127.0.0.1";
-		this.port = 20013;
+		
 		this.currserver = "loginapp";
 		this.currstate = "create";
+		
+		// 扩展数据
 		this.serverdatas = "";
 		this.clientdatas = "";
+		
+		// 版本信息
 		this.serverVersion = "";
 		this.serverScriptVersion = "";
 		this.serverProtocolMD5 = "";
 		this.serverEntityDefMD5 = "";
 		this.clientVersion = "0.4.0";
 		this.clientScriptVersion = "0.1.0";
+		
+		// player的相关信息
 		this.entity_uuid = null;
 		this.entity_id = 0;
 		this.entity_type = "";
+		
+		// 玩家是否在地面上
+		this.isOnGound = false;
+		
+		// 客户端所有的实体
 		this.entities = {};
 		this.entityIDAliasIDList = [];
+		
+		// 空间的信息
 		this.spacedata = {};
-		var dateObject = new Date();
-		this.lastticktime = dateObject.getTime();
 		this.spaceID = 0;
 		this.spaceResPath = "";
 		this.isLoadedGeometry = false;
-		this.isOnGound = false;
+		
+		var dateObject = new Date();
+		this.lastticktime = dateObject.getTime();
+
+		// 当前组件类别， 配套服务端体系
 		this.component = "client";
 	}
 
@@ -2427,8 +2465,8 @@ KBEngine.KBEngineApp = function()
 		if(noconnect)
 		{
 			KBEngine.Event.fire("login_baseapp");
-			KBEngine.INFO_MSG("KBEngineApp::login_baseapp: start connect to ws://" + KBEngine.app.ip + ":" + KBEngine.app.port + "!");
-			KBEngine.app.connect("ws://" + KBEngine.app.ip + ":" + KBEngine.app.port);
+			KBEngine.INFO_MSG("KBEngineApp::login_baseapp: start connect to ws://" + KBEngine.app.baseappIp + ":" + KBEngine.app.baseappPort + "!");
+			KBEngine.app.connect("ws://" + KBEngine.app.baseappIp + ":" + KBEngine.app.baseappPort);
 			KBEngine.app.socket.onopen = KBEngine.app.onOpenBaseapp;  
 		}
 		else
@@ -2444,8 +2482,8 @@ KBEngine.KBEngineApp = function()
 	this.relogin_baseapp = function()
 	{  
 		KBEngine.Event.fire("onRelogin_baseapp");
-		KBEngine.INFO_MSG("KBEngineApp::relogin_baseapp: start connect to ws://" + KBEngine.app.ip + ":" + KBEngine.app.port + "!");
-		KBEngine.app.connect("ws://" + KBEngine.app.ip + ":" + KBEngine.app.port);
+		KBEngine.INFO_MSG("KBEngineApp::relogin_baseapp: start connect to ws://" + KBEngine.app.baseappIp + ":" + KBEngine.app.baseappPort + "!");
+		KBEngine.app.connect("ws://" + KBEngine.app.baseappIp + ":" + KBEngine.app.baseappPort);
 		KBEngine.app.socket.onopen = KBEngine.app.onReOpenBaseapp;  
 	}
 	
@@ -2489,12 +2527,12 @@ KBEngine.KBEngineApp = function()
 	{
 		var accountName = args.readString();
 		KBEngine.app.username = accountName;
-		KBEngine.app.ip = args.readString();
-		KBEngine.app.port = args.readUint16();
+		KBEngine.app.baseappIp = args.readString();
+		KBEngine.app.baseappPort = args.readUint16();
 		KBEngine.app.serverdatas = args.readBlob();
 		
 		KBEngine.INFO_MSG("KBEngineApp::Client_onLoginSuccessfully: accountName(" + accountName + "), addr(" + 
-				KBEngine.app.ip + ":" + KBEngine.app.port + "), datas(" + KBEngine.app.serverdatas.length + ")!");
+				KBEngine.app.baseappIp + ":" + KBEngine.app.baseappPort + "), datas(" + KBEngine.app.serverdatas.length + ")!");
 		
 		KBEngine.app.login_baseapp(true);
 	}
@@ -3327,16 +3365,16 @@ KBEngine.KBEngineApp = function()
 	}
 }
 
-KBEngine.create = function()
+KBEngine.create = function(kbengineArgs)
 {
 	if(KBEngine.app != undefined)
 		return;
 	
-	new KBEngine.KBEngineApp();
+	new KBEngine.KBEngineApp(kbengineArgs);
 	
 	KBEngine.app.reset();
 	KBEngine.app.installEvents();
-	KBEngine.idInterval = setInterval(KBEngine.app.update, 100);
+	KBEngine.idInterval = setInterval(KBEngine.app.update, kbengineArgs.updateHZ);
 }
 
 KBEngine.destroy = function()

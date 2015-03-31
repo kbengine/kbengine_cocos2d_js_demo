@@ -66,11 +66,10 @@
       <file leaf-file-name="kbengine.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/plugins/kbengine/kbengine.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="63166" max-vertical-offset="63840">
-              <caret line="3345" column="0" selection-start-line="3345" selection-start-column="0" selection-end-line="3345" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="63888" max-vertical-offset="64562">
+              <caret line="3383" column="0" selection-start-line="3383" selection-start-column="0" selection-end-line="3383" selection-end-column="0" />
               <folding>
-                <marker date="1427787097306" expanded="true" signature="80966:81126" placeholder="{...}" />
-                <marker date="1427787097306" expanded="true" signature="81298:81401" placeholder="{...}" />
+                <marker date="1427791106932" expanded="true" signature="81942:82045" placeholder="{...}" />
               </folding>
             </state>
           </provider>
@@ -89,8 +88,8 @@
       <file leaf-file-name="main.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1083" max-vertical-offset="1482">
-              <caret line="57" column="0" selection-start-line="57" selection-start-column="0" selection-end-line="57" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="1197" max-vertical-offset="1577">
+              <caret line="63" column="0" selection-start-line="63" selection-start-column="0" selection-end-line="63" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -362,8 +361,7 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="63109" max-vertical-offset="63802">
           <caret line="3342" column="0" selection-start-line="3342" selection-start-column="0" selection-end-line="3342" selection-end-column="0" />
           <folding>
-            <marker date="1427787097306" expanded="true" signature="80966:81126" placeholder="{...}" />
-            <marker date="1427787097306" expanded="true" signature="81298:81401" placeholder="{...}" />
+            <marker date="1427791106932" expanded="true" signature="81942:82045" placeholder="{...}" />
           </folding>
         </state>
       </provider>
@@ -428,8 +426,7 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="63109" max-vertical-offset="63802">
           <caret line="3342" column="0" selection-start-line="3342" selection-start-column="0" selection-end-line="3342" selection-end-column="0" />
           <folding>
-            <marker date="1427787097306" expanded="true" signature="80966:81126" placeholder="{...}" />
-            <marker date="1427787097306" expanded="true" signature="81298:81401" placeholder="{...}" />
+            <marker date="1427791106932" expanded="true" signature="81942:82045" placeholder="{...}" />
           </folding>
         </state>
       </provider>
@@ -478,8 +475,7 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="1891" max-vertical-offset="63232">
           <caret line="110" column="0" selection-start-line="110" selection-start-column="0" selection-end-line="110" selection-end-column="0" />
           <folding>
-            <marker date="1427787097306" expanded="true" signature="80966:81126" placeholder="{...}" />
-            <marker date="1427787097306" expanded="true" signature="81298:81401" placeholder="{...}" />
+            <marker date="1427791106932" expanded="true" signature="81942:82045" placeholder="{...}" />
           </folding>
         </state>
       </provider>
@@ -512,8 +508,7 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="3430" max-vertical-offset="63042">
           <caret line="200" column="13" selection-start-line="200" selection-start-column="13" selection-end-line="200" selection-end-column="13" />
           <folding>
-            <marker date="1427787097306" expanded="true" signature="80966:81126" placeholder="{...}" />
-            <marker date="1427787097306" expanded="true" signature="81298:81401" placeholder="{...}" />
+            <marker date="1427791106932" expanded="true" signature="81942:82045" placeholder="{...}" />
           </folding>
         </state>
       </provider>
@@ -546,8 +541,7 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="3430" max-vertical-offset="63042">
           <caret line="200" column="13" selection-start-line="200" selection-start-column="13" selection-end-line="200" selection-end-column="13" />
           <folding>
-            <marker date="1427787097306" expanded="true" signature="80966:81126" placeholder="{...}" />
-            <marker date="1427787097306" expanded="true" signature="81298:81401" placeholder="{...}" />
+            <marker date="1427791106932" expanded="true" signature="81942:82045" placeholder="{...}" />
           </folding>
         </state>
       </provider>
@@ -580,8 +574,7 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="60135">
           <caret line="1426" column="59" selection-start-line="1426" selection-start-column="59" selection-end-line="1426" selection-end-column="59" />
           <folding>
-            <marker date="1427787097306" expanded="true" signature="80966:81126" placeholder="{...}" />
-            <marker date="1427787097306" expanded="true" signature="81298:81401" placeholder="{...}" />
+            <marker date="1427791106932" expanded="true" signature="81942:82045" placeholder="{...}" />
           </folding>
         </state>
       </provider>
@@ -626,19 +619,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/plugins/kbengine/kbengine.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="63166" max-vertical-offset="63840">
-          <caret line="3345" column="0" selection-start-line="3345" selection-start-column="0" selection-end-line="3345" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="63888" max-vertical-offset="64562">
+          <caret line="3383" column="0" selection-start-line="3383" selection-start-column="0" selection-end-line="3383" selection-end-column="0" />
           <folding>
-            <marker date="1427787097306" expanded="true" signature="80966:81126" placeholder="{...}" />
-            <marker date="1427787097306" expanded="true" signature="81298:81401" placeholder="{...}" />
+            <marker date="1427791106932" expanded="true" signature="81942:82045" placeholder="{...}" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="732" max-vertical-offset="1482">
-          <caret line="57" column="0" selection-start-line="57" selection-start-column="0" selection-end-line="57" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="1197" max-vertical-offset="1577">
+          <caret line="63" column="0" selection-start-line="63" selection-start-column="0" selection-end-line="63" selection-end-column="0" />
           <folding />
         </state>
       </provider>

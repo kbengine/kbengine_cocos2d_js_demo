@@ -51,7 +51,12 @@
 cc.game.onStart = function()
 {
 	// 初始化KBEngine
-	KBEngine.create();
+	var args = new KBEngine.KBEngineArgs();
+	
+	// 设置登录ip地址
+	args.ip = "127.0.0.1";
+	args.port = 20013;
+	KBEngine.create(args);
 	
     cc.view.adjustViewPort(true);
     cc.view.setDesignResolutionSize(1024, 768, cc.ResolutionPolicy.SHOW_ALL);
