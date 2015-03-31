@@ -1,5 +1,5 @@
 
-var LoginSceneLayer = cc.Layer.extend({
+var StartSceneLayer = cc.Layer.extend({
     sprite:null,
     clientScriptVersion:null,
     serverVersion:null,
@@ -22,54 +22,15 @@ var LoginSceneLayer = cc.Layer.extend({
     	
     	// 安装这个场景需要监听的KBE事件
         this.installEvents();
-        
+        	     
         // 创建场景
-        this.start_map = cc.TMXTiledMap.create("res/img/2/start.tmx"); 
-        this.addChild(this.start_map, 1); 
-        
-        var size = cc.winSize;
-		this.start_map.attr({
-            x: size.width / 2,
-            y: size.height / 2,
-            anchorX: 0.5,
-            anchorY: 0.5
-        });
-        	        
+        this.createScene();
         return true;
     },
-
-    onExit: function () {
-    },
     	
-    installEvents : function()
-    {
-		// common
-		KBEngine.Event.register("onKicked", this, "onKicked");
-		KBEngine.Event.register("onDisableConnect", this, "onDisableConnect");
-		KBEngine.Event.register("onConnectStatus", this, "onConnectStatus");
-	    	
-		// login
-		KBEngine.Event.register("onCreateAccountResult", this, "onCreateAccountResult");
-		KBEngine.Event.register("onLoginFailed", this, "onLoginFailed");
-		KBEngine.Event.register("onVersionNotMatch", this, "onVersionNotMatch");
-		KBEngine.Event.register("onScriptVersionNotMatch", this, "onScriptVersionNotMatch");
-		KBEngine.Event.register("onLoginGatewayFailed", this, "onLoginGatewayFailed");
-		KBEngine.Event.register("onLoginSuccessfully", this, "onLoginSuccessfully");
-		KBEngine.Event.register("login_baseapp", this, "login_baseapp");
-		KBEngine.Event.register("Loginapp_importClientMessages", this, "Loginapp_importClientMessages");
-		KBEngine.Event.register("Baseapp_importClientMessages", this, "Baseapp_importClientMessages");
-		KBEngine.Event.register("Baseapp_importClientEntityDef", this, "Baseapp_importClientEntityDef");
-		
-		KBEngine.Event.register("onImportClientMessages", this, "onImportClientMessages");
-		KBEngine.Event.register("onImportClientEntityDef", this, "onImportClientEntityDef");
-		KBEngine.Event.register("onImportServerErrorsDescr", this, "onImportServerErrorsDescr");
-		
-		// selavatars
-		//KBEngine.Event.register("onReqAvatarList", this, "onReqAvatarList");
-		//KBEngine.Event.register("onCreateAvatarResult", this, "onCreateAvatarResult");
-		//KBEngine.Event.register("onRemoveAvatar", this, "onRemoveAvatar");
-    },
-
+    /* -----------------------------------------------------------------------/
+    							UI 相关
+    /------------------------------------------------------------------------ */
 	initUI : function()
     {
         // ask the window size
@@ -323,7 +284,39 @@ var LoginSceneLayer = cc.Layer.extend({
                 break;
         }
     },
-    	    	
+    
+    /* -----------------------------------------------------------------------/
+    							KBEngine 事件响应
+    /------------------------------------------------------------------------ */
+    installEvents : function()
+    {
+		// common
+		KBEngine.Event.register("onKicked", this, "onKicked");
+		KBEngine.Event.register("onDisableConnect", this, "onDisableConnect");
+		KBEngine.Event.register("onConnectStatus", this, "onConnectStatus");
+	    	
+		// login
+		KBEngine.Event.register("onCreateAccountResult", this, "onCreateAccountResult");
+		KBEngine.Event.register("onLoginFailed", this, "onLoginFailed");
+		KBEngine.Event.register("onVersionNotMatch", this, "onVersionNotMatch");
+		KBEngine.Event.register("onScriptVersionNotMatch", this, "onScriptVersionNotMatch");
+		KBEngine.Event.register("onLoginGatewayFailed", this, "onLoginGatewayFailed");
+		KBEngine.Event.register("onLoginSuccessfully", this, "onLoginSuccessfully");
+		KBEngine.Event.register("login_baseapp", this, "login_baseapp");
+		KBEngine.Event.register("Loginapp_importClientMessages", this, "Loginapp_importClientMessages");
+		KBEngine.Event.register("Baseapp_importClientMessages", this, "Baseapp_importClientMessages");
+		KBEngine.Event.register("Baseapp_importClientEntityDef", this, "Baseapp_importClientEntityDef");
+		
+		KBEngine.Event.register("onImportClientMessages", this, "onImportClientMessages");
+		KBEngine.Event.register("onImportClientEntityDef", this, "onImportClientEntityDef");
+		KBEngine.Event.register("onImportServerErrorsDescr", this, "onImportServerErrorsDescr");
+		
+		// selavatars
+		//KBEngine.Event.register("onReqAvatarList", this, "onReqAvatarList");
+		//KBEngine.Event.register("onCreateAvatarResult", this, "onCreateAvatarResult");
+		//KBEngine.Event.register("onRemoveAvatar", this, "onRemoveAvatar");
+    },
+    	    
 	onKicked : function(failedcode)
 	{
 	},
@@ -373,17 +366,20 @@ var LoginSceneLayer = cc.Layer.extend({
     onVersionNotMatch : function(clientVersion, serverVersion)
     {
     	GUIDebugLayer.debug.ERROR_MSG("version not match(curr=" + clientVersion + ", srv=" + serverVersion + " )(版本不匹配)");	
+        this.serverScriptVersion.setString("serverScriptVersion: " + KBEngine.app.serverScriptVersion);
+        this.serverVersion.setString("serverVersion: " + KBEngine.app.serverVersion);	    	
     },
 
     onScriptVersionNotMatch : function(clientScriptVersion, serverScriptVersion)
     {
     	GUIDebugLayer.debug.ERROR_MSG("scriptVersion not match(curr=" + clientScriptVersion + ", srv=" + serverScriptVersion + " )(脚本版本不匹配)");
+        this.serverScriptVersion.setString("serverScriptVersion: " + KBEngine.app.serverScriptVersion);
+        this.serverVersion.setString("serverVersion: " + KBEngine.app.serverVersion);	    	
     },
 
     onLoginGatewayFailed : function(failedcode)
     {
     	GUIDebugLayer.debug.ERROR_MSG("loginGateway is failed(登陆网关失败), err=" + failedcode);	
-    	this.removeChild(this.connectStateLayer);
     },
     	
     onLoginSuccessfully : function(rndUUID, eid, accountEntity)
@@ -395,6 +391,9 @@ var LoginSceneLayer = cc.Layer.extend({
         this.logintButton.visible = false;
         this.registerButton.visible = false;
 		this.playButton.visible = true;
+		
+        this.serverScriptVersion.setString("serverScriptVersion: " + KBEngine.app.serverScriptVersion);
+        this.serverVersion.setString("serverVersion: " + KBEngine.app.serverVersion);		
     },
 
     login_baseapp : function()
@@ -431,20 +430,40 @@ var LoginSceneLayer = cc.Layer.extend({
     {
     	GUIDebugLayer.debug.INFO_MSG("importServerErrorsDescr successfully!");
     },
-    	 	
-    update : function (dt) {
-        this.serverScriptVersion.setString("serverScriptVersion: " + KBEngine.app.serverScriptVersion);
-        this.serverVersion.setString("serverVersion: " + KBEngine.app.serverVersion);
+
+    /* -----------------------------------------------------------------------/
+    							其他系统相关
+    /------------------------------------------------------------------------ */
+    onExit: function () {
+    },
+    	    
+	createScene : function()
+    {
+        // 创建场景
+        this.start_map = cc.TMXTiledMap.create("res/img/2/start.tmx"); 
+        this.addChild(this.start_map, 1); 
+        
+        var size = cc.winSize;
+		this.start_map.attr({
+            x: size.width / 2,
+            y: size.height / 2,
+            anchorX: 0.5,
+            anchorY: 0.5
+        });    	
+    },
+
+    update : function (dt) 
+    {
     }
 });
 
-var LoginScene = cc.Scene.extend({
+var StartScene = cc.Scene.extend({
     onEnter:function () 
     {
         this._super();
         
         // 创建基本场景层
-        var layer = new LoginSceneLayer();
+        var layer = new StartSceneLayer();
         this.addChild(layer);
     }
 });
