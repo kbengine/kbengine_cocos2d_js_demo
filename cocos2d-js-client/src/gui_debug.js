@@ -19,7 +19,7 @@ var GUIDebugLayer = cc.Layer.extend(
             anchorX: 0.5,
             anchorY: -1,
             x: size.width / 2,
-            y: size.height - 150
+            y: size.height - 200
         });
         this.debug.setColor(new cc.Color(255, 0, 0, 255));
         this.addChild(this.debug, 999);
