@@ -1686,6 +1686,8 @@ KBEngine.KBEngineArgs = function()
 -----------------------------------------------------------------------------------------*/
 KBEngine.KBEngineApp = function(kbengineArgs)
 {
+	console.assert(KBEngine.app == null || KBEngine.app == undefined, "Assertion of KBEngine.app not is null");
+	
 	KBEngine.app = this;
 	
 	this.args = kbengineArgs;
@@ -1793,6 +1795,7 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 		{ 
 		}
 		
+		console.assert(KBEngine.app.socket == null, "Assertion of socket not is null");
 		KBEngine.app.socket = null;
 		
 		try
