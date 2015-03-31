@@ -21,7 +21,7 @@ KBEngine.Account = KBEngine.GameObject.extend(
 			console.info("KBEAccount::onCreateAvatarResult: name=" + info.name);
 		}
 		
-		console.info("KBEAccount::onCreateAvatarResult: avatarsize=" + this.avatars.values.length);
+		console.info("KBEAccount::onCreateAvatarResult: avatarsize=" + this.avatars.values.length + ", error=" + KBEngine.app.serverErr(retcode));
 		KBEngine.Event.fire("onCreateAvatarResult", retcode, info, this.avatars);
 	},
 		

@@ -245,6 +245,7 @@ var StartSceneLayer = cc.Layer.extend({
 			if(this.playerNameLabel != null)
 				return;
 			
+			var size = cc.winSize;
 	        this.playerNameLabel = new ccui.Text();
 	        this.playerNameLabel.attr({
 	            string: info.name,
@@ -253,8 +254,8 @@ var StartSceneLayer = cc.Layer.extend({
 	            textAlign:cc.TEXT_ALIGNMENT_LEFT,
 	            fontName: "graphicpixel-webfont",
 	            fontSize: 20,
-	            x: size.width / 2 - 200,
-	            y: size.height - 300
+	            x: size.width / 2,
+	            y: size.height - 470
 	        });
 	        this.playerNameLabel.setColor(new cc.Color(0, 255, 255, 255));
 	        this.addChild(this.playerNameLabel, 2);    
@@ -407,6 +408,7 @@ var StartSceneLayer = cc.Layer.extend({
     	    
 	onKicked : function(failedcode)
 	{
+		GUIDebugLayer.debug.ERROR_MSG("kick, disconnect!, reason=" + KBEngine.app.serverErr(failedcode));
 	},
 		
 	onDisableConnect : function()
@@ -480,11 +482,11 @@ var StartSceneLayer = cc.Layer.extend({
     {
 		if(failedcode == 20)
 		{
-			GUIDebugLayer.debug.ERROR_MSG("Login is failed(登陆失败), err=" + failedcode + ", " + KBEngine.app.serverdatas);
+			GUIDebugLayer.debug.ERROR_MSG("Login is failed(登陆失败), err=" + KBEngine.app.serverErr(failedcode) + ", " + KBEngine.app.serverdatas);
 		}
 		else
 		{
-			GUIDebugLayer.debug.ERROR_MSG("Login is failed(登陆失败), err=" + failedcode);
+			GUIDebugLayer.debug.ERROR_MSG("Login is failed(登陆失败), err=" + KBEngine.app.serverErr(failedcode));
 		}    	
     },
 
@@ -504,7 +506,7 @@ var StartSceneLayer = cc.Layer.extend({
 
     onLoginGatewayFailed : function(failedcode)
     {
-    	GUIDebugLayer.debug.ERROR_MSG("LoginGateway is failed(登陆网关失败), err=" + failedcode);	
+    	GUIDebugLayer.debug.ERROR_MSG("LoginGateway is failed(登陆网关失败), err=" + KBEngine.app.serverErr(failedcode));	
     },
     	
     onLoginSuccessfully : function(rndUUID, eid, accountEntity)

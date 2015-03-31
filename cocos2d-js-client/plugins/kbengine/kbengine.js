@@ -120,6 +120,79 @@ KBEngine.WARNING_MSG = function(s)
 }
 
 /*-----------------------------------------------------------------------------------------
+												string
+-----------------------------------------------------------------------------------------*/
+KBEngine.utf8ArrayToString = function(array)
+{
+    var out, i, len, c;
+    var char2, char3;
+
+    out = "";
+    len = array.length;
+    i = 0;
+
+    while(i < len)
+    {
+        c = array[i++];
+
+        switch(c >> 4)
+        {
+            case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7:
+            // 0xxxxxxx
+            out += String.fromCharCode(c);
+            break;
+            case 12: case 13:
+            // 110x xxxx   10xx xxxx
+            char2 = array[i++];
+            out += String.fromCharCode(((c & 0x1F) << 6) | (char2 & 0x3F));
+            break;
+            case 14:
+                // 1110 xxxx  10xx xxxx  10xx xxxx
+                char2 = array[i++];
+                char3 = array[i++];
+                out += String.fromCharCode(((c & 0x0F) << 12) |
+                    ((char2 & 0x3F) << 6) |
+                    ((char3 & 0x3F) << 0));
+                break;
+        }
+    }
+    
+    return out;
+}
+
+KBEngine.stringToUTF8Bytes = function(str) 
+{
+    var utf8 = [];
+    for (var i=0; i < str.length; i++) {
+        var charcode = str.charCodeAt(i);
+        if (charcode < 0x80) utf8.push(charcode);
+        else if (charcode < 0x800) {
+            utf8.push(0xc0 | (charcode >> 6), 
+                      0x80 | (charcode & 0x3f));
+        }
+        else if (charcode < 0xd800 || charcode >= 0xe000) {
+            utf8.push(0xe0 | (charcode >> 12), 
+                      0x80 | ((charcode>>6) & 0x3f), 
+                      0x80 | (charcode & 0x3f));
+        }
+        // surrogate pair
+        else {
+            i++;
+            // UTF-16 encodes 0x10000-0x10FFFF by
+            // subtracting 0x10000 and splitting the
+            // 20 bits of 0x0-0xFFFFF into two halves
+            charcode = 0x10000 + (((charcode & 0x3ff)<<10)
+                      | (str.charCodeAt(i) & 0x3ff))
+            utf8.push(0xf0 | (charcode >>18), 
+                      0x80 | ((charcode>>12) & 0x3f), 
+                      0x80 | ((charcode>>6) & 0x3f), 
+                      0x80 | (charcode & 0x3f));
+        }
+    }
+    return utf8;
+}
+
+/*-----------------------------------------------------------------------------------------
 												event
 -----------------------------------------------------------------------------------------*/
 KBEngine.EventInfo = function(classinst, callbackfn)
@@ -1503,15 +1576,15 @@ KBEngine.DATATYPE_UNICODE = function()
 	this.bind = function()
 	{
 	}
-	
+
 	this.createFromStream = function(stream)
 	{
-		return KBEngine.reader.readBlob.call(stream);
+		return KBEngine.utf8ArrayToString(KBEngine.reader.readBlob.call(stream));
 	}
 	
 	this.addToStream = function(stream, v)
 	{
-		stream.writeBlob(v);
+		stream.writeBlob(KBEngine.stringToUTF8Bytes(v));
 	}
 	
 	this.parseDefaultValStr = function(v)
@@ -1696,8 +1769,20 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 	this.password = "123456";
 	this.loginappMessageImported = false;
 	this.baseappMessageImported = false;
+	this.serverErrorsDescrImported = false;
 	this.entitydefImported = false;
 	
+	
+	// 描述服务端返回的错误信息
+	KBEngine.ServerErr = function()
+	{
+		this.name = "";
+		this.descr = "";
+		this.id = 0;
+	}
+	
+	this.serverErrs = {};
+		
 	// 登录loginapp的地址
 	this.ip = this.args.ip;
 	this.port = this.args.port;
@@ -1927,7 +2012,43 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 		
 		KBEngine.app.updatePlayerToServer();
 	}
-	
+
+	/*
+		通过错误id得到错误描述
+	*/
+	this.serverErr = function(id)
+	{
+		var e = KBEngine.app.serverErrs[id];
+		
+		if(e == undefined)
+		{
+			return "";
+		}
+
+		return e.name + " [" + e.descr + "]";
+	}
+
+	/*
+		服务端错误描述导入了
+	*/
+	this.Client_onImportServerErrorsDescr = function(stream)
+	{
+		var size = stream.readUint16();
+		while(size > 0)
+		{
+			size -= 1;
+			
+			var e = new KBEngine.ServerErr();
+			e.id = stream.readUint16();
+			e.name = KBEngine.utf8ArrayToString(stream.readBlob());
+			e.descr = KBEngine.utf8ArrayToString(stream.readBlob());
+			
+			KBEngine.app.serverErrs[e.id] = e;
+				
+			KBEngine.INFO_MSG("Client_onImportServerErrorsDescr: id=" + e.id + ", name=" + e.name + ", descr=" + e.descr);
+		}
+	}
+		
 	this.onOpenLoginapp_login = function()
 	{  
 		KBEngine.INFO_MSG("KBEngineApp::onOpenLoginapp_login: successfully!");
@@ -1981,6 +2102,15 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 		
 		if(KBEngine.app.currserver == "loginapp")
 		{
+			if(!KBEngine.app.serverErrorsDescrImported)
+			{
+				KBEngine.INFO_MSG("KBEngine::onImportClientMessagesCompleted(): send importServerErrorsDescr!");
+				KBEngine.app.serverErrorsDescrImported = true;
+				var bundle = new KBEngine.Bundle();
+				bundle.newMessage(KBEngine.messages.Loginapp_importServerErrorsDescr);
+				bundle.send(KBEngine.app);
+			}
+							
 			if(KBEngine.app.currstate == "login")
 				KBEngine.app.login_loginapp(false);
 			else if(KBEngine.app.currstate == "resetpassword")
