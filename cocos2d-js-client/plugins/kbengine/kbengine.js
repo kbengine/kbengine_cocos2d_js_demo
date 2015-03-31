@@ -1786,17 +1786,7 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 	
 	this.connect = function(addr)
 	{
-		try
-		{  
-			if(KBEngine.app.socket != null)
-				KBEngine.app.socket.close();
-		}
-		catch(e)
-		{ 
-		}
-		
 		console.assert(KBEngine.app.socket == null, "Assertion of socket not is null");
-		KBEngine.app.socket = null;
 		
 		try
 		{  
@@ -1837,12 +1827,6 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 		KBEngine.INFO_MSG('connect success!');
 		KBEngine.app.socket.onerror = KBEngine.app.onerror_after_onopen;
 		KBEngine.Event.fire("onConnectStatus", true);
-	}
-
-	this.onerror = function(evt)
-	{  
-		KBEngine.ERROR_MSG('connect error:' + evt.data);
-		KBEngine.Event.fire("onConnectStatus", false);
 	}
 
 	this.onerror_before_onopen = function(evt)
