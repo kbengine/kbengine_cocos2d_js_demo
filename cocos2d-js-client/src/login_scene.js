@@ -225,6 +225,18 @@ var LoginSceneLayer = cc.Layer.extend({
         this.registerButton.y = size.height / 2.0 - 150;
         this.registerButton.addTouchEventListener(this.touchRegisterButtonEvent ,this);
         this.addChild(this.registerButton, 2);
+
+        // 进入游戏按钮
+        this.playButton = new ccui.Button();
+        this.playButton.setTitleFontName("graphicpixel-webfont");
+        this.playButton.setTouchEnabled(true);
+        this.playButton.loadTextures("res/ui/btn_up.png", "res/ui/btn_down.png", "");
+        this.playButton.setTitleText("Play");
+        this.playButton.x = size.width / 2.0;
+        this.playButton.y = size.height / 2.0 - 150;
+        this.playButton.addTouchEventListener(this.touchPlayButtonEvent ,this);
+        this.playButton.visible = false;
+        this.addChild(this.playButton, 2);
     },
 
 	editBoxEditingDidBegin: function (editBox) {
@@ -249,6 +261,10 @@ var LoginSceneLayer = cc.Layer.extend({
     {
         switch (type) {
             case ccui.Widget.TOUCH_BEGAN:
+                break;
+            case ccui.Widget.TOUCH_MOVED:
+                break;
+            case ccui.Widget.TOUCH_ENDED:
             	if(this.usernamebox.getString().length < 3)
             	{
             		GUIDebugLayer.debug.ERROR_MSG("username is error, length < 3!(账号或者密码错误，长度必须大于等于3!)");
@@ -262,11 +278,7 @@ var LoginSceneLayer = cc.Layer.extend({
             	}
             	
                 GUIDebugLayer.debug.INFO_MSG("connect to server...");
-                KBEngine.Event.fire("login", this.usernamebox.getString(), this.passwordbox.getString());
-                break;
-            case ccui.Widget.TOUCH_MOVED:
-                break;
-            case ccui.Widget.TOUCH_ENDED:
+                KBEngine.Event.fire("login", this.usernamebox.getString(), this.passwordbox.getString());            
                 break;
             case ccui.Widget.TOUCH_CANCELED:
                 break;
@@ -279,12 +291,12 @@ var LoginSceneLayer = cc.Layer.extend({
     {
         switch (type) {
             case ccui.Widget.TOUCH_BEGAN:
-                GUIDebugLayer.debug.ERROR_MSG("connect to server...");
-            	KBEngine.Event.fire("createAccount", this.usernamebox.getString(), this.passwordbox.getString());
                 break;
             case ccui.Widget.TOUCH_MOVED:
                 break;
             case ccui.Widget.TOUCH_ENDED:
+                GUIDebugLayer.debug.INFO_MSG("connect to server...");
+            	KBEngine.Event.fire("createAccount", this.usernamebox.getString(), this.passwordbox.getString());            
                 break;
             case ccui.Widget.TOUCH_CANCELED:
                 break;
@@ -293,6 +305,25 @@ var LoginSceneLayer = cc.Layer.extend({
         }
     },
     	
+    touchPlayButtonEvent: function (sender, type) 
+    {
+        switch (type) {
+            case ccui.Widget.TOUCH_BEGAN:
+                break;
+            case ccui.Widget.TOUCH_MOVED:
+                break;
+            case ccui.Widget.TOUCH_ENDED:
+				GUIDebugLayer.debug.INFO_MSG("loading...");
+				// 切换到场景
+				cc.director.runScene(new WorldScene());
+                break;
+            case ccui.Widget.TOUCH_CANCELED:
+                break;
+            default:
+                break;
+        }
+    },
+    	    	
 	onKicked : function(failedcode)
 	{
 	},
@@ -359,8 +390,11 @@ var LoginSceneLayer = cc.Layer.extend({
     {
     	GUIDebugLayer.debug.INFO_MSG("login is successfully!(登陆成功!)");
     	
-    	// 切换到选人场景
-	    cc.director.runScene(new WorldScene());
+        this.usernamebox.visible = false;
+        this.passwordbox.visible = false;
+        this.logintButton.visible = false;
+        this.registerButton.visible = false;
+		this.playButton.visible = true;
     },
 
     login_baseapp : function()
