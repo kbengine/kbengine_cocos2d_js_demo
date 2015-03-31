@@ -1808,14 +1808,31 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 		
 		KBEngine.app.socket.binaryType = "arraybuffer";
 		KBEngine.app.socket.onopen = KBEngine.app.onopen;  
-		KBEngine.app.socket.onerror = KBEngine.app.onerror;  
+		KBEngine.app.socket.onerror = KBEngine.app.onerror_before_onopen;  
 		KBEngine.app.socket.onmessage = KBEngine.app.onmessage;  
 		KBEngine.app.socket.onclose = KBEngine.app.onclose;
 	}
 
+	this.disconnect = function()
+	{
+		try
+		{  
+			if(KBEngine.app.socket != null)
+			{
+				KBEngine.app.socket.onclose = undefined;
+				KBEngine.app.socket.close();
+				KBEngine.app.socket = null;
+			}
+		}
+		catch(e)
+		{ 
+		}
+	}
+	
 	this.onopen = function()
 	{  
-		KBEngine.INFO_MSG('connect success!') ; 
+		KBEngine.INFO_MSG('connect success!');
+		KBEngine.app.socket.onerror = KBEngine.app.onerror_after_onopen;
 		KBEngine.Event.fire("onConnectStatus", true);
 	}
 
@@ -1823,6 +1840,18 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 	{  
 		KBEngine.ERROR_MSG('connect error:' + evt.data);
 		KBEngine.Event.fire("onConnectStatus", false);
+	}
+
+	this.onerror_before_onopen = function(evt)
+	{  
+		KBEngine.ERROR_MSG('connect error:' + evt.data);
+		KBEngine.Event.fire("onConnectStatus", false);
+	}
+	
+	this.onerror_after_onopen = function(evt)
+	{
+		KBEngine.ERROR_MSG('connect error:' + evt.data);
+		KBEngine.Event.fire("onDisableConnect");
 	}
 	
 	this.onmessage = function(msg)
@@ -2534,6 +2563,7 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 		KBEngine.INFO_MSG("KBEngineApp::Client_onLoginSuccessfully: accountName(" + accountName + "), addr(" + 
 				KBEngine.app.baseappIp + ":" + KBEngine.app.baseappPort + "), datas(" + KBEngine.app.serverdatas.length + ")!");
 		
+		KBEngine.app.disconnect();
 		KBEngine.app.login_baseapp(true);
 	}
 	
