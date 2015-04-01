@@ -84,10 +84,53 @@ KBEngine.KBE_FLT_MAX			= 3.402823466e+38;
 /*-----------------------------------------------------------------------------------------
 												number64bits
 -----------------------------------------------------------------------------------------*/
-KBEngine.INT64 = function(hi, lo)
+KBEngine.INT64 = function(lo, hi)
 {
-	this.hi = hi;
 	this.lo = lo;
+	this.hi = hi;
+	
+	this.sign = 1;
+	
+	if(hi >= 2147483648)
+	{
+		this.sign = -1;
+		if(this.lo > 0)
+		{
+			this.lo = (4294967295 - this.lo + 1) & 0xffffffff;
+			this.hi = 4294967295 - this.hi;
+		}
+		else
+		{
+			this.lo = (4294967296 - this.lo) & 0xffffffff;
+			this.hi = 4294967295 - this.hi + 1;
+		}
+	}
+	
+	this.toString = function()
+	{
+		var result = "";
+		
+		if(this.sign < 0)
+		{
+			result += "-"
+		}
+		
+		var low = this.lo.toString(16);
+		var high = this.hi.toString(16);
+		
+		if(this.hi > 0)
+		{
+			result += high;
+			for(var i = 8 - low.length; i > 0; --i)
+			{
+				result += "0";
+			}
+		}
+		result += low;
+		
+		return result;
+		
+	}
 }
 
 KBEngine.UINT64 = function(lo, hi)
@@ -103,8 +146,8 @@ KBEngine.UINT64 = function(lo, hi)
 		var result = "";
 		if(this.hi > 0)
 		{
-			result = this.hi;
-			for(var i = 8 - high.length; i > 0; --i)
+			result += high;
+			for(var i = 8 - low.length; i > 0; --i)
 			{
 				result += "0";
 			}
@@ -348,7 +391,7 @@ KBEngine.MemoryStream = function(size_or_buffer)
 
 	this.readInt64 = function()
 	{
-		return new KBEngine.INT64(this.readInt32(), this.readInt32());
+		return new KBEngine.INT64(this.readUInt32(), this.readUInt32());
 	}
 	
 	this.readUint8 = function()
@@ -491,8 +534,8 @@ KBEngine.MemoryStream = function(size_or_buffer)
 
 	this.writeInt64 = function(v)
 	{
-		this.writeInt32(v.hi);
 		this.writeInt32(v.lo);
+		this.writeInt32(v.hi);
 	}
 	
 	this.writeUint8 = function(v)
