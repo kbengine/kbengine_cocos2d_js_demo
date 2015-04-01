@@ -90,10 +90,28 @@ KBEngine.INT64 = function(hi, lo)
 	this.lo = lo;
 }
 
-KBEngine.UINT64 = function(hi, lo)
+KBEngine.UINT64 = function(lo, hi)
 {
-	this.hi = hi;
 	this.lo = lo;
+	this.hi = hi;
+	
+	this.toString = function()
+	{
+		var low = this.lo.toString(16);
+		var high = this.hi.toString(16);
+		
+		var result = "";
+		if(this.hi > 0)
+		{
+			result = this.hi;
+			for(var i = 8 - high.length; i > 0; --i)
+			{
+				result += "0";
+			}
+		}
+		result += low;
+		return result;
+	}
 }
 
 /*-----------------------------------------------------------------------------------------
@@ -498,8 +516,8 @@ KBEngine.MemoryStream = function(size_or_buffer)
 
 	this.writeUint64 = function(v)
 	{
-		this.writeUint32(v.hi);
 		this.writeUint32(v.lo);
+		this.writeUint32(v.hi);
 	}
 	
 	this.writeFloat = function(v)
