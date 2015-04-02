@@ -3,6 +3,7 @@ var WorldSceneLayer = cc.Layer.extend({
     sprite:null,
     player:null,
     tmxmap: null,
+    entities: {},
     ctor:function () {
         //////////////////////////////
         // super init first
@@ -15,7 +16,7 @@ var WorldSceneLayer = cc.Layer.extend({
         this.installEvents();
 
 		// 监听鼠标触摸等输入输出事件
-		this.installInputEvents();
+		this.installInputEvents(this);
 		
         // 激活 update
         this.schedule(this.update, 0.1, cc.repeatForever, 0.1);
@@ -39,38 +40,57 @@ var WorldSceneLayer = cc.Layer.extend({
     /* -----------------------------------------------------------------------/
     							输入输出事件 相关
     /------------------------------------------------------------------------ */
-	installInputEvents : function()
+	installInputEvents : function(target)
 	{
         if( 'mouse' in cc.sys.capabilities ) {
             cc.eventManager.addListener({
                  event: cc.EventListener.MOUSE,
-                 	 
-                onMouseDown: function(event)
-                {
-                    var pos = event.getLocation(), target = event.getCurrentTarget();
-                    if(event.getButton() === cc.EventMouse.BUTTON_RIGHT)
-                        cc.log("onRightMouseDown at: " + pos.x + " " + pos.y );
-                    else if(event.getButton() === cc.EventMouse.BUTTON_LEFT)
-                        cc.log("onLeftMouseDown at: " + pos.x + " " + pos.y );
-                },
-                	
-                onMouseMove: function(event)
-                {
-                    //var pos = event.getLocation(), target = event.getCurrentTarget();
-                    //cc.log("onMouseMove at: " + pos.x + " " + pos.y );
-                },
-                	
-                onMouseUp: function(event)
-                {
-                    var pos = event.getLocation(), target = event.getCurrentTarget();
-                    cc.log("onMouseUp at: " + pos.x + " " + pos.y );
-                }
-            }, this);
+                onMouseDown: this.onMouseDown,
+                onMouseMove: this.onMouseMove,
+                onMouseUp: this.onMouseUp
+            }, target);
         } else {
             cc.log("MOUSE Not supported");
         }		
 	},
+
+    onMouseDown: function(event)
+    {
+        var pos = event.getLocation(), target = event.getCurrentTarget();
+        var locationInNode = target.convertToNodeSpace(pos);
+        var s = target.getContentSize();
+        var rect = cc.rect(0, 0, s.width, s.height);
 		
+		// 检查是否在区域内
+        if (cc.rectContainsPoint(rect, locationInNode))
+		{
+	        if(event.getButton() === cc.EventMouse.BUTTON_RIGHT)
+	            cc.log("onRightMouseDown at: " + pos.x + " " + pos.y);
+	        else if(event.getButton() === cc.EventMouse.BUTTON_LEFT)
+	            cc.log("onLeftMouseDown at: " + pos.x + " " + pos.y);
+		}
+    },
+    	
+    onMouseMove: function(event)
+    {
+        //var pos = event.getLocation(), target = event.getCurrentTarget();
+        //cc.log("onMouseMove at: " + pos.x + " " + pos.y );
+    },
+    	
+    onMouseUp: function(event)
+    {
+        var pos = event.getLocation(), target = event.getCurrentTarget();
+        var locationInNode = target.convertToNodeSpace(pos);
+        var s = target.getContentSize();
+        var rect = cc.rect(0, 0, s.width, s.height);
+		
+		// 检查是否在区域内
+        if (cc.rectContainsPoint(rect, locationInNode))
+		{
+			cc.log("onMouseUp at: " + pos.x + " " + pos.y );
+		}
+    },
+    	
     /* -----------------------------------------------------------------------/
     							KBEngine 事件响应
     /------------------------------------------------------------------------ */
