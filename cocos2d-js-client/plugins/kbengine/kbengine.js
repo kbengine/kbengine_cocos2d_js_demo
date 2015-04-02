@@ -1172,6 +1172,12 @@ KBEngine.Entity = KBEngine.Class.extend(
 			KBEngine.ERROR_MSG('KBEngine.Entity::baseCall: not fount interfaceName!');  
 			return;
 		}
+
+		if(this.base == undefined)
+		{
+			KBEngine.ERROR_MSG('KBEngine.Entity::cellCall: cell is None!');  
+			return;			
+		}
 		
 		var method = KBEngine.moduledefs[this.className].base_methods[arguments[0]];
 		var methodID = method[0];
@@ -1209,6 +1215,12 @@ KBEngine.Entity = KBEngine.Class.extend(
 		{
 			KBEngine.ERROR_MSG('KBEngine.Entity::cellCall: not fount interfaceName!');  
 			return;
+		}
+		
+		if(this.cell == undefined)
+		{
+			KBEngine.ERROR_MSG('KBEngine.Entity::cellCall: cell is None!');  
+			return;			
 		}
 		
 		var method = KBEngine.moduledefs[this.className].cell_methods[arguments[0]];
@@ -2980,6 +2992,7 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 			KBEngine.app.Client_onUpdatePropertys(entityMessage);
 			delete KBEngine.bufferedCreateEntityMessage[eid];
 			
+			entity.isOnGound = isOnGound > 0;
 			entity.__init__();
 			entity.onEnterWorld();
 			
@@ -2990,6 +3003,11 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 		{
 			if(!entity.inWorld)
 			{
+				entity.cell = new KBEngine.Mailbox();
+				entity.cell.id = eid;
+				entity.cell.className = entityType;
+				entity.cell.type = KBEngine.MAILBOX_TYPE_CELL;
+			
 				// 安全起见， 这里清空一下
 				// 如果服务端上使用giveClientTo切换控制权
 				// 之前的实体已经进入世界， 切换后的实体也进入世界， 这里可能会残留之前那个实体进入世界的信息
@@ -2997,6 +3015,7 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 				KBEngine.app.entities = {}
 				KBEngine.app.entities[entity.id] = entity;
 			
+				entity.isOnGound = isOnGound > 0;
 				entity.onEnterWorld();
 			}
 		}

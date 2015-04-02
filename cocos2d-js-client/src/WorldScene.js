@@ -14,6 +14,9 @@ var WorldSceneLayer = cc.Layer.extend({
     	// 安装这个场景需要监听的KBE事件
         this.installEvents();
 
+		// 监听鼠标触摸等输入输出事件
+		this.installInputEvents();
+		
         // 激活 update
         this.schedule(this.update, 0.1, cc.repeatForever, 0.1);
         return true;
@@ -29,6 +32,41 @@ var WorldSceneLayer = cc.Layer.extend({
         this.addChild(GUIDebugLayer.debug, 1);    	
     },
 
+    /* -----------------------------------------------------------------------/
+    							输入输出事件 相关
+    /------------------------------------------------------------------------ */
+	installInputEvents : function()
+	{
+        if( 'mouse' in cc.sys.capabilities ) {
+            cc.eventManager.addListener({
+                 event: cc.EventListener.MOUSE,
+                 	 
+                onMouseDown: function(event)
+                {
+                    var pos = event.getLocation(), target = event.getCurrentTarget();
+                    if(event.getButton() === cc.EventMouse.BUTTON_RIGHT)
+                        cc.log("onRightMouseDown at: " + pos.x + " " + pos.y );
+                    else if(event.getButton() === cc.EventMouse.BUTTON_LEFT)
+                        cc.log("onLeftMouseDown at: " + pos.x + " " + pos.y );
+                },
+                	
+                onMouseMove: function(event)
+                {
+                    //var pos = event.getLocation(), target = event.getCurrentTarget();
+                    //cc.log("onMouseMove at: " + pos.x + " " + pos.y );
+                },
+                	
+                onMouseUp: function(event)
+                {
+                    var pos = event.getLocation(), target = event.getCurrentTarget();
+                    cc.log("onMouseUp at: " + pos.x + " " + pos.y );
+                }
+            }, this);
+        } else {
+            cc.log("MOUSE Not supported");
+        }		
+	},
+		
     /* -----------------------------------------------------------------------/
     							KBEngine 事件响应
     /------------------------------------------------------------------------ */
@@ -61,7 +99,7 @@ var WorldSceneLayer = cc.Layer.extend({
 		KBEngine.Event.register("otherAvatarOnJump", this, "otherAvatarOnJump");
 		KBEngine.Event.register("onAddSkill", this, "onAddSkill");
     },
-    	    
+
 	onKicked : function(failedcode)
 	{
 	},
@@ -98,7 +136,89 @@ var WorldSceneLayer = cc.Layer.extend({
         });
         this.addChild(this.player, 10);
 	},
+
+	onEnterWorld : function(entity)
+	{
+		if(entity.isPlayer())
+			return;
 		
+		// 实体第一次进入到这个世界时这些属性不属于值改变行为，造成事件不会触发
+		// 这里我们强制进行一次相关表现上的设置
+		this.set_moveSpeed(entity, entity.speed);
+		this.set_state(entity, entity.state);
+		this.set_modelScale(entity, entity.modelScale);
+		this.set_entityName(entity, entity.name);
+		this.set_HP(entity, entity.HP);
+	},
+
+	onLeaveWorld : function(entity)
+	{
+	},
+
+	set_position : function(entity)
+	{
+	},
+
+	update_position : function(entity)
+	{
+	},	
+
+	set_direction : function(entity)
+	{
+	},
+
+	set_HP : function(entity, v)
+	{
+	},
+
+	set_MP : function(entity, v)
+	{
+	},
+
+	set_HP_Max : function(entity, v)
+	{
+	},	
+		
+	set_MP_Max : function(entity, v)
+	{
+	},
+
+	set_level : function(entity, v)
+	{
+	},
+
+	set_entityName : function(entity, v)
+	{
+	},	
+
+	set_state : function(entity, v)
+	{
+	},
+
+	set_moveSpeed : function(entity, v)
+	{
+	},
+
+	set_modelScale : function(entity, v)
+	{
+	},
+
+	set_modelID : function(entity, v)
+	{
+	},
+
+	recvDamage : function(entity, attacker, skillID, damageType, damage)
+	{
+	},
+
+	onAddSkill : function(entity)
+	{
+	},
+
+	otherAvatarOnJump : function(entity)
+	{
+	},
+															
     /* -----------------------------------------------------------------------/
     							其他系统相关
     /------------------------------------------------------------------------ */
