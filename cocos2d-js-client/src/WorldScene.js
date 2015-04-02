@@ -25,7 +25,7 @@ var WorldSceneLayer = cc.Layer.extend({
 		this.installInputEvents(this);
 		
         // 激活update
-        this.schedule(this.worldUpdate, 0.1, cc.repeatForever, 0.1);    			
+        this.schedule(this.worldUpdate, 0.1, cc.REPEAT_FOREVER, 0.1);
     },
     	    
     onExit: function () {

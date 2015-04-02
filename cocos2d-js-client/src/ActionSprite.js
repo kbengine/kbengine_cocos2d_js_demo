@@ -66,7 +66,7 @@ var ActionSprite = cc.Node.extend({
     	this.setSprite(this.res);
     	
         // 激活update
-        this.schedule(this.spriteUpdate, 0.15, cc.repeatForever, 0.15);    	
+        this.schedule(this.spriteUpdate, 0.15, cc.REPEAT_FOREVER, 0.15);
     },
 
     onExit: function () 

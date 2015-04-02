@@ -26,7 +26,7 @@ var StartSceneLayer = cc.Layer.extend({
     	this._super();
     	
 		// 激活 update
-        this.schedule(this.sceneUpdate, 0.1, cc.repeatForever, 0.1);
+        this.schedule(this.sceneUpdate, 0.1, cc.REPEAT_FOREVER, 0.1);
     
     	// 初始化UI
     	this.initUI();
