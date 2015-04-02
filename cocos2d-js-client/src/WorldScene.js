@@ -91,7 +91,7 @@ var WorldSceneLayer = cc.Layer.extend({
         var size = cc.winSize;
 
 		// 角色进入世界，创建角色精灵
-		this.player = new ActionSprite(this, "res/img/3/clotharmor.png");
+		this.player = new Avatar(this, "res/img/3/clotharmor.png");
         this.player.attr({
             x: size.width / 2,
             y: size.height / 2

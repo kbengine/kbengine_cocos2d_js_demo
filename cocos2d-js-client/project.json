@@ -19,10 +19,11 @@
         "plugins/kbengine/NPC.js",
         "plugins/kbengine/Gate.js",
 
-	"src/gui_debug.js",
+	"src/GuiDebug.js",
         "src/resource.js",
-        "src/start_scene.js",
-	"src/world_scene.js",
-	"src/action_sprite.js"
+        "src/StartScene.js",
+	"src/WorldScene.js",
+	"src/ActionSprite.js",
+	"src/Avatar.js"
     ]
 }
