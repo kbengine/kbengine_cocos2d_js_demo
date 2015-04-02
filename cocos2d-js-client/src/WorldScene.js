@@ -27,9 +27,13 @@ var WorldSceneLayer = cc.Layer.extend({
     /------------------------------------------------------------------------ */
 	initUI : function()
     {
+        // ask the window size
+        var size = cc.winSize;
+            	
         // debug
         new GUIDebugLayer();
-        this.addChild(GUIDebugLayer.debug, 1);    	
+        GUIDebugLayer.debug.debug.y = size.height - 80;
+        this.addChild(GUIDebugLayer.debug, 100);    	
     },
 
     /* -----------------------------------------------------------------------/

@@ -1257,22 +1257,48 @@ KBEngine.Entity = KBEngine.Class.extend(
 	{
 		KBEngine.INFO_MSG(this.className + '::onEnterWorld: ' + this.id); 
 		this.inWorld = true;
+		
+		KBEngine.Event.fire("onEnterWorld", this);
 	},
 	
 	onLeaveWorld : function()
 	{
 		KBEngine.INFO_MSG(this.className + '::onLeaveWorld: ' + this.id); 
 		this.inWorld = false;
+		
+		KBEngine.Event.fire("onLeaveWorld", this);
 	},
 	
 	onEnterSpace : function()
 	{
 		KBEngine.INFO_MSG(this.className + '::onEnterSpace: ' + this.id); 
+		KBEngine.Event.fire("onEnterSpace", this);
 	},
 	
 	onLeaveSpace : function()
 	{
 		KBEngine.INFO_MSG(this.className + '::onLeaveSpace: ' + this.id); 
+		KBEngine.Event.fire("onLeaveSpace", this);
+	},
+
+	set_position : function(old)
+	{
+		// Dbg.DEBUG_MSG(className + "::set_position: " + old + " => " + v); 
+		
+		if(this.isPlayer())
+			KBEngine.app.entityServerPos(this.position);
+		
+		KBEngine.Event.fire("set_position", this);
+	},
+
+	onUpdateVolatileData : function()
+	{
+	},
+	
+	set_direction : function(old)
+	{
+		// Dbg.DEBUG_MSG(className + "::set_direction: " + old + " => " + v); 
+		KBEngine.Event.fire("set_direction", this);
 	}
 });
 

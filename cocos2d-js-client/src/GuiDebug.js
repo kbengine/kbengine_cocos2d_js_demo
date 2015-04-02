@@ -22,7 +22,7 @@ var GUIDebugLayer = cc.Layer.extend(
             y: size.height - 200
         });
         this.debug.setColor(new cc.Color(255, 0, 0, 255));
-        this.addChild(this.debug, 999);
+        this.addChild(this.debug, 1);
         return true;
     },
 

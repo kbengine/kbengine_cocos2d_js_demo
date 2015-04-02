@@ -43,6 +43,7 @@ var StartSceneLayer = cc.Layer.extend({
 
         // debug
         new GUIDebugLayer();
+        GUIDebugLayer.debug.debug.y = size.height - 200;
         this.addChild(GUIDebugLayer.debug, 100);
 
         // serverVersion
