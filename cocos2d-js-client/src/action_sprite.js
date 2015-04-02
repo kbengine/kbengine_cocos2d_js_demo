@@ -6,7 +6,8 @@ var ActionAnimation = cc.Node.extend({
     h: 0,
     row: 0,
     length: 0,
-    ctor:function (sprite, row, length, w, h, frameX, frameY) {
+    name : "",
+    ctor:function (sprite, row, length, w, h, frameX, frameY, name) {
         //////////////////////////////
         // super init first
         this._super();
@@ -18,15 +19,22 @@ var ActionAnimation = cc.Node.extend({
         this.h = h;
         this.frameX = frameX;
         this.frameY = frameY;
+        this.name = name;
         return true;
     },	
     
-    play:function(dt)
+    play : function()
     {
         this.sprite.setTextureRect(cc.rect(this.frameX * this.w, (this.frameY + this.row) * this.h, this.w, this.h));
         this.frameX += 1;
         if(this.frameX >= this.length)
             this.frameX = 0;
+    },
+
+    reset : function()
+    {
+        this.frameX = 0;
+        this.frameY = 0;
     }
 });
 
@@ -36,6 +44,10 @@ var ActionSprite = cc.Node.extend({
     frameY: 0,
     scene:null,
     animations: {},
+    state : 0,
+    direction : 0,
+    position : 0,
+    lastAnim : null,
     ctor:function (scene, res) {
         //////////////////////////////
         // super init first
@@ -44,7 +56,7 @@ var ActionSprite = cc.Node.extend({
         this.setSprite(res);
 
         // 激活update
-        this.schedule(this.update, 0.1, cc.repeatForever, 0.1);
+        this.schedule(this.update, 0.15, cc.repeatForever, 0.15);
         return true;
     },	
     
@@ -69,14 +81,32 @@ var ActionSprite = cc.Node.extend({
         for(var aniName in animations)
         {
             var ani = animations[aniName];
-            var actionAnimation = new ActionAnimation(this.sprite, ani.row, ani.length, jsonData.width * 3, jsonData.height * 3, 0, 0);
+            var actionAnimation = new ActionAnimation(this.sprite, ani.row, ani.length, jsonData.width * 3, jsonData.height * 3, 0, 0, aniName);
             this.animations[aniName] = actionAnimation;
         }
     },
 
+    play : function(aniName)
+    {
+        if(this.lastAnim == null || this.lastAnim.name != aniName)
+        {
+            this.lastAnim = this.animations[aniName];
+            this.lastAnim.reset();
+        }
+
+        this.lastAnim.play();
+    },
+
+    setState : function(state)
+    {
+        if(state == this.state)
+            return;
+
+        this.state = state;
+    },
+
     update:function(dt)
     {
-    	var ani = this.animations["atk_right"];
-        ani.play(dt);
+        this.play("walk_right");
     }
 });
