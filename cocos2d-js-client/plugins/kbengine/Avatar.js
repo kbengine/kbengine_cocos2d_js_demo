@@ -48,7 +48,7 @@ KBEngine.Avatar = KBEngine.GameObject.extend(
 		KBEngine.INFO_MSG(this.className + '::onEnterWorld: ' + this.id); 
 		this._super();
 		
-		// ÇëÇó»ñÈ¡¼¼ÄÜÁĞ±í
+		// è¯·æ±‚è·å–æŠ€èƒ½åˆ—è¡¨
 		if(this.isPlayer())
 		{
 			this.cellCall("requestPull");

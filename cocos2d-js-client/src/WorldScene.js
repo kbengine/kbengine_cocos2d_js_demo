@@ -8,9 +8,6 @@ var WorldSceneLayer = cc.Layer.extend({
         //////////////////////////////
         // super init first
         this._super();
-        
-        // 激活update
-        this.scheduleUpdate(this.worldUpdate, 0.1, cc.repeatForever, 0.1);         
         return true;
     },
 
@@ -27,7 +24,8 @@ var WorldSceneLayer = cc.Layer.extend({
 		// 监听鼠标触摸等输入输出事件
 		this.installInputEvents(this);
 		
-   			
+        // 激活update
+        this.schedule(this.worldUpdate, 0.1, cc.repeatForever, 0.1);    			
     },
     	    
     onExit: function () {
@@ -177,16 +175,16 @@ var WorldSceneLayer = cc.Layer.extend({
 	{
 		if(entity.isPlayer())
 			return;
-		/*
+
 		var size = cc.winSize;
 		var ae = new ActionEntity(this, "res/img/3/crab.png");
         ae.attr({
-            x: size.width / 2 + (50 * Math.random()) - 20,
-            y: size.height / 2 + (50 * Math.random()) - 20
+            x: size.width / 2 + (50 * Math.random()) - 200,
+            y: size.height / 2 + (50 * Math.random()) - 200
         });
 
-        //this.addChild(ae, 10);
-        //this.entities[entity.id] = ae;
+        this.addChild(ae, 10);
+        this.entities[entity.id] = ae;
 
 		// 实体第一次进入到这个世界时这些属性不属于值改变行为，造成事件不会触发
 		// 这里我们强制进行一次相关表现上的设置
@@ -194,7 +192,7 @@ var WorldSceneLayer = cc.Layer.extend({
 		this.set_state(entity, entity.state);
 		this.set_modelScale(entity, entity.modelScale);
 		this.set_entityName(entity, entity.name);
-		this.set_HP(entity, entity.HP);	*/
+		this.set_HP(entity, entity.HP);	
 	},
 
 	onLeaveWorld : function(entity)
@@ -292,8 +290,6 @@ var WorldSceneLayer = cc.Layer.extend({
     		actionEntity = this.entities[entityID];
     		actionEntity.update(dt);
     	}*/
-    	
-    	cc.log("world");
     }
 });
 
