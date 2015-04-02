@@ -179,8 +179,8 @@ var WorldSceneLayer = cc.Layer.extend({
 		var size = cc.winSize;
 		var ae = new ActionEntity(this, "res/img/3/crab.png");
         ae.attr({
-            x: size.width / 2 + (50 * Math.random()) - 200,
-            y: size.height / 2 + (50 * Math.random()) - 200
+            x: size.width / 2 + (400 * Math.random()) - 200,
+            y: size.height / 2 + (400 * Math.random()) - 200
         });
 
         this.addChild(ae, 10);

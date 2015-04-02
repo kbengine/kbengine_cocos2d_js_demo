@@ -76,21 +76,17 @@ var ActionSprite = cc.Node.extend({
     	
     setSprite : function(res)
     {
-		this.sprite = new cc.Sprite(res, cc.rect(0, 0, 50, 50));
+        spriteRes = res.replace(/\\/g,'/');
+        var s1 = spriteRes.lastIndexOf('/');
+        var s2 = spriteRes.lastIndexOf('.');
+        var name = spriteRes.substring(s1 + 1, s2);
+
+        var jsonData = cc.loader.getRes("res/sprites/" + name + ".json");
+            	
+		this.sprite = new cc.Sprite(res, cc.rect(0, 0, jsonData.width * 3, jsonData.height * 3));
         this.addChild(this.sprite);
 
         // 初始化动画信息
-        this.createAnimations(res);
-    },
-
-    createAnimations : function(res)
-    {
-        res = res.replace(/\\/g,'/');
-        var s1 = res.lastIndexOf('/');
-        var s2 = res.lastIndexOf('.');
-        var name = res.substring(s1 + 1, s2);
-
-        var jsonData = cc.loader.getRes("res/sprites/" + name + ".json");
         var animations = jsonData.animations;
         for(var aniName in animations)
         {
