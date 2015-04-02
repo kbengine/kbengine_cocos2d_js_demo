@@ -248,7 +248,7 @@ var StartSceneLayer = cc.Layer.extend({
 			var size = cc.winSize;
 	        this.playerNameLabel = new ccui.Text();
 	        this.playerNameLabel.attr({
-	            string: info.name,
+	            string: info.name + ", level=" + info.level,
 	            boundingWidth: 200,
 	            boundingHeight: 50,
 	            textAlign:cc.TEXT_ALIGNMENT_LEFT,

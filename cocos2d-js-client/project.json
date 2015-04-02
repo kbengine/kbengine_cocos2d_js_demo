@@ -22,6 +22,7 @@
 	"src/gui_debug.js",
         "src/resource.js",
         "src/start_scene.js",
-	"src/world_scene.js"
+	"src/world_scene.js",
+	"src/action_sprite.js"
     ]
 }
