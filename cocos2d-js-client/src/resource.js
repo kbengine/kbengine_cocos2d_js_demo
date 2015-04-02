@@ -247,10 +247,6 @@ var g_resources = [
 "res/img/common/spinner.gif",
 "res/img/common/thingy.png",
 
-"res/maps/spritesheet.png",
-"res/maps/start.tmx",
-"res/maps/wood.png",
-
 "res/sprites/agent.json",
 "res/sprites/arrow.json",
 "res/sprites/axe.json",

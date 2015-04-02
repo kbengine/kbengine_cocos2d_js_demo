@@ -8,6 +8,15 @@ var WorldSceneLayer = cc.Layer.extend({
         //////////////////////////////
         // super init first
         this._super();
+        
+        // 激活update
+        this.scheduleUpdate(this.worldUpdate, 0.1, cc.repeatForever, 0.1);         
+        return true;
+    },
+
+    onEnter: function () 
+    {
+        this._super();
 
     	// 初始化UI
     	this.initUI();
@@ -18,11 +27,13 @@ var WorldSceneLayer = cc.Layer.extend({
 		// 监听鼠标触摸等输入输出事件
 		this.installInputEvents(this);
 		
-        // 激活 update
-        this.schedule(this.update, 0.1, cc.repeatForever, 0.1);
-        return true;
+   			
     },
-
+    	    
+    onExit: function () {
+    	this._super();
+    },
+    	
     /* -----------------------------------------------------------------------/
     							UI 相关
     /------------------------------------------------------------------------ */
@@ -33,7 +44,6 @@ var WorldSceneLayer = cc.Layer.extend({
             	
         // debug
         new GUIDebugLayer();
-        GUIDebugLayer.debug.debug.y = size.height - 80;
         this.addChild(GUIDebugLayer.debug, 100);    	
     },
 
@@ -155,28 +165,42 @@ var WorldSceneLayer = cc.Layer.extend({
 		// 角色进入世界，创建角色精灵
 		this.player = new Avatar(this, "res/img/3/clotharmor.png");
         this.player.attr({
-            x: size.width / 2,
-            y: size.height / 2
+            x: size.width / 2 + (100 * Math.random()) - 50,
+            y: size.height / 2 + (100 * Math.random()) - 50
         });
         this.addChild(this.player, 10);
+        
+        this.entities[avatar.id] = this.player;
 	},
 
 	onEnterWorld : function(entity)
 	{
 		if(entity.isPlayer())
 			return;
-		
+		/*
+		var size = cc.winSize;
+		var ae = new ActionEntity(this, "res/img/3/crab.png");
+        ae.attr({
+            x: size.width / 2 + (50 * Math.random()) - 20,
+            y: size.height / 2 + (50 * Math.random()) - 20
+        });
+
+        //this.addChild(ae, 10);
+        //this.entities[entity.id] = ae;
+
 		// 实体第一次进入到这个世界时这些属性不属于值改变行为，造成事件不会触发
 		// 这里我们强制进行一次相关表现上的设置
 		this.set_moveSpeed(entity, entity.speed);
 		this.set_state(entity, entity.state);
 		this.set_modelScale(entity, entity.modelScale);
 		this.set_entityName(entity, entity.name);
-		this.set_HP(entity, entity.HP);
+		this.set_HP(entity, entity.HP);	*/
 	},
 
 	onLeaveWorld : function(entity)
 	{
+		this.removeChild(this.entities[avatar.id]);
+		delete this.entities[avatar.id];
 	},
 
 	set_position : function(entity)
@@ -246,9 +270,6 @@ var WorldSceneLayer = cc.Layer.extend({
     /* -----------------------------------------------------------------------/
     							其他系统相关
     /------------------------------------------------------------------------ */
-    onExit: function () {
-    },
-    	    
 	createScene : function(resPath)
     {
         this.tmxmap = cc.TMXTiledMap.create(resPath);
@@ -263,7 +284,16 @@ var WorldSceneLayer = cc.Layer.extend({
         });	
     },
 
-    update : function (dt) {
+    worldUpdate : function (dt) 
+    {
+    	/*
+    	for(var entityID in this.entities)
+    	{
+    		actionEntity = this.entities[entityID];
+    		actionEntity.update(dt);
+    	}*/
+    	
+    	cc.log("world");
     }
 });
 

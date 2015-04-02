@@ -9,7 +9,13 @@ var GUIDebugLayer = cc.Layer.extend(
         this._super();
 		
 		GUIDebugLayer.debug = this;
+        return true;
+    },
 
+    onEnter: function () 
+    {
+    	this._super();
+    	
         var size = cc.winSize;
         this.debug = new ccui.Text();
         this.debug.attr({
@@ -19,14 +25,14 @@ var GUIDebugLayer = cc.Layer.extend(
             anchorX: 0.5,
             anchorY: -1,
             x: size.width / 2,
-            y: size.height - 200
+            y: size.height - 80
         });
         this.debug.setColor(new cc.Color(255, 0, 0, 255));
         this.addChild(this.debug, 1);
-        return true;
     },
-
+    	
     onExit: function () {
+    	this._super();
     },
 
     INFO_MSG:function (str) {

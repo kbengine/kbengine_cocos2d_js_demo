@@ -44,25 +44,39 @@ var ActionSprite = cc.Node.extend({
     frameY: 0,
     scene:null,
     animations: {},
-    state : 0,
-    direction : 0,
-    position : 0,
-    lastAnim : null,
+    state: 0,
+    direction: 0,
+    position: 0,
+    lastAnim: null,
+    res: "",
     ctor:function (scene, res) {
         //////////////////////////////
         // super init first
         this._super();
+        
         this.scene = scene;
-        this.setSprite(res);
-
-        // 激活update
-        this.schedule(this.update, 0.15, cc.repeatForever, 0.15);
+        this.res = res;
         return true;
     },	
-    
+
+    onEnter: function () 
+    {
+    	this._super();
+    	
+    	this.setSprite(this.res);
+    	
+        // 激活update
+        //this.scheduleUpdate(this.spriteUpdate, 0.15, cc.repeatForever, 0.15);    	
+    },
+
+    onExit: function () 
+    {
+    	this._super();
+    },
+    	
     setSprite : function(res)
     {
-		this.sprite = new cc.Sprite(res, cc.rect(0, 0, 0, 0));
+		this.sprite = new cc.Sprite(res, cc.rect(0, 0, 50, 50));
         this.addChild(this.sprite);
 
         // 初始化动画信息
@@ -105,7 +119,10 @@ var ActionSprite = cc.Node.extend({
         this.state = state;
     },
 
-    update:function(dt)
+    /* -----------------------------------------------------------------------/
+    							其他系统相关
+    /------------------------------------------------------------------------ */
+    spriteUpdate : function(dt)
     {
         this.play("walk_right");
     }

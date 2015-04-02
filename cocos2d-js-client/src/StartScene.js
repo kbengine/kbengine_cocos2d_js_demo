@@ -18,9 +18,15 @@ var StartSceneLayer = cc.Layer.extend({
         //////////////////////////////
         // super init first
         this._super();
-        
+        return true;
+    },
+
+    onEnter: function () 
+    {
+    	this._super();
+    	
 		// 激活 update
-        this.schedule(this.update, 0.1, cc.repeatForever, 0.1);
+        this.schedule(this.sceneUpdate, 0.1, cc.repeatForever, 0.1);
     
     	// 初始化UI
     	this.initUI();
@@ -29,8 +35,12 @@ var StartSceneLayer = cc.Layer.extend({
         this.installEvents();
         	     
         // 创建场景
-        this.createScene();
-        return true;
+        this.createScene();  	
+    },
+    	    
+    onExit: function () 
+    {
+    	this._super();
     },
     	
     /* -----------------------------------------------------------------------/
@@ -43,7 +53,6 @@ var StartSceneLayer = cc.Layer.extend({
 
         // debug
         new GUIDebugLayer();
-        GUIDebugLayer.debug.debug.y = size.height - 200;
         this.addChild(GUIDebugLayer.debug, 100);
 
         // serverVersion
@@ -562,9 +571,6 @@ var StartSceneLayer = cc.Layer.extend({
     /* -----------------------------------------------------------------------/
     							其他系统相关
     /------------------------------------------------------------------------ */
-    onExit: function () {
-    },
-    	    
 	createScene : function()
     {
         // 创建场景
@@ -580,7 +586,7 @@ var StartSceneLayer = cc.Layer.extend({
         });    	
     },
 
-    update : function (dt) 
+    sceneUpdate : function (dt) 
     {
     }
 });
