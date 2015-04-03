@@ -45,12 +45,9 @@ var ActionSprite = cc.Node.extend({
     scene:null,
     animations: null,
     state: 0,
-    direction: 0,
-    position: 0,
     speed: 6,
     lastAnim: null,
     res: "",
-    currentDirIsRight: true,
     ctor:function (scene, res) {
         //////////////////////////////
         // super init first

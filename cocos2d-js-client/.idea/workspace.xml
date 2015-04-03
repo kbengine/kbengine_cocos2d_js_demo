@@ -88,8 +88,8 @@
       <file leaf-file-name="ActionSprite.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/ActionSprite.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.55637705" vertical-offset="2245" max-vertical-offset="4123">
-              <caret line="134" column="9" selection-start-line="134" selection-start-column="9" selection-end-line="134" selection-end-column="9" />
+            <state vertical-scroll-proportion="0.55637705" vertical-offset="2188" max-vertical-offset="4066">
+              <caret line="131" column="9" selection-start-line="131" selection-start-column="9" selection-end-line="131" selection-end-column="9" />
               <folding />
             </state>
           </provider>
@@ -739,8 +739,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/ActionSprite.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.55637705" vertical-offset="2245" max-vertical-offset="4123">
-          <caret line="134" column="9" selection-start-line="134" selection-start-column="9" selection-end-line="134" selection-end-column="9" />
+        <state vertical-scroll-proportion="0.55637705" vertical-offset="2188" max-vertical-offset="4066">
+          <caret line="131" column="9" selection-start-line="131" selection-start-column="9" selection-end-line="131" selection-end-column="9" />
           <folding />
         </state>
       </provider>
