@@ -4,6 +4,7 @@ var WorldSceneLayer = cc.Layer.extend({
     player:null,
     tmxmap: null,
     entities: null,
+    playerLastPos: null,
     ctor:function () {
         //////////////////////////////
         // super init first
@@ -26,7 +27,8 @@ var WorldSceneLayer = cc.Layer.extend({
 		this.installInputEvents(this);
 		
         // 激活update
-        this.schedule(this.worldUpdate, 0.1, cc.REPEAT_FOREVER, 0.1);
+        //this.schedule(this.worldUpdate, 0.1, cc.REPEAT_FOREVER, 0.1);
+        this.scheduleUpdate();
     },
     	    
     onExit: function () {
@@ -194,12 +196,13 @@ var WorldSceneLayer = cc.Layer.extend({
 		// 角色进入世界，创建角色精灵
 		this.player = new Avatar(this, "res/img/3/clotharmor.png");
         this.player.attr({
-            x: size.width / 2 + (100 * Math.random()) - 50,
-            y: size.height / 2 + (100 * Math.random()) - 50
+            x: size.width / 2,
+            y: size.height / 2
         });
         this.addChild(this.player, 10);
         
         this.entities[avatar.id] = this.player;
+        this.playerLastPos = cc.p(this.player.x, this.player.y);
 	},
 
 	onEnterWorld : function(entity)
@@ -315,6 +318,21 @@ var WorldSceneLayer = cc.Layer.extend({
 
     worldUpdate : function (dt) 
     {
+    },
+    
+    update : function (dt) 
+    {
+    	if(this.tmxmap == null || this.playerLastPos == null)
+    		return;
+    	
+    	var x = this.playerLastPos.x - this.player.x;
+    	var y = this.playerLastPos.y - this.player.y;
+    	
+    	this.playerLastPos.x = this.player.x;
+    	this.playerLastPos.y = this.player.y;
+    	
+    	this.tmxmap.x += x;
+    	this.tmxmap.y += y;
     }
 });
 
