@@ -1391,7 +1391,17 @@ KBEngine.DATATYPE_UINT8 = function()
 	
 	this.isSameType = function(v)
 	{
-		return typeof(v) == "number";
+		if(typeof(v) != "number")
+		{
+			return false;
+		}
+		
+		if(v < 0 || v > 0xff)
+		{
+			return false;
+		}
+		
+		return true;
 	}
 }
 
@@ -1418,7 +1428,17 @@ KBEngine.DATATYPE_UINT16 = function()
 	
 	this.isSameType = function(v)
 	{
-		return typeof(v) == "number";
+		if(typeof(v) != "number")
+		{
+			return false;
+		}
+		
+		if(v < 0 || v > 0xffff)
+		{
+			return false;
+		}
+		
+		return true;
 	}
 }
 
@@ -1445,7 +1465,17 @@ KBEngine.DATATYPE_UINT32 = function()
 	
 	this.isSameType = function(v)
 	{
-		return typeof(v) == "number";
+		if(typeof(v) != "number")
+		{
+			return false;
+		}
+		
+		if(v < 0 || v > 0xffffffff)
+		{
+			return false;
+		}
+		
+		return true;
 	}
 }
 
@@ -1499,7 +1529,17 @@ KBEngine.DATATYPE_INT8 = function()
 	
 	this.isSameType = function(v)
 	{
-		return typeof(v) == "number";
+		if(typeof(v) != "number")
+		{
+			return false;
+		}
+		
+		if(v < -0x80 || v > 0x7f)
+		{
+			return false;
+		}
+		
+		return true;
 	}
 }
 
@@ -1526,7 +1566,17 @@ KBEngine.DATATYPE_INT16 = function()
 	
 	this.isSameType = function(v)
 	{
-		return typeof(v) == "number";
+		if(typeof(v) != "number")
+		{
+			return false;
+		}
+		
+		if(v < -0x8000 || v > 0x7fff)
+		{
+			return false;
+		}
+		
+		return true;
 	}
 }
 
@@ -1553,7 +1603,17 @@ KBEngine.DATATYPE_INT32 = function()
 	
 	this.isSameType = function(v)
 	{
-		return typeof(v) == "number";
+		if(typeof(v) != "number")
+		{
+			return false;
+		}
+		
+		if(v < -0x80000000 || v > 0x7fffffff)
+		{
+			return false;
+		}
+		
+		return true;
 	}
 }
 
