@@ -47,6 +47,7 @@ var ActionSprite = cc.Node.extend({
     state: 0,
     direction: 0,
     position: 0,
+    speed : 6,
     lastAnim: null,
     res: "",
     ctor:function (scene, res) {
@@ -119,7 +120,11 @@ var ActionSprite = cc.Node.extend({
 	moveTo : function(position)
 	{
 		this.stopAllActions();
-		this.runAction(cc.moveTo(1, position));
+
+        var x = position.x - this.x;
+        var y = position.y - this.y;
+        var t = Math.sqrt(x * x + y * y) / this.speed * 0.01;
+		this.runAction(cc.moveTo(t, position));
 	},
 		
     /* -----------------------------------------------------------------------/
