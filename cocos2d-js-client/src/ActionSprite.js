@@ -158,7 +158,7 @@ var ActionSprite = cc.Node.extend({
 
         var x = position.x - this.x;
         var y = position.y - this.y;
-        var t = Math.sqrt(x * x + y * y) / this.speed * 0.01;
+        var t = Math.sqrt(x * x + y * y) / this.speed * 0.05;
 		this.runAction(cc.moveTo(t, position));
 		
 		var dir = this.getDir(x, y);
