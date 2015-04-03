@@ -3,11 +3,12 @@ var WorldSceneLayer = cc.Layer.extend({
     sprite:null,
     player:null,
     tmxmap: null,
-    entities: {},
+    entities: null,
     ctor:function () {
         //////////////////////////////
         // super init first
         this._super();
+		this.entities = {};
         return true;
     },
 

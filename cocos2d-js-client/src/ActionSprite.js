@@ -43,7 +43,7 @@ var ActionSprite = cc.Node.extend({
     frameX: 0,
     frameY: 0,
     scene:null,
-    animations: {},
+    animations: null,
     state: 0,
     direction: 0,
     position: 0,
@@ -56,6 +56,7 @@ var ActionSprite = cc.Node.extend({
         
         this.scene = scene;
         this.res = res;
+		this.animations = {};
         return true;
     },	
 
