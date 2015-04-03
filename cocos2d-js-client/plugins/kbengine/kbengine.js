@@ -96,13 +96,13 @@ KBEngine.INT64 = function(lo, hi)
 		this.sign = -1;
 		if(this.lo > 0)
 		{
-			this.lo = (4294967295 - this.lo + 1) & 0xffffffff;
+			this.lo = (4294967296 - this.lo) & 0xffffffff;
 			this.hi = 4294967295 - this.hi;
 		}
 		else
 		{
 			this.lo = (4294967296 - this.lo) & 0xffffffff;
-			this.hi = 4294967295 - this.hi + 1;
+			this.hi = 4294967296 - this.hi;
 		}
 	}
 	
@@ -1196,12 +1196,20 @@ KBEngine.Entity = KBEngine.Class.extend(
 		{
 			for(var i=0; i<args.length; i++)
 			{
-				args[i].addToStream(this.base.bundle, arguments[i + 1]);
+				if(args[i].isSameType(arguments[i + 1]))
+				{
+					args[i].addToStream(this.base.bundle, arguments[i + 1]);
+				}
+				else
+				{
+					throw new Error("KBEngine.Entity::baseCall: arg[" + i + "] is error!");
+				}
 			}
 		}
 		catch(e)
 		{
-			KBEngine.ERROR_MSG('KBEngine.Entity::baseCall: args is error!');  
+			KBEngine.ERROR_MSG(e.toString());
+			KBEngine.ERROR_MSG('KBEngine.Entity::baseCall: args is error!');
 			this.base.bundle = null;
 			return;
 		}
@@ -1380,6 +1388,11 @@ KBEngine.DATATYPE_UINT8 = function()
 	{
 		return eval(v);
 	}
+	
+	this.isSameType = function(v)
+	{
+		return typeof(v) == "number";
+	}
 }
 
 KBEngine.DATATYPE_UINT16 = function()
@@ -1401,6 +1414,11 @@ KBEngine.DATATYPE_UINT16 = function()
 	this.parseDefaultValStr = function(v)
 	{
 		return eval(v);
+	}
+	
+	this.isSameType = function(v)
+	{
+		return typeof(v) == "number";
 	}
 }
 
@@ -1424,6 +1442,11 @@ KBEngine.DATATYPE_UINT32 = function()
 	{
 		return eval(v);
 	}
+	
+	this.isSameType = function(v)
+	{
+		return typeof(v) == "number";
+	}
 }
 
 KBEngine.DATATYPE_UINT64 = function()
@@ -1445,6 +1468,11 @@ KBEngine.DATATYPE_UINT64 = function()
 	this.parseDefaultValStr = function(v)
 	{
 		return eval(v);
+	}
+	
+	this.isSameType = function(v)
+	{
+		return v instanceof KBEngine.UINT64;
 	}
 }
 
@@ -1468,6 +1496,11 @@ KBEngine.DATATYPE_INT8 = function()
 	{
 		return eval(v);
 	}
+	
+	this.isSameType = function(v)
+	{
+		return typeof(v) == "number";
+	}
 }
 
 KBEngine.DATATYPE_INT16 = function()
@@ -1489,6 +1522,11 @@ KBEngine.DATATYPE_INT16 = function()
 	this.parseDefaultValStr = function(v)
 	{
 		return eval(v);
+	}
+	
+	this.isSameType = function(v)
+	{
+		return typeof(v) == "number";
 	}
 }
 
@@ -1512,6 +1550,11 @@ KBEngine.DATATYPE_INT32 = function()
 	{
 		return eval(v);
 	}
+	
+	this.isSameType = function(v)
+	{
+		return typeof(v) == "number";
+	}
 }
 
 KBEngine.DATATYPE_INT64 = function()
@@ -1533,6 +1576,11 @@ KBEngine.DATATYPE_INT64 = function()
 	this.parseDefaultValStr = function(v)
 	{
 		return eval(v);
+	}
+	
+	this.isSameType = function(v)
+	{
+		return v instanceof KBEngine.INT64;
 	}
 }
 
@@ -1556,6 +1604,11 @@ KBEngine.DATATYPE_FLOAT = function()
 	{
 		return eval(v);
 	}
+	
+	this.isSameType = function(v)
+	{
+		return typeof(v) == "number";
+	}
 }
 
 KBEngine.DATATYPE_DOUBLE = function()
@@ -1578,6 +1631,11 @@ KBEngine.DATATYPE_DOUBLE = function()
 	{
 		return eval(v);
 	}
+	
+	this.isSameType = function(v)
+	{
+		return typeof(v) == "number";
+	}
 }
 
 KBEngine.DATATYPE_STRING = function()
@@ -1599,6 +1657,11 @@ KBEngine.DATATYPE_STRING = function()
 	this.parseDefaultValStr = function(v)
 	{
 		return eval(v);
+	}
+	
+	this.isSameType = function(v)
+	{
+		return typeof(v) == "string";
 	}
 }
 
@@ -1648,6 +1711,29 @@ KBEngine.DATATYPE_VECTOR = function(size)
 	{
 		return eval(v);
 	}
+	
+	this.isSameType = function(v)
+	{
+		if(! v instanceof Array)
+		{
+			return false;
+		}
+		
+		if(this.itemsize != v.length)
+		{
+			return false;
+		}
+		
+		for(var i=0; i<this.itemsize; i++)
+		{
+			if(typeof(v[i]) != "number")
+			{
+				return false;
+			}
+		}
+		
+		return true;
+	}
 }
 
 KBEngine.DATATYPE_PYTHON = function()
@@ -1667,6 +1753,11 @@ KBEngine.DATATYPE_PYTHON = function()
 	this.parseDefaultValStr = function(v)
 	{
 		return eval(v);
+	}
+	
+	this.isSameType = function(v)
+	{
+		return false;
 	}
 }
 
@@ -1690,6 +1781,11 @@ KBEngine.DATATYPE_UNICODE = function()
 	{
 		return eval(v);
 	}
+	
+	this.isSameType = function(v)
+	{
+		return typeof(v) == "string";
+	}
 }
 
 KBEngine.DATATYPE_MAILBOX = function()
@@ -1709,6 +1805,11 @@ KBEngine.DATATYPE_MAILBOX = function()
 	this.parseDefaultValStr = function(v)
 	{
 		return eval(v);
+	}
+	
+	this.isSameType = function(v)
+	{
+		return false;
 	}
 }
 
@@ -1734,6 +1835,11 @@ KBEngine.DATATYPE_BLOB = function()
 	this.parseDefaultValStr = function(v)
 	{
 		return eval(v);
+	}
+	
+	this.isSameType = function(v)
+	{
+		return true;
 	}
 }
 
@@ -1775,6 +1881,19 @@ KBEngine.DATATYPE_ARRAY = function()
 	this.parseDefaultValStr = function(v)
 	{
 		return eval(v);
+	}
+	
+	this.isSameType = function(v)
+	{
+		for(var i=0; i<v.length; i++)
+		{
+			if(!this.type.isSameType(v[i]))
+			{
+				return false;
+			}
+		}
+		
+		return true;
 	}
 }
 
@@ -1818,6 +1937,19 @@ KBEngine.DATATYPE_FIXED_DICT = function()
 	this.parseDefaultValStr = function(v)
 	{
 		return eval(v);
+	}
+	
+	this.isSameType = function(v)
+	{
+		for(itemkey in this.dicttype)
+		{
+			if(!this.dicttype[itemkey].isSameType(v[itemkey]))
+			{
+				return false;
+			}
+		}
+		
+		return true;
 	}
 }
 
