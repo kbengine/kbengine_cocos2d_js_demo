@@ -59,10 +59,16 @@ var WorldSceneLayer = cc.Layer.extend({
                 onMouseUp: this.onMouseUp
             }, target);
         } else {
-            cc.log("MOUSE Not supported");
+	        if( 'touches' in cc.sys.capabilities )
+	            cc.eventManager.addListener(cc.EventListener.create({
+	                event: cc.EventListener.TOUCH_ALL_AT_ONCE,
+	                onTouchesEnded:this.onTouchesEnded
+	            }), this);
+            else        	
+          	  cc.log("MOUSE and TOUCH Not supported");
         }		
 	},
-
+		
     onMouseDown: function(event)
     {
         var pos = event.getLocation(), target = event.getCurrentTarget();
@@ -96,10 +102,34 @@ var WorldSceneLayer = cc.Layer.extend({
 		// 检查是否在区域内
         if (cc.rectContainsPoint(rect, locationInNode))
 		{
-			cc.log("onMouseUp at: " + pos.x + " " + pos.y );
+			target.onClickUp(pos);
 		}
     },
-    	
+
+	onTouchesEnded : function (touches, event) 
+	{
+        if (touches.length <= 0)
+            return;
+        
+        var pos = touches[0].getLocation(), target = event.getCurrentTarget();
+        
+        var locationInNode = target.convertToNodeSpace(pos);
+        var s = target.getContentSize();
+        var rect = cc.rect(0, 0, s.width, s.height);
+		
+		// 检查是否在区域内
+        if (cc.rectContainsPoint(rect, locationInNode))
+		{
+			target.onClickUp(pos);
+		}
+	},
+	
+	onClickUp : function(pos)
+	{
+		cc.log("onClickUp at: " + pos.x + " " + pos.y );
+        this.player.moveTo(this.convertToNodeSpace(pos));
+	},
+		
     /* -----------------------------------------------------------------------/
     							KBEngine 事件响应
     /------------------------------------------------------------------------ */

@@ -116,6 +116,12 @@ var ActionSprite = cc.Node.extend({
         this.state = state;
     },
 
+	moveTo : function(position)
+	{
+		this.stopAllActions();
+		this.runAction(cc.moveTo(1, position));
+	},
+		
     /* -----------------------------------------------------------------------/
     							其他系统相关
     /------------------------------------------------------------------------ */
