@@ -47,9 +47,10 @@ var ActionSprite = cc.Node.extend({
     state: 0,
     direction: 0,
     position: 0,
-    speed : 6,
+    speed: 6,
     lastAnim: null,
     res: "",
+    currentDirIsRight: true,
     ctor:function (scene, res) {
         //////////////////////////////
         // super init first
@@ -69,13 +70,16 @@ var ActionSprite = cc.Node.extend({
     	
         // 激活update
         this.schedule(this.spriteUpdate, 0.15, cc.REPEAT_FOREVER, 0.15);
+        
+        // 初始动作表现
+        this.play("idle_down");
     },
 
     onExit: function () 
     {
     	this._super();
     },
-    	
+
     setSprite : function(res)
     {
         spriteRes = res.replace(/\\/g,'/');
@@ -84,7 +88,7 @@ var ActionSprite = cc.Node.extend({
         var name = spriteRes.substring(s1 + 1, s2);
 
         var jsonData = cc.loader.getRes("res/sprites/" + name + ".json");
-            	
+
 		this.sprite = new cc.Sprite(res, cc.rect(0, 0, jsonData.width * 3, jsonData.height * 3));
         this.addChild(this.sprite);
 
@@ -100,13 +104,21 @@ var ActionSprite = cc.Node.extend({
 
     play : function(aniName)
     {
-        if(this.lastAnim == null || this.lastAnim.name != aniName)
-        {
-            this.lastAnim = this.animations[aniName];
-            this.lastAnim.reset();
-        }
+    	if(arguments.length == 1)
+    	{
+	        if(this.lastAnim == null || this.lastAnim.name != aniName)
+	        {
+	            this.lastAnim = this.animations[aniName];
+	            this.lastAnim.reset();
+	        }
+	    }
+	    else
+	    {
+	    	if(this.lastAnim == null)
+	    		return;
+	    }
 
-        this.lastAnim.play();
+	    this.lastAnim.play();
     },
 
     setState : function(state)
@@ -117,6 +129,29 @@ var ActionSprite = cc.Node.extend({
         this.state = state;
     },
 
+    getDir: function (dx, dy) 
+    {
+        // 坐标系 →x ↑y， 0 当前方向不变， 1 到 4 分别为右、上、左、下        
+        if (dx > 0 && dx >= Math.abs(dy))
+        {
+            return 1; // 右
+        }
+        else if (dx < 0 && Math.abs(dx) >= Math.abs(dy))
+        {
+            return 3; // 左
+        }
+        else if (dy > 0 && dy >= Math.abs(dx))
+        {
+            return 2; // 上
+        }
+        else if (dy < 0 && Math.abs(dy) >= Math.abs(dx))
+        {
+            return 4; // 下
+        }
+        
+        return 0; // 当前方向不变
+    },
+    	
 	moveTo : function(position)
 	{
 		this.stopAllActions();
@@ -125,6 +160,25 @@ var ActionSprite = cc.Node.extend({
         var y = position.y - this.y;
         var t = Math.sqrt(x * x + y * y) / this.speed * 0.01;
 		this.runAction(cc.moveTo(t, position));
+		
+		var dir = this.getDir(x, y);
+		switch(dir)
+		{
+			case 1:
+				this.scaleX = 1;		
+				this.play("walk_right");
+				break;
+			case 2:
+				this.play("walk_up");
+				break;
+			case 3:
+				this.scaleX = -1;
+				this.play("walk_right");
+				break;
+			case 4:
+				this.play("walk_down");
+				break;
+		};
 	},
 		
     /* -----------------------------------------------------------------------/
@@ -132,6 +186,6 @@ var ActionSprite = cc.Node.extend({
     /------------------------------------------------------------------------ */
     spriteUpdate : function(dt)
     {
-        this.play("walk_right");
+        this.play();
     }
 });
