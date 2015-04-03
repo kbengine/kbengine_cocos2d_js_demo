@@ -159,7 +159,11 @@ var ActionSprite = cc.Node.extend({
         var x = position.x - this.x;
         var y = position.y - this.y;
         var t = Math.sqrt(x * x + y * y) / this.speed * 0.05;
-		this.runAction(cc.moveTo(t, position));
+        
+        var act1 = cc.moveTo(t, position);
+        var act2 = cc.callFunc(this.onMoveToOver);
+        var actF = cc.sequence(act1, act2);
+		this.runAction(actF);
 		
 		var dir = this.getDir(x, y);
 		switch(dir)
@@ -172,6 +176,7 @@ var ActionSprite = cc.Node.extend({
 				this.play("walk_up");
 				break;
 			case 3:
+				// 由于只有一个right, 因此这个方向的表现需要翻转图片
 				this.scaleX = -1;
 				this.play("walk_right");
 				break;
@@ -180,7 +185,23 @@ var ActionSprite = cc.Node.extend({
 				break;
 		};
 	},
-		
+
+    onMoveToOver:function (pSender) 
+    {
+        if(pSender.lastAnim == null || pSender.lastAnim.name == "walk_down")
+        {
+        	pSender.play("idle_down");
+        }    	
+        else if(pSender.lastAnim.name == "walk_up")
+        {
+        	pSender.play("idle_up");
+        }
+        else if(pSender.lastAnim.name == "walk_right")
+        {
+        	pSender.play("idle_right");
+        }        
+    },
+    	
     /* -----------------------------------------------------------------------/
     							其他系统相关
     /------------------------------------------------------------------------ */
