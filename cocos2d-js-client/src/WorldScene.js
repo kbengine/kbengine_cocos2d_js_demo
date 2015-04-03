@@ -5,11 +5,13 @@ var WorldSceneLayer = cc.Layer.extend({
     tmxmap: null,
     entities: null,
     playerLastPos: null,
+    mapNode: null,
     ctor:function () {
         //////////////////////////////
         // super init first
         this._super();
 		this.entities = {};
+		this.mapNode = new cc.Node();
         return true;
     },
 
@@ -17,6 +19,8 @@ var WorldSceneLayer = cc.Layer.extend({
     {
         this._super();
 
+		this.addChild(this.mapNode);
+		
     	// 初始化UI
     	this.initUI();
 
@@ -129,7 +133,7 @@ var WorldSceneLayer = cc.Layer.extend({
 	onClickUp : function(pos)
 	{
 		cc.log("onClickUp at: " + pos.x + " " + pos.y );
-        this.player.moveTo(this.convertToNodeSpace(pos));
+        this.player.moveTo(this.mapNode.convertToNodeSpace(pos));
 	},
 		
     /* -----------------------------------------------------------------------/
@@ -199,7 +203,7 @@ var WorldSceneLayer = cc.Layer.extend({
             x: size.width / 2,
             y: size.height / 2
         });
-        this.addChild(this.player, 10);
+        this.mapNode.addChild(this.player, 10);
         
         this.entities[avatar.id] = this.player;
         this.playerLastPos = cc.p(this.player.x, this.player.y);
@@ -217,7 +221,7 @@ var WorldSceneLayer = cc.Layer.extend({
             y: size.height / 2 + (400 * Math.random()) - 200
         });
 
-        this.addChild(ae, 10);
+        this.mapNode.addChild(ae, 10);
         this.entities[entity.id] = ae;
 
 		// 实体第一次进入到这个世界时这些属性不属于值改变行为，造成事件不会触发
@@ -305,7 +309,7 @@ var WorldSceneLayer = cc.Layer.extend({
 	createScene : function(resPath)
     {
         this.tmxmap = cc.TMXTiledMap.create(resPath);
-        this.addChild(this.tmxmap, 1, NODE_TAG_TMX);
+        this.mapNode.addChild(this.tmxmap, 1, NODE_TAG_TMX);
         
         var size = cc.winSize;
 		this.tmxmap.attr({
@@ -327,12 +331,13 @@ var WorldSceneLayer = cc.Layer.extend({
     	
     	var x = this.playerLastPos.x - this.player.x;
     	var y = this.playerLastPos.y - this.player.y;
-    	
+
     	this.playerLastPos.x = this.player.x;
     	this.playerLastPos.y = this.player.y;
     	
-    	this.tmxmap.x += x;
-    	this.tmxmap.y += y;
+    	var pos = this.convertToNodeSpace(cc.p(x, y));
+    	this.mapNode.x += pos.x;
+    	this.mapNode.y += pos.y;
     }
 });
 
