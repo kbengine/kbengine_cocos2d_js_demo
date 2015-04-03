@@ -50,10 +50,10 @@
 	   
 cc.game.onStart = function()
 {
-	// 初始化KBEngine
+	// 鍒濆鍖朘BEngine
 	var args = new KBEngine.KBEngineArgs();
 	
-	// 设置登录ip地址
+	// 璁剧疆鐧诲綍ip鍦板潃
 	args.ip = "127.0.0.1";
 	args.port = 20013;
 	KBEngine.create(args);
