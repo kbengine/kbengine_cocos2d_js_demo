@@ -302,7 +302,7 @@ var WorldSceneLayer = cc.Layer.extend({
 	createScene : function(resPath)
     {
         this.tmxmap = cc.TMXTiledMap.create(resPath);
-        this.addChild(this.tmxmap, 1);
+        this.addChild(this.tmxmap, 1, NODE_TAG_TMX);
         
         var size = cc.winSize;
 		this.tmxmap.attr({
@@ -315,12 +315,6 @@ var WorldSceneLayer = cc.Layer.extend({
 
     worldUpdate : function (dt) 
     {
-    	/*
-    	for(var entityID in this.entities)
-    	{
-    		actionEntity = this.entities[entityID];
-    		actionEntity.update(dt);
-    	}*/
     }
 });
 

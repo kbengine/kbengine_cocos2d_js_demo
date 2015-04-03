@@ -19,8 +19,9 @@
         "plugins/kbengine/NPC.js",
         "plugins/kbengine/Gate.js",
 
-	"src/GuiDebug.js",
         "src/resource.js",
+	"src/global.js",
+	"src/GuiDebug.js",
         "src/StartScene.js",
 	"src/WorldScene.js",
 	"src/ActionSprite.js",
