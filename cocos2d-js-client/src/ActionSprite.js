@@ -186,7 +186,7 @@ var ActionSprite = cc.Node.extend({
 		};
 	},
 
-    onMoveToOver:function (pSender) 
+    onMoveToOver : function (pSender) 
     {
         if(pSender.lastAnim == null || pSender.lastAnim.name == "walk_down")
         {
