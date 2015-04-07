@@ -1909,10 +1909,8 @@ KBEngine.DATATYPE_ARRAY = function()
 	
 	this.bind = function()
 	{
-		if(!isNaN(this.type))
+		if(typeof(this.type) == "number")
 			this.type = KBEngine.datatypes[this.type];
-		else
-			this.type.bind();
 	}
 	
 	this.createFromStream = function(stream)
@@ -1968,10 +1966,8 @@ KBEngine.DATATYPE_FIXED_DICT = function()
 		{
 			var utype = this.dicttype[itemkey];
 			
-			if(!isNaN(utype))
+			if(typeof(this.dicttype[itemkey]) == "number")
 				this.dicttype[itemkey] = KBEngine.datatypes[utype];
-			else
-				this.dicttype[itemkey].bind();
 		}
 	}
 	
@@ -2485,7 +2481,7 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 	
 		for(datatype in KBEngine.datatypes)
 		{
-			if(isNaN(datatype) && KBEngine.datatypes[datatype] != undefined)
+			if(KBEngine.datatypes[datatype] != undefined)
 			{
 				KBEngine.datatypes[datatype].bind();
 			}
