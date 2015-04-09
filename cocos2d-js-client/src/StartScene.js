@@ -319,7 +319,7 @@ var StartSceneLayer = cc.Layer.extend({
             	}
             	
                 GUIDebugLayer.debug.INFO_MSG("Connect to server...");
-                KBEngine.Event.fire("login", this.usernamebox.getString(), this.passwordbox.getString());            
+                KBEngine.Event.fire("login", this.usernamebox.getString(), this.passwordbox.getString(), "kbengine_cocos2d_js_demo");            
                 break;
             case ccui.Widget.TOUCH_CANCELED:
                 break;
@@ -337,7 +337,7 @@ var StartSceneLayer = cc.Layer.extend({
                 break;
             case ccui.Widget.TOUCH_ENDED:
                 GUIDebugLayer.debug.INFO_MSG("Connect to server...");
-            	KBEngine.Event.fire("createAccount", this.usernamebox.getString(), this.passwordbox.getString());            
+            	KBEngine.Event.fire("createAccount", this.usernamebox.getString(), this.passwordbox.getString(), "kbengine_cocos2d_js_demo");            
                 break;
             case ccui.Widget.TOUCH_CANCELED:
                 break;

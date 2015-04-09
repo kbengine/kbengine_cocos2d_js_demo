@@ -2039,6 +2039,9 @@ KBEngine.KBEngineArgs = function()
 	this.ip = "127.0.0.1";
 	this.port = 20013;
 	this.updateHZ = 100;
+	
+	// Reference: http://www.kbengine.org/docs/programming/clientsdkprogramming.html, client types
+	this.clientType = 3;
 }
 
 /*-----------------------------------------------------------------------------------------
@@ -2756,10 +2759,11 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 			KBEngine.ERROR_MSG("KBEngineApp::onmessage: not found msg(" + msgid + ")!");
 	}
 	
-	this.createAccount = function(username, password)
+	this.createAccount = function(username, password, datas)
 	{  
 		KBEngine.app.username = username;
 		KBEngine.app.password = password;
+		KBEngine.app.clientdatas = datas;
 		
 		KBEngine.app.createAccount_loginapp(true);
 	}
@@ -2778,7 +2782,7 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 			bundle.newMessage(KBEngine.messages.Loginapp_reqCreateAccount);
 			bundle.writeString(KBEngine.app.username);
 			bundle.writeString(KBEngine.app.password);
-			bundle.writeBlob("");
+			bundle.writeBlob(KBEngine.app.clientdatas);
 			bundle.send(KBEngine.app);
 		}
 	}
@@ -2803,10 +2807,11 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 		bundle.send(KBEngine.app);
 	}
 	
-	this.login = function(username, password)
+	this.login = function(username, password, datas)
 	{  
 		KBEngine.app.username = username;
 		KBEngine.app.password = password;
+		KBEngine.app.clientdatas = datas;
 		
 		KBEngine.app.login_loginapp(true);
 	}
@@ -2823,8 +2828,8 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 		{
 			var bundle = new KBEngine.Bundle();
 			bundle.newMessage(KBEngine.messages.Loginapp_login);
-			bundle.writeInt8(3); // clientType
-			bundle.writeBlob("");
+			bundle.writeInt8(KBEngine.app.args.clientType); // clientType
+			bundle.writeBlob(KBEngine.app.clientdatas);
 			bundle.writeString(KBEngine.app.username);
 			bundle.writeString(KBEngine.app.password);
 			bundle.send(KBEngine.app);
