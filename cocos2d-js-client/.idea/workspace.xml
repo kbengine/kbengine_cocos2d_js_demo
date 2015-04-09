@@ -36,10 +36,10 @@
       <file leaf-file-name="kbengine.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/plugins/kbengine/kbengine.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="21460" max-vertical-offset="73017">
-              <caret line="1144" column="21" selection-start-line="1144" selection-start-column="21" selection-end-line="1144" selection-end-column="21" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="21793" max-vertical-offset="73074">
+              <caret line="1147" column="21" selection-start-line="1147" selection-start-column="21" selection-end-line="1147" selection-end-column="21" />
               <folding>
-                <marker date="1428055351660" expanded="true" signature="90477:90580" placeholder="{...}" />
+                <marker date="1428558408612" expanded="true" signature="90732:90835" placeholder="{...}" />
               </folding>
             </state>
           </provider>
@@ -173,6 +173,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -225,7 +226,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -235,6 +235,14 @@
     <property name="FullScreen" value="false" />
   </component>
   <component name="RunManager" selected="JavaScript Debug.Unnamed">
+    <configuration default="true" type="DartUnitRunConfigurationType" factoryName="DartUnit">
+      <option name="VMOptions" />
+      <option name="arguments" />
+      <option name="filePath" />
+      <option name="scope" value="ALL" />
+      <option name="testName" />
+      <method />
+    </configuration>
     <configuration default="true" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application">
       <option name="VMOptions" />
       <option name="arguments" />
@@ -245,12 +253,14 @@
       <option name="showConsoleOnStdOut" value="false" />
       <method />
     </configuration>
-    <configuration default="true" type="DartUnitRunConfigurationType" factoryName="DartUnit">
-      <option name="VMOptions" />
-      <option name="arguments" />
+    <configuration default="true" type="CucumberJavaScriptRunConfigurationType" factoryName="Cucumber.js">
+      <option name="cucumberJsArguments" />
+      <option name="executablePath" />
       <option name="filePath" />
-      <option name="scope" value="ALL" />
-      <option name="testName" />
+      <method />
+    </configuration>
+    <configuration default="true" type="JavaScriptTestRunnerKarma" factoryName="Karma" config-file="">
+      <envs />
       <method />
     </configuration>
     <configuration default="true" type="JSTestDriver:ConfigurationType" factoryName="JsTestDriver">
@@ -258,16 +268,6 @@
       <setting name="settingsFile" value="" />
       <setting name="serverType" value="INTERNAL" />
       <setting name="preferredDebugBrowser" value="Chrome" />
-      <method />
-    </configuration>
-    <configuration default="true" type="JavaScriptTestRunnerKarma" factoryName="Karma" config-file="">
-      <envs />
-      <method />
-    </configuration>
-    <configuration default="true" type="CucumberJavaScriptRunConfigurationType" factoryName="Cucumber.js">
-      <option name="cucumberJsArguments" />
-      <option name="executablePath" />
-      <option name="filePath" />
       <method />
     </configuration>
     <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
@@ -306,18 +306,18 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39957717" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.39957717" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -345,7 +345,7 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="20320" max-vertical-offset="69369">
           <caret line="1078" column="25" selection-start-line="1078" selection-start-column="25" selection-end-line="1078" selection-end-column="25" />
           <folding>
-            <marker date="1428055351660" expanded="true" signature="90477:90580" placeholder="{...}" />
+            <marker date="1428558408612" expanded="true" signature="90732:90835" placeholder="{...}" />
           </folding>
         </state>
       </provider>
@@ -390,7 +390,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="893" max-vertical-offset="1102">
           <caret line="47" column="0" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -406,7 +405,7 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="63109" max-vertical-offset="63802">
           <caret line="3342" column="0" selection-start-line="3342" selection-start-column="0" selection-end-line="3342" selection-end-column="0" />
           <folding>
-            <marker date="1428055351660" expanded="true" signature="90477:90580" placeholder="{...}" />
+            <marker date="1428558408612" expanded="true" signature="90732:90835" placeholder="{...}" />
           </folding>
         </state>
       </provider>
@@ -429,7 +428,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="893" max-vertical-offset="1102">
           <caret line="47" column="0" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -452,7 +450,7 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="63109" max-vertical-offset="63802">
           <caret line="3342" column="0" selection-start-line="3342" selection-start-column="0" selection-end-line="3342" selection-end-column="0" />
           <folding>
-            <marker date="1428055351660" expanded="true" signature="90477:90580" placeholder="{...}" />
+            <marker date="1428558408612" expanded="true" signature="90732:90835" placeholder="{...}" />
           </folding>
         </state>
       </provider>
@@ -490,7 +488,7 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="1891" max-vertical-offset="63232">
           <caret line="110" column="0" selection-start-line="110" selection-start-column="0" selection-end-line="110" selection-end-column="0" />
           <folding>
-            <marker date="1428055351660" expanded="true" signature="90477:90580" placeholder="{...}" />
+            <marker date="1428558408612" expanded="true" signature="90732:90835" placeholder="{...}" />
           </folding>
         </state>
       </provider>
@@ -521,7 +519,7 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="3430" max-vertical-offset="63042">
           <caret line="200" column="13" selection-start-line="200" selection-start-column="13" selection-end-line="200" selection-end-column="13" />
           <folding>
-            <marker date="1428055351660" expanded="true" signature="90477:90580" placeholder="{...}" />
+            <marker date="1428558408612" expanded="true" signature="90732:90835" placeholder="{...}" />
           </folding>
         </state>
       </provider>
@@ -552,7 +550,7 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="3430" max-vertical-offset="63042">
           <caret line="200" column="13" selection-start-line="200" selection-start-column="13" selection-end-line="200" selection-end-column="13" />
           <folding>
-            <marker date="1428055351660" expanded="true" signature="90477:90580" placeholder="{...}" />
+            <marker date="1428558408612" expanded="true" signature="90732:90835" placeholder="{...}" />
           </folding>
         </state>
       </provider>
@@ -583,7 +581,7 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="60135">
           <caret line="1426" column="59" selection-start-line="1426" selection-start-column="59" selection-end-line="1426" selection-end-column="59" />
           <folding>
-            <marker date="1428055351660" expanded="true" signature="90477:90580" placeholder="{...}" />
+            <marker date="1428558408612" expanded="true" signature="90732:90835" placeholder="{...}" />
           </folding>
         </state>
       </provider>
@@ -627,7 +625,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="1102" max-vertical-offset="1273">
           <caret line="58" column="0" selection-start-line="58" selection-start-column="0" selection-end-line="58" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -662,10 +659,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/plugins/kbengine/kbengine.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="21460" max-vertical-offset="73017">
-          <caret line="1144" column="21" selection-start-line="1144" selection-start-column="21" selection-end-line="1144" selection-end-column="21" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="21793" max-vertical-offset="73074">
+          <caret line="1147" column="21" selection-start-line="1147" selection-start-column="21" selection-end-line="1147" selection-end-column="21" />
           <folding>
-            <marker date="1428055351660" expanded="true" signature="90477:90580" placeholder="{...}" />
+            <marker date="1428558408612" expanded="true" signature="90732:90835" placeholder="{...}" />
           </folding>
         </state>
       </provider>

@@ -2057,6 +2057,9 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 	
 	this.username = "testhtml51";
 	this.password = "123456";
+	this.clientdatas = "";
+	this.encryptedKey = "";
+	
 	this.loginappMessageImported = false;
 	this.baseappMessageImported = false;
 	this.serverErrorsDescrImported = false;
@@ -2090,7 +2093,6 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 		
 		// 扩展数据
 		this.serverdatas = "";
-		this.clientdatas = "";
 		
 		// 版本信息
 		this.serverVersion = "";
@@ -2150,7 +2152,7 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 		
 		bundle.writeString(KBEngine.app.clientVersion);
 		bundle.writeString(KBEngine.app.clientScriptVersion);
-		bundle.writeBlob(KBEngine.app.clientdatas);
+		bundle.writeBlob(KBEngine.app.encryptedKey);
 		bundle.send(KBEngine.app);
 	}
 
