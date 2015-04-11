@@ -3376,7 +3376,7 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 	
 	this.updatePlayerToServer = function()
 	{
-		player = KBEngine.app.player();
+		var player = KBEngine.app.player();
 		if(player == undefined || player.inWorld == false || KBEngine.app.spaceID == 0)
 			return;
 		
@@ -3389,7 +3389,7 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 		bundle.writeFloat(player.direction[1]);
 		bundle.writeFloat(player.direction[0]);
 		bundle.writeUint8(KBEngine.app.isOnGound);
-		bundle.writeUint8(KBEngine.app.spaceID);
+		bundle.writeUint32(KBEngine.app.spaceID);
 		bundle.send(KBEngine.app);
 	}
 	

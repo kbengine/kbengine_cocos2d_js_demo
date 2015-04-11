@@ -241,7 +241,7 @@ var WorldSceneLayer = cc.Layer.extend({
 
 		// 实体第一次进入到这个世界时这些属性不属于值改变行为，造成事件不会触发
 		// 这里我们强制进行一次相关表现上的设置
-		this.set_moveSpeed(entity, entity.speed);
+		this.set_moveSpeed(entity, entity.moveSpeed);
 		this.set_state(entity, entity.state);
 		this.set_modelID(entity, entity.modelID);
 		this.set_modelScale(entity, entity.modelScale);
@@ -295,10 +295,14 @@ var WorldSceneLayer = cc.Layer.extend({
 
 	set_state : function(entity, v)
 	{
+		var ae = this.entities[entity.id];
+		ae.setState(v);
 	},
 
 	set_moveSpeed : function(entity, v)
 	{
+		var ae = this.entities[entity.id];
+		ae.setSpeed(v / 10.0);		
 	},
 
 	set_modelScale : function(entity, v)
@@ -396,6 +400,15 @@ var WorldSceneLayer = cc.Layer.extend({
     	var pos = this.convertToNodeSpace(cc.p(x, y));
     	this.mapNode.x += pos.x;
     	this.mapNode.y += pos.y;
+    	
+    	var player = KBEngine.app.player();
+		player.position[0] = this.player.x / 16;
+		player.position[1] = 0;
+		player.position[2] = this.player.y / 16;
+		player.direction[2] = this.player.getDir();
+		player.direction[1] = 0;
+		player.direction[0] = 0;
+		KBEngine.app.isOnGound = 1;    	
     }
 });
 

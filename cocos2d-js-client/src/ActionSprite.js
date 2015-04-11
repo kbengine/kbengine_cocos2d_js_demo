@@ -75,6 +75,11 @@ var ActionSprite = cc.Node.extend({
     	this._super();
     },
 
+	setSpeed : function(speed)
+	{
+		this.speed = speed;
+	},
+		
 	setName : function(name)
 	{
 		if(this.ui_name == null)

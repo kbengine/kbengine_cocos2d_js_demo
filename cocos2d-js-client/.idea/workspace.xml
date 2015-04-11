@@ -36,10 +36,10 @@
       <file leaf-file-name="kbengine.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/plugins/kbengine/kbengine.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-24.08" vertical-offset="21476" max-vertical-offset="73131">
-              <caret line="1162" column="0" selection-start-line="1162" selection-start-column="0" selection-end-line="1162" selection-end-column="0" />
+            <state vertical-scroll-proportion="-24.08" vertical-offset="21495" max-vertical-offset="73131">
+              <caret line="1163" column="0" selection-start-line="1163" selection-start-column="0" selection-end-line="1163" selection-end-column="0" />
               <folding>
-                <marker date="1428651954916" expanded="true" signature="90807:90910" placeholder="{...}" />
+                <marker date="1428761236837" expanded="true" signature="90812:90915" placeholder="{...}" />
               </folding>
             </state>
           </provider>
@@ -61,8 +61,8 @@
       <file leaf-file-name="WorldScene.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/WorldScene.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1007" max-vertical-offset="7961">
-              <caret line="69" column="0" selection-start-line="69" selection-start-column="0" selection-end-line="69" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="1102" max-vertical-offset="8208">
+              <caret line="74" column="0" selection-start-line="74" selection-start-column="0" selection-end-line="74" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -101,8 +101,8 @@
       <file leaf-file-name="ActionSprite.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/ActionSprite.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.45101663" vertical-offset="1371" max-vertical-offset="4655">
-              <caret line="85" column="28" selection-start-line="85" selection-start-column="28" selection-end-line="85" selection-end-column="28" />
+            <state vertical-scroll-proportion="0.45101663" vertical-offset="1485" max-vertical-offset="4750">
+              <caret line="91" column="28" selection-start-line="91" selection-start-column="28" selection-end-line="91" selection-end-column="28" />
               <folding />
             </state>
           </provider>
@@ -409,7 +409,7 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="63109" max-vertical-offset="63802">
           <caret line="3342" column="0" selection-start-line="3342" selection-start-column="0" selection-end-line="3342" selection-end-column="0" />
           <folding>
-            <marker date="1428651954916" expanded="true" signature="90807:90910" placeholder="{...}" />
+            <marker date="1428761236837" expanded="true" signature="90812:90915" placeholder="{...}" />
           </folding>
         </state>
       </provider>
@@ -455,7 +455,7 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="63109" max-vertical-offset="63802">
           <caret line="3342" column="0" selection-start-line="3342" selection-start-column="0" selection-end-line="3342" selection-end-column="0" />
           <folding>
-            <marker date="1428651954916" expanded="true" signature="90807:90910" placeholder="{...}" />
+            <marker date="1428761236837" expanded="true" signature="90812:90915" placeholder="{...}" />
           </folding>
         </state>
       </provider>
@@ -493,7 +493,7 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="1891" max-vertical-offset="63232">
           <caret line="110" column="0" selection-start-line="110" selection-start-column="0" selection-end-line="110" selection-end-column="0" />
           <folding>
-            <marker date="1428651954916" expanded="true" signature="90807:90910" placeholder="{...}" />
+            <marker date="1428761236837" expanded="true" signature="90812:90915" placeholder="{...}" />
           </folding>
         </state>
       </provider>
@@ -524,7 +524,7 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="3430" max-vertical-offset="63042">
           <caret line="200" column="13" selection-start-line="200" selection-start-column="13" selection-end-line="200" selection-end-column="13" />
           <folding>
-            <marker date="1428651954916" expanded="true" signature="90807:90910" placeholder="{...}" />
+            <marker date="1428761236837" expanded="true" signature="90812:90915" placeholder="{...}" />
           </folding>
         </state>
       </provider>
@@ -555,7 +555,7 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="3430" max-vertical-offset="63042">
           <caret line="200" column="13" selection-start-line="200" selection-start-column="13" selection-end-line="200" selection-end-column="13" />
           <folding>
-            <marker date="1428651954916" expanded="true" signature="90807:90910" placeholder="{...}" />
+            <marker date="1428761236837" expanded="true" signature="90812:90915" placeholder="{...}" />
           </folding>
         </state>
       </provider>
@@ -586,7 +586,7 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="60135">
           <caret line="1426" column="59" selection-start-line="1426" selection-start-column="59" selection-end-line="1426" selection-end-column="59" />
           <folding>
-            <marker date="1428651954916" expanded="true" signature="90807:90910" placeholder="{...}" />
+            <marker date="1428761236837" expanded="true" signature="90812:90915" placeholder="{...}" />
           </folding>
         </state>
       </provider>
@@ -723,26 +723,26 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/plugins/kbengine/kbengine.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-24.08" vertical-offset="21476" max-vertical-offset="73131">
-          <caret line="1162" column="0" selection-start-line="1162" selection-start-column="0" selection-end-line="1162" selection-end-column="0" />
+        <state vertical-scroll-proportion="-24.08" vertical-offset="21495" max-vertical-offset="73131">
+          <caret line="1163" column="0" selection-start-line="1163" selection-start-column="0" selection-end-line="1163" selection-end-column="0" />
           <folding>
-            <marker date="1428651954916" expanded="true" signature="90807:90910" placeholder="{...}" />
+            <marker date="1428761236837" expanded="true" signature="90812:90915" placeholder="{...}" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/WorldScene.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1007" max-vertical-offset="7961">
-          <caret line="69" column="0" selection-start-line="69" selection-start-column="0" selection-end-line="69" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="1102" max-vertical-offset="8208">
+          <caret line="74" column="0" selection-start-line="74" selection-start-column="0" selection-end-line="74" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/ActionSprite.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.45101663" vertical-offset="1371" max-vertical-offset="4655">
-          <caret line="85" column="28" selection-start-line="85" selection-start-column="28" selection-end-line="85" selection-end-column="28" />
+        <state vertical-scroll-proportion="0.45101663" vertical-offset="1485" max-vertical-offset="4750">
+          <caret line="91" column="28" selection-start-line="91" selection-start-column="28" selection-end-line="91" selection-end-column="28" />
           <folding />
         </state>
       </provider>
