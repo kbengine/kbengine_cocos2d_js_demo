@@ -11,12 +11,17 @@ def getSpawnPoints(res):
                 return
         
         rootNode = etree.parse(res).getroot()
-
+        #tilewidth = int(rootNode.attrib["tilewidth"])
+        #tileheight = int(rootNode.attrib["tileheight"])
+        tilewidth = 1
+        tileheight = 1
+        
         for childNode in rootNode:
                 if childNode.tag == "layer":
                         if childNode.attrib["name"] == "spawnpoint":
                                 width = int(childNode.attrib["width"])
                                 height = int(childNode.attrib["height"])
+                                
                                 print("-------------------------------------------------")
                                 #print("map: width=%i, height=%i" % (width, height))
                                 for dataNode in childNode:
@@ -46,10 +51,10 @@ def getSpawnPoints(res):
                                                 for info in spawnInfos:
                                                         tileIndex, gid = info
                                                         info = (tileIndex, keys.index(gid) + 1)
-                                                        print("(%i, (%i, 0, %i), (0,0,0), 1)," % ((80000 + info[1]) * 1000 + 1, info[0] % width, int(info[0] % height)))
+                                                        print("(%i, (%i, 0, %i), (0,0,0), 1)," % ((80000 + info[1]) * 1000 + 1, (info[0] % width) * tilewidth, ((height - 1) - int(info[0] / height)) * tileheight))
                                                         newspawnInfos.append(info)
                                                         
-                                                print("totals=%s" % (str(totals)))
+                                                #print("totals=%s" % (str(totals)))
 
                         if childNode.attrib["name"] == "avatar_spawnpoint": 
                                 width = int(childNode.attrib["width"])
@@ -82,7 +87,7 @@ def getSpawnPoints(res):
                                                 for info in spawnInfos:
                                                         tileIndex, gid = info
                                                         info = (tileIndex, keys.index(gid) + 1)
-                                                        print("avatar_spawnpoint = (%i, 0, %i)," % (info[0] % width, int(info[0] % height)))
+                                                        print("avatar_spawnpoint = (%i, 0, %i)," % ((info[0] % width) * tilewidth, ((height - 1) - int(info[0] / height)) * tilewidth))
                                                         newspawnInfos.append(info)
                                                         
                                                   

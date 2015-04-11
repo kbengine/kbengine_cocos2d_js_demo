@@ -6,8 +6,6 @@ KBEngine.Avatar = KBEngine.GameObject.extend(
 	__init__ : function()
 	{
 		this._super();
-		
-		KBEngine.Event.fire("onAvatarEnterWorld", KBEngine.app.entity_uuid, this.id, this);
   	},
   		
 	relive : function(type)
@@ -51,6 +49,7 @@ KBEngine.Avatar = KBEngine.GameObject.extend(
 		// 请求获取技能列表
 		if(this.isPlayer())
 		{
+			KBEngine.Event.fire("onAvatarEnterWorld", KBEngine.app.entity_uuid, this.id, this);
 			this.cellCall("requestPull");
 		}		
 	}

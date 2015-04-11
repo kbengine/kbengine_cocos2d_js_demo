@@ -1142,8 +1142,7 @@ KBEngine.bufferedCreateEntityMessage = {};
 -----------------------------------------------------------------------------------------*/
 KBEngine.Entity = KBEngine.Class.extend(
 {
-	init : function()
-	{
+    ctor:function () {
 		this.id = 0;
 		this.className = "";
 		this.position = [0.0, 0.0, 0.0];
@@ -1153,9 +1152,11 @@ KBEngine.Entity = KBEngine.Class.extend(
 		this.cell = null;
 		this.base = null;
 		
-		this.inWorld = false;
-	},
-
+		this.inWorld = false;		
+        return true;
+    },
+    
+    // 与服务端实体脚本中__init__类似, 代表初始化实体
 	__init__ : function()
 	{
 	},
@@ -3098,7 +3099,9 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 			var setmethod = propertydata[5];
 			var val = propertydata[4].createFromStream(stream);
 			var oldval = entity[utype];
+			
 			KBEngine.INFO_MSG("KBEngineApp::Client_onUpdatePropertys: " + entity.className + "(id=" + eid  + " " + propertydata[2] + ", val=" + val + ")!");
+			
 			entity[propertydata[2]] = val;
 			if(setmethod != null)
 			{

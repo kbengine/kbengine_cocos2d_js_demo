@@ -155,7 +155,7 @@ var ActionSprite = cc.Node.extend({
 
         var x = position.x - this.x;
         var y = position.y - this.y;
-        var t = Math.sqrt(x * x + y * y) / this.speed * 0.05;
+        var t = Math.sqrt(x * x + y * y) / 16 / this.speed;
         
         var act1 = cc.moveTo(t, position);
         var act2 = cc.callFunc(this.onMoveToOver);

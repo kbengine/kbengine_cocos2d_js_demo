@@ -6,6 +6,7 @@ var WorldSceneLayer = cc.Layer.extend({
     entities: null,
     playerLastPos: null,
     mapNode: null,
+    mapName: "",
     ctor:function () {
         //////////////////////////////
         // super init first
@@ -187,38 +188,52 @@ var WorldSceneLayer = cc.Layer.extend({
 
 	addSpaceGeometryMapping : function(resPath)
 	{
-		GUIDebugLayer.debug.INFO_MSG("scene = " + resPath);
+		this.mapName = resPath;
 		
         // 创建场景
         this.createScene("res/img/3/cocosjs_demo_map1.tmx");
+        this.fixMap();
 	},
 	
 	onAvatarEnterWorld : function(rndUUID, eid, avatar)
 	{
-        var size = cc.winSize;
-
 		// 角色进入世界，创建角色精灵
 		this.player = new Avatar(this, "res/img/3/clotharmor.png");
         this.player.attr({
-            x: size.width / 2,
-            y: size.height / 2
+            x: avatar.position[0] * 16,
+            y: avatar.position[2] * 16,
+            anchorX: 0.5
         });
-        this.mapNode.addChild(this.player, 10);
-        
+
+		this.mapNode.addChild(this.player, 10);
         this.entities[avatar.id] = this.player;
         this.playerLastPos = cc.p(this.player.x, this.player.y);
+        
+        this.fixMap();
 	},
 
+	fixMap : function()
+	{
+		if(this.tmxmap == null || this.player == null)
+			return;
+		
+		var size = cc.winSize;
+		
+        // 将角色放置于屏幕中心
+        this.mapNode.x = this.mapNode.x - this.player.x + (size.width / 2);	
+		this.mapNode.y = this.mapNode.y - this.player.y + (size.height / 2);	
+	},
+		
 	onEnterWorld : function(entity)
 	{
 		if(entity.isPlayer())
 			return;
 
-		var size = cc.winSize;
 		var ae = new ActionEntity(this, "res/img/3/crab.png");
         ae.attr({
-            x: size.width / 2 + (400 * Math.random()) - 200,
-            y: size.height / 2 + (400 * Math.random()) - 200
+            x: entity.position[0] * 16,
+            y: entity.position[2] * 16,
+            anchorX: 0.5
         });
 
         this.mapNode.addChild(ae, 10);
@@ -235,8 +250,8 @@ var WorldSceneLayer = cc.Layer.extend({
 
 	onLeaveWorld : function(entity)
 	{
-		this.removeChild(this.entities[avatar.id]);
-		delete this.entities[avatar.id];
+		this.removeChild(this.entities[entity.id]);
+		delete this.entities[entity.id];
 	},
 
 	set_position : function(entity)
@@ -308,16 +323,8 @@ var WorldSceneLayer = cc.Layer.extend({
     /------------------------------------------------------------------------ */
 	createScene : function(resPath)
     {
-        this.tmxmap = cc.TMXTiledMap.create(resPath);
+        this.tmxmap = cc.TMXTiledMap.create(resPath);    
         this.mapNode.addChild(this.tmxmap, 1, NODE_TAG_TMX);
-        
-        var size = cc.winSize;
-		this.tmxmap.attr({
-            x: size.width / 2,
-            y: size.height / 2,
-            anchorX: 0.5,
-            anchorY: 0.5
-        });	
     },
 
     worldUpdate : function (dt) 
@@ -329,6 +336,8 @@ var WorldSceneLayer = cc.Layer.extend({
     	if(this.tmxmap == null || this.playerLastPos == null)
     		return;
     	
+    	GUIDebugLayer.debug.INFO_MSG("[scene] = " + this.mapName + ", [pos] = (" + Math.round(this.player.x) + ", " + Math.round(this.player.y) + ")");
+    	    	
     	var x = this.playerLastPos.x - this.player.x;
     	var y = this.playerLastPos.y - this.player.y;
 
