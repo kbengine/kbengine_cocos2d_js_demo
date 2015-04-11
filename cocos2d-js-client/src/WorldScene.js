@@ -226,23 +226,24 @@ var WorldSceneLayer = cc.Layer.extend({
 		
 	onEnterWorld : function(entity)
 	{
-		if(entity.isPlayer())
-			return;
+		if(!entity.isPlayer())
+		{
+			var ae = new ActionEntity(this, "res/img/3/crab.png");
+	        ae.attr({
+	            x: entity.position[0] * 16,
+	            y: entity.position[2] * 16,
+	            anchorX: 0.5
+	        });
 
-		var ae = new ActionEntity(this, "res/img/3/crab.png");
-        ae.attr({
-            x: entity.position[0] * 16,
-            y: entity.position[2] * 16,
-            anchorX: 0.5
-        });
-
-        this.mapNode.addChild(ae, 10);
-        this.entities[entity.id] = ae;
+	        this.mapNode.addChild(ae, 10);
+	        this.entities[entity.id] = ae;
+	    }
 
 		// 实体第一次进入到这个世界时这些属性不属于值改变行为，造成事件不会触发
 		// 这里我们强制进行一次相关表现上的设置
 		this.set_moveSpeed(entity, entity.speed);
 		this.set_state(entity, entity.state);
+		this.set_modelID(entity, entity.modelID);
 		this.set_modelScale(entity, entity.modelScale);
 		this.set_entityName(entity, entity.name);
 		this.set_HP(entity, entity.HP);	
@@ -288,6 +289,8 @@ var WorldSceneLayer = cc.Layer.extend({
 
 	set_entityName : function(entity, v)
 	{
+		var ae = this.entities[entity.id];
+		ae.setName(v);
 	},	
 
 	set_state : function(entity, v)
@@ -304,6 +307,52 @@ var WorldSceneLayer = cc.Layer.extend({
 
 	set_modelID : function(entity, v)
 	{
+		var ae = this.entities[entity.id];
+		switch(v)
+		{
+			case 80001001:
+				ae.setSprite("res/img/3/crab.png");
+				break;
+			case 80002001:
+				ae.setSprite("res/img/3/rat.png");
+				break;
+			case 80003001:
+				ae.setSprite("res/img/3/bat.png");
+				break;
+			case 80004001:
+				ae.setSprite("res/img/3/bat.png");
+				break;
+			case 80005001:
+				ae.setSprite("res/img/3/bat.png");
+				break;
+			case 80006001:
+				ae.setSprite("res/img/3/firefox.png");
+				break;
+			case 80007001:
+				ae.setSprite("res/img/3/skeleton2.png");
+				break;
+			case 80008001:
+				ae.setSprite("res/img/3/snake.png");
+				break;
+			case 80009001:
+				ae.setSprite("res/img/3/skeleton.png");
+				break;		
+			case 80010001:
+				ae.setSprite("res/img/3/ogre.png");
+				break;
+			case 80011001:
+				ae.setSprite("res/img/3/goblin.png");
+				break;
+			case 80012001:
+				ae.setSprite("res/img/3/eye.png");
+				break;
+			case 80013001:
+				ae.setSprite("res/img/3/spectre.png");
+				break;
+			case 80014001:
+				ae.setSprite("res/img/3/boss.png");
+				break;																																		
+		};
 	},
 
 	recvDamage : function(entity, attacker, skillID, damageType, damage)

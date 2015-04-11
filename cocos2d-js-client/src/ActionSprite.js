@@ -48,6 +48,7 @@ var ActionSprite = cc.Node.extend({
     speed: 6,
     lastAnim: null,
     res: "",
+    ui_name:null,
     ctor:function (scene, res) {
         //////////////////////////////
         // super init first
@@ -67,9 +68,6 @@ var ActionSprite = cc.Node.extend({
     	
         // 激活update
         this.schedule(this.spriteUpdate, 0.15, cc.REPEAT_FOREVER, 0.15);
-        
-        // 初始动作表现
-        this.play("idle_down");
     },
 
     onExit: function () 
@@ -77,8 +75,33 @@ var ActionSprite = cc.Node.extend({
     	this._super();
     },
 
+	setName : function(name)
+	{
+		if(this.ui_name == null)
+		{
+	        this.ui_name = new ccui.Text();
+	        this.ui_name.attr({
+	            string: name,
+	            fontName: "graphicpixel-webfont",
+	            fontSize: 20,
+	            anchorX: 0.5,
+	            anchorY: -1
+	        });
+	        this.ui_name.setColor(new cc.Color(255, 255, 0, 255));
+	        this.addChild(this.ui_name, 1);
+	    }
+
+        this.ui_name.setString(name);
+	},
+		
     setSprite : function(res)
     {
+    	this.res = res;
+    	if(this.sprite != null)
+    	{
+    		this.removeChild(this.sprite);
+    	}
+    	
         spriteRes = res.replace(/\\/g,'/');
         var s1 = spriteRes.lastIndexOf('/');
         var s2 = spriteRes.lastIndexOf('.');
@@ -90,6 +113,9 @@ var ActionSprite = cc.Node.extend({
         this.addChild(this.sprite);
 
         // 初始化动画信息
+        this.animations = {};
+        this.lastAnim = null;
+        
         var animations = jsonData.animations;
         for(var aniName in animations)
         {
@@ -97,6 +123,9 @@ var ActionSprite = cc.Node.extend({
             var actionAnimation = new ActionAnimation(this.sprite, ani.row, ani.length, jsonData.width * 3, jsonData.height * 3, 0, 0, aniName);
             this.animations[aniName] = actionAnimation;
         }
+        
+        // 重新刷动画播放
+        this.setState(this.state);
     },
 
     play : function(aniName)
@@ -120,10 +149,10 @@ var ActionSprite = cc.Node.extend({
 
     setState : function(state)
     {
-        if(state == this.state)
-            return;
-
         this.state = state;
+        
+        // 初始动作表现
+        this.play("idle_down");        
     },
 
     getDir: function (dx, dy) 
@@ -167,6 +196,7 @@ var ActionSprite = cc.Node.extend({
 		{
 			case 1:
 				this.scaleX = 1;		
+				this.ui_name.scaleX = 1;
 				this.play("walk_right");
 				break;
 			case 2:
@@ -175,6 +205,7 @@ var ActionSprite = cc.Node.extend({
 			case 3:
 				// 由于只有一个right, 因此这个方向的表现需要翻转图片
 				this.scaleX = -1;
+				this.ui_name.scaleX = -1;
 				this.play("walk_right");
 				break;
 			case 4:

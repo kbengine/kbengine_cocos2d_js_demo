@@ -44,14 +44,15 @@ KBEngine.Avatar = KBEngine.GameObject.extend(
 	onEnterWorld : function()
 	{
 		KBEngine.INFO_MSG(this.className + '::onEnterWorld: ' + this.id); 
-		this._super();
-		
+
 		// 请求获取技能列表
 		if(this.isPlayer())
 		{
 			KBEngine.Event.fire("onAvatarEnterWorld", KBEngine.app.entity_uuid, this.id, this);
 			this.cellCall("requestPull");
-		}		
+		}
+		
+		this._super();		
 	}
 });
 
