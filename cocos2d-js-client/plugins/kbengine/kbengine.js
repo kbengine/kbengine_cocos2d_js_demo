@@ -365,6 +365,22 @@ KBEngine.MemoryStream = function(size_or_buffer)
 	this.rpos = 0;
 	this.wpos = 0;
 	
+	/*
+		union PackFloatXType
+		{
+			float	fv;
+			uint32	uv;
+			int		iv;
+		};	
+	*/
+	KBEngine.MemoryStream.PackFloatXType = function()
+	{
+		this._unionData = new ArrayBuffer(4);
+		this.fv = new Float32Array(this._unionData, 0, 1);
+		this.uv = new Uint32Array(this._unionData, 0, 1);
+		this.iv = new Int32Array(this._unionData, 0, 1);
+	};
+			
 	//---------------------------------------------------------------------------------
 	this.readInt8 = function()
 	{
@@ -496,13 +512,36 @@ KBEngine.MemoryStream = function(size_or_buffer)
 	
 	this.readPackXZ = function()
 	{
+		var xPackData = new KBEngine.MemoryStream.PackFloatXType();
+		var zPackData = new KBEngine.MemoryStream.PackFloatXType();
+		
+		xPackData.fv[0] = 0.0;
+		zPackData.fv[0] = 0.0;
+
+		xPackData.uv[0] = 0x40000000;
+		zPackData.uv[0] = 0x40000000;
+			
 		var v1 = this.readUint8();
 		var v2 = this.readUint8();
 		var v3 = this.readUint8();
-		
+
+		var data = 0;
+		data |= (v1 << 16);
+		data |= (v2 << 8);
+		data |= v3;
+
+		xPackData.uv[0] |= (data & 0x7ff000) << 3;
+		zPackData.uv[0] |= (data & 0x0007ff) << 15;
+
+		xPackData.fv[0] -= 2.0;
+		zPackData.fv[0] -= 2.0;
+	
+		xPackData.uv[0] |= (data & 0x800000) << 8;
+		zPackData.uv[0] |= (data & 0x000800) << 20;
+			
 		var data = new Array(2);
-		data[0] = 0.0;
-		data[1] = 0.0;
+		data[0] = xPackData.fv[0];
+		data[1] = zPackData.fv[0];
 		return data;
 	}
 
