@@ -1959,7 +1959,10 @@ KBEngine.DATATYPE_UNICODE = function()
 	
 	this.parseDefaultValStr = function(v)
 	{
-		return eval(v);
+		if(typeof(v) == "string")
+			return v;
+		
+		return "";
 	}
 	
 	this.isSameType = function(v)
@@ -3143,10 +3146,10 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 		
 		if(entity != undefined)
 		{
-			KBEngine.WARNING_MSG("KBEngineApp::Client_onCreatedProxies: entity(" + eid + ") has exist!");
+			// KBEngine.WARNING_MSG("KBEngineApp::Client_onCreatedProxies: entity(" + eid + ") has exist!");
 			return;
 		}
-		
+				
 		KBEngine.app.entity_uuid = rndUUID;
 		KBEngine.app.entity_id = eid;
 		
@@ -3165,6 +3168,13 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 		
 		KBEngine.app.entities[eid] = entity;
 		
+		var entityMessage = KBEngine.bufferedCreateEntityMessage[eid];
+		if(entityMessage != undefined)
+		{
+			KBEngine.app.Client_onUpdatePropertys(entityMessage);
+			delete KBEngine.bufferedCreateEntityMessage[eid];
+		}
+			
 		entity.__init__();
 	}
 	
@@ -3195,7 +3205,7 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 		
 		if(entity == undefined)
 		{
-			entityMessage = KBEngine.bufferedCreateEntityMessage[eid];
+			var entityMessage = KBEngine.bufferedCreateEntityMessage[eid];
 			if(entityMessage != undefined)
 			{
 				KBEngine.ERROR_MSG("KBEngineApp::Client_onUpdatePropertys: entity(" + eid + ") not found!");
