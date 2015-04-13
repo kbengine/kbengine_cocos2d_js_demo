@@ -200,8 +200,8 @@ var WorldSceneLayer = cc.Layer.extend({
 		// 角色进入世界，创建角色精灵
 		this.player = new Avatar(this, "res/img/3/clotharmor.png");
         this.player.attr({
-            x: avatar.position[0] * 16,
-            y: avatar.position[2] * 16,
+            x: avatar.position.x * 16,
+            y: avatar.position.z * 16,
             anchorX: 0.5
         });
 
@@ -230,8 +230,8 @@ var WorldSceneLayer = cc.Layer.extend({
 		{
 			var ae = new ActionEntity(this, "res/img/3/crab.png");
 	        ae.attr({
-	            x: entity.position[0] * 16,
-	            y: entity.position[2] * 16,
+	            x: entity.position.x * 16,
+	            y: entity.position.z * 16,
 	            anchorX: 0.5
 	        });
 
@@ -257,34 +257,42 @@ var WorldSceneLayer = cc.Layer.extend({
 
 	set_position : function(entity)
 	{
+		var ae = this.entities[entity.id];
 	},
 
 	update_position : function(entity)
 	{
+		var ae = this.entities[entity.id];
 	},	
 
 	set_direction : function(entity)
 	{
+		var ae = this.entities[entity.id];
 	},
 
 	set_HP : function(entity, v)
 	{
+		var ae = this.entities[entity.id];
 	},
 
 	set_MP : function(entity, v)
 	{
+		var ae = this.entities[entity.id];
 	},
 
 	set_HP_Max : function(entity, v)
 	{
+		var ae = this.entities[entity.id];
 	},	
 		
 	set_MP_Max : function(entity, v)
 	{
+		var ae = this.entities[entity.id];
 	},
 
 	set_level : function(entity, v)
 	{
+		var ae = this.entities[entity.id];
 	},
 
 	set_entityName : function(entity, v)
@@ -302,11 +310,12 @@ var WorldSceneLayer = cc.Layer.extend({
 	set_moveSpeed : function(entity, v)
 	{
 		var ae = this.entities[entity.id];
-		ae.setSpeed(v / 10.0);		
+		ae.setSpeed(v / 10.0);
 	},
 
 	set_modelScale : function(entity, v)
 	{
+		var ae = this.entities[entity.id];
 	},
 
 	set_modelID : function(entity, v)
@@ -361,14 +370,17 @@ var WorldSceneLayer = cc.Layer.extend({
 
 	recvDamage : function(entity, attacker, skillID, damageType, damage)
 	{
+		var ae = this.entities[entity.id];
 	},
 
 	onAddSkill : function(entity)
 	{
+		var ae = this.entities[entity.id];
 	},
 
 	otherAvatarOnJump : function(entity)
 	{
+		var ae = this.entities[entity.id];
 	},
 															
     /* -----------------------------------------------------------------------/
@@ -402,13 +414,13 @@ var WorldSceneLayer = cc.Layer.extend({
     	this.mapNode.y += pos.y;
     	
     	var player = KBEngine.app.player();
-		player.position[0] = this.player.x / 16;
-		player.position[1] = 0;
-		player.position[2] = this.player.y / 16;
-		player.direction[2] = this.player.getDir();
-		player.direction[1] = 0;
-		player.direction[0] = 0;
-		KBEngine.app.isOnGound = 1;    	
+		player.position.x = this.player.x / 16;
+		player.position.y = 0;
+		player.position.z = this.player.y / 16;
+		player.direction.x = 0;
+		player.direction.y = 0;		
+		player.direction.z = this.player.getDir();
+		KBEngine.app.isOnGound = 1;
     }
 });
 
