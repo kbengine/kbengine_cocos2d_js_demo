@@ -226,10 +226,21 @@ var ActionSprite = cc.Node.extend({
     	*/
     	    	
 		var anim = "idle_";
-		if(this.isMoving)
+		
+		if(this.state == 1)
+		{
+			// 死亡时也播放idle，一段时间后模型将消失
+			anim = "idle_";
+		}
+		else if(this.isMoving)
+		{
 			anim = "walk_";
+		}
 		else if(this.state == 3)
-			anim = "atk_";
+		{
+			// 这里仍然使用idle， "atk_", 在挥动武器的刹那才播放该动作
+			anim = "idle_"; 
+		}
 		
 		switch(this.dir)
 		{
