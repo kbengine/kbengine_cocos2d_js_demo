@@ -188,7 +188,7 @@ var StartSceneLayer = cc.Layer.extend({
         this.logintButton.setTitleFontName("graphicpixel-webfont");
         this.logintButton.x = size.width / 2.0 - 100;
         this.logintButton.y = size.height / 2.0 - 150;
-        this.logintButton.addTouchEventListener(this.touchLogintButtonEvent ,this);
+        this.logintButton.addTouchEventListener(this.touchLoginButtonEvent ,this);
         this.addChild(this.logintButton, 2);
 
         // 注册按钮
@@ -298,7 +298,7 @@ var StartSceneLayer = cc.Layer.extend({
     editBoxReturn: function (editBox) {
     },
 
-    touchLogintButtonEvent: function (sender, type) 
+    touchLoginButtonEvent: function (sender, type) 
     {
         switch (type) {
             case ccui.Widget.TOUCH_BEGAN:

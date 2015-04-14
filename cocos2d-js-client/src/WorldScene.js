@@ -7,6 +7,7 @@ var WorldSceneLayer = cc.Layer.extend({
     playerLastPos: null,
     mapNode: null,
     mapName: "",
+    relivePanel: null,
     ctor:function () {
         //////////////////////////////
         // super init first
@@ -53,6 +54,66 @@ var WorldSceneLayer = cc.Layer.extend({
         this.addChild(GUIDebugLayer.debug, 100);    	
     },
 
+	createReliveUI : function()
+	{
+		var size = cc.winSize;
+		this.relivePanel = new cc.Sprite("res/img/2/spritesheet.png", cc.rect(0, 587, 844, 360));
+        this.relivePanel.attr({
+            x: size.width / 2,
+            y: size.height / 2,
+            anchorX: 0.5,
+            anchorY: 0.5
+        });
+		
+		this.addChild(this.relivePanel);	
+		
+		this.relivePanel.reliveStr = new ccui.Text();
+        this.relivePanel.reliveStr.attr({
+            string: "You have died, please revive avatar!",
+            boundingWidth: 200,
+            boundingHeight: 50,
+            textAlign:cc.TEXT_ALIGNMENT_LEFT,
+            fontName: "graphicpixel-webfont",
+            fontSize: 20,
+            x: size.width / 2 - 110,
+            y: size.height / 2 - 150
+        });
+        this.relivePanel.reliveStr.setColor(new cc.Color(0, 0, 0, 255));
+        this.relivePanel.addChild(this.relivePanel.reliveStr, 1);
+        
+        // 复活按钮
+        this.relivePanel.reliveButton = new ccui.Button();
+        this.relivePanel.reliveButton.setTouchEnabled(true);
+        this.relivePanel.reliveButton.loadTextures("res/ui/btn_up.png", "res/ui/btn_down.png", "");
+        this.relivePanel.reliveButton.setTitleText("Relive");
+        this.relivePanel.reliveButton.setTitleFontName("graphicpixel-webfont");
+        this.relivePanel.reliveButton.x = size.width / 2.0 - 110;
+        this.relivePanel.reliveButton.y = size.height / 2.0 - 300;
+        this.relivePanel.reliveButton.addTouchEventListener(this.touchReliveButtonEvent ,this);
+        this.relivePanel.addChild(this.relivePanel.reliveButton, 2);		
+	},
+		
+    touchReliveButtonEvent: function (sender, type) 
+    {
+        switch (type) {
+            case ccui.Widget.TOUCH_BEGAN:
+                break;
+            case ccui.Widget.TOUCH_MOVED:
+                break;
+            case ccui.Widget.TOUCH_ENDED:
+                GUIDebugLayer.debug.INFO_MSG("relive...");
+			    	var player = KBEngine.app.player();
+			    	if(player == undefined || !player.inWorld)
+			    		return;
+            		player.relive(1);          
+                break;
+            case ccui.Widget.TOUCH_CANCELED:
+                break;
+            default:
+                break;
+        }
+    },
+    	
     /* -----------------------------------------------------------------------/
     							输入输出事件 相关
     /------------------------------------------------------------------------ */
@@ -136,7 +197,7 @@ var WorldSceneLayer = cc.Layer.extend({
 		cc.log("onClickUp at: " + pos.x + " " + pos.y );
 		
 		// 点击了鼠标，我们需要将角色移动到该位置
-		if(this.player != null)
+		if(this.player != null && this.player.state != 1/* 非死亡状态才可以移动 */)
 			this.player.moveTo(this.mapNode.convertToNodeSpace(pos));
 	},
 		
@@ -325,6 +386,21 @@ var WorldSceneLayer = cc.Layer.extend({
 	{
 		var ae = this.entities[entity.id];
 		ae.setState(v);
+		
+		if(entity.isPlayer())
+		{
+			if(this.relivePanel != null)
+			{
+				this.removeChild(this.relivePanel);
+				this.relivePanel = null;
+			}
+			
+			// 如果死亡了，弹出死亡复活面板
+			if(v == 1)
+			{
+				this.createReliveUI();		        											
+			}
+		}
 	},
 
 	set_moveSpeed : function(entity, v)
@@ -426,8 +502,20 @@ var WorldSceneLayer = cc.Layer.extend({
     	if(this.tmxmap == null || this.playerLastPos == null)
     		return;
     	
-    	GUIDebugLayer.debug.INFO_MSG("[scene] = " + this.mapName + ", [pos] = (" + Math.round(this.player.x) + ", " + Math.round(this.player.y) + ")");
-    	    	
+    	var player = KBEngine.app.player();
+    	if(player == undefined || !player.inWorld)
+    		return;
+    		
+    	if(this.player.state != 1)
+    	{
+    		GUIDebugLayer.debug.INFO_MSG("[scene] = " + this.mapName + ", [pos] = (" + Math.round(this.player.x) + ", " + Math.round(this.player.y) + ")");
+    	}
+    	else
+    	{
+    		GUIDebugLayer.debug.INFO_MSG("Dead(角色已死亡), can not move!");
+    		return;
+    	}
+    	
     	var x = this.playerLastPos.x - this.player.x;
     	var y = this.playerLastPos.y - this.player.y;
 
@@ -438,17 +526,13 @@ var WorldSceneLayer = cc.Layer.extend({
     	this.mapNode.x += pos.x;
     	this.mapNode.y += pos.y;
     	
-    	var player = KBEngine.app.player();
-    	if(player != undefined && player.inWorld)
-    	{
-			player.position.x = this.player.x / 16;
-			player.position.y = 0;
-			player.position.z = this.player.y / 16;
-			player.direction.x = 0;
-			player.direction.y = 0;		
-			player.direction.z = this.player.getDirection();
-			KBEngine.app.isOnGound = 1;
-		}
+		player.position.x = this.player.x / 16;
+		player.position.y = 0;
+		player.position.z = this.player.y / 16;
+		player.direction.x = 0;
+		player.direction.y = 0;		
+		player.direction.z = this.player.getDirection();
+		KBEngine.app.isOnGound = 1;
     }
 });
 

@@ -199,6 +199,12 @@ var ActionSprite = cc.Node.extend({
     	
     setDirection : function(dir)
     {
+    	if(dir == 0)
+    	{
+    		this.updateAnim();
+    		return;
+    	}
+    	
 		this.dir = dir;
 		this.updateAnim();
     },

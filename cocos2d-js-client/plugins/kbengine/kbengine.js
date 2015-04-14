@@ -1339,12 +1339,20 @@ KBEngine.Entity = KBEngine.Class.extend(
 		{
 			for(var i=0; i<args.length; i++)
 			{
-				bindwriter(args[i])(arguments[i + 1]);
+				if(args[i].isSameType(arguments[i + 1]))
+				{
+					args[i].addToStream(this.cell.bundle, arguments[i + 1]);
+				}
+				else
+				{
+					throw new Error("KBEngine.Entity::cellCall: arg[" + i + "] is error!");
+				}
 			}
 		}
 		catch(e)
 		{
-			KBEngine.ERROR_MSG('KBEngine.Entity::cellCall: args is error!');  
+			KBEngine.ERROR_MSG(e.toString());
+			KBEngine.ERROR_MSG('KBEngine.Entity::cellCall: args is error!');
 			this.cell.bundle = null;
 			return;
 		}
@@ -2327,7 +2335,12 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 	{
 		return KBEngine.app.entities[KBEngine.app.entity_id];
 	}
-	
+
+	this.findEntity = function(entityID)
+	{
+		return KBEngine.app.entities[entityID];
+	}
+		
 	this.connect = function(addr)
 	{
 		console.assert(KBEngine.app.socket == null, "Assertion of socket not is null");
