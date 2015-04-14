@@ -38,6 +38,10 @@ var ActionAnimation = cc.Node.extend({
     }
 });
 
+
+/*
+	活动精灵对象类
+*/
 var ActionSprite = cc.Node.extend({
 	sprite:null,
     frameX: 0,

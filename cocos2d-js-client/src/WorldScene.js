@@ -134,7 +134,10 @@ var WorldSceneLayer = cc.Layer.extend({
 	onClickUp : function(pos)
 	{
 		cc.log("onClickUp at: " + pos.x + " " + pos.y );
-        this.player.moveTo(this.mapNode.convertToNodeSpace(pos));
+		
+		// 点击了鼠标，我们需要将角色移动到该位置
+		if(this.player != null)
+			this.player.moveTo(this.mapNode.convertToNodeSpace(pos));
 	},
 		
     /* -----------------------------------------------------------------------/
@@ -188,9 +191,11 @@ var WorldSceneLayer = cc.Layer.extend({
 
 	addSpaceGeometryMapping : function(resPath)
 	{
+		// 服务器space创建了几何映射（可以理解为添加了场景的具体资源信息，客户端可以使用这个信息来加载对应的场景表现）
 		this.mapName = resPath;
 		
-        // 创建场景
+        // 其实可以将resPath与地图tmx文件名设置为一致，那么就可以根据服务器返回的信息来加载场景
+        // resPath由服务端cell/space.py中KBEngine.addSpaceGeometryMapping(self.spaceID, None, resPath)设置
         this.createScene("res/img/3/cocosjs_demo_map1.tmx");
         this.fixMap();
 	},
@@ -226,6 +231,7 @@ var WorldSceneLayer = cc.Layer.extend({
 		
 	onEnterWorld : function(entity)
 	{
+		// NPC/Monster/Gate等实体进入客户端世界，我们需要创建一个精灵来描述整个实体的表现
 		if(!entity.isPlayer())
 		{
 			var ae = new ActionEntity(this, "res/img/3/crab.png");
@@ -251,6 +257,7 @@ var WorldSceneLayer = cc.Layer.extend({
 
 	onLeaveWorld : function(entity)
 	{
+		// 实体离开了客户端世界，通常是因为离开了玩家的AOI
 		this.removeChild(this.entities[entity.id]);
 		delete this.entities[entity.id];
 	},
@@ -267,7 +274,12 @@ var WorldSceneLayer = cc.Layer.extend({
 
 	update_position : function(entity)
 	{
+		// 服务器同步到实体的新位置，我们需要将实体平滑移动到指定坐标点
 		var ae = this.entities[entity.id];
+		ae.destPosition.x = entity.position.x * 16;
+		ae.destPosition.y = entity.position.z * 16;	
+		ae.isOnGound = entity.isOnGound;
+		ae.moveTo(ae.destPosition);	
 	},	
 
 	set_direction : function(entity)
@@ -375,6 +387,7 @@ var WorldSceneLayer = cc.Layer.extend({
 
 	recvDamage : function(entity, attacker, skillID, damageType, damage)
 	{
+		// 实体接受伤害，可以在此做受击表现
 		var ae = this.entities[entity.id];
 	},
 

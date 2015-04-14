@@ -1,3 +1,6 @@
+/* 
+	一个抽象的实体类，可以用来描述NPC/MONSTER/传送门/可交互的服务端实体对象
+*/	
 var ActionEntity = ActionSprite.extend({
 	destPosition:null,
 	isOnGound:true,
@@ -6,7 +9,7 @@ var ActionEntity = ActionSprite.extend({
         // super init first
         this._super(scene, res);
         
-        this.destPosition = new KBEngine.Vector3(0.0, 0.0, 0.0);
+        this.destPosition = cc.p(0.0, 0.0);
         return true;
     },
     	
