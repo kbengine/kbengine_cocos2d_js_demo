@@ -9,9 +9,5 @@ var Avatar = ActionEntity.extend(
         // super init first
         this._super(scene, res);
         return true;
-    },
-    	
-    motionUpdate : function(dt)
-    {
-    }  	
+    }
 });

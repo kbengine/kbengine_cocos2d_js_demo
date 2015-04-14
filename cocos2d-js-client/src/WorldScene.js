@@ -268,18 +268,14 @@ var WorldSceneLayer = cc.Layer.extend({
 		var ae = this.entities[entity.id];
 		ae.x = entity.position.x * 16;
 		ae.y = entity.position.z * 16;
-		ae.destPosition.x = entity.position.x * 16;
-		ae.destPosition.y = entity.position.z * 16;
 	},
 
 	update_position : function(entity)
 	{
 		// 服务器同步到实体的新位置，我们需要将实体平滑移动到指定坐标点
 		var ae = this.entities[entity.id];
-		ae.destPosition.x = entity.position.x * 16;
-		ae.destPosition.y = entity.position.z * 16;	
 		ae.isOnGound = entity.isOnGound;
-		ae.moveTo(ae.destPosition);	
+		ae.moveTo(cc.p(entity.position.x * 16, entity.position.z * 16));	
 	},	
 
 	set_direction : function(entity)
@@ -381,7 +377,11 @@ var WorldSceneLayer = cc.Layer.extend({
 				break;
 			case 80014001:
 				ae.setSprite("res/img/3/boss.png");
-				break;																																		
+				break;
+			default:
+				// 其他玩家
+				ae.setSprite("res/img/3/clotharmor.png");
+				break;																																				
 		};
 	},
 
