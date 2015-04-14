@@ -2700,7 +2700,7 @@ KBEngine.KBEngineApp = function(kbengineArgs)
 			
 			try
 			{
-				var Class = eval(scriptmethod_name);
+				var Class = eval("KBEngine." + scriptmethod_name);
 			}
 			catch(e)
 			{
