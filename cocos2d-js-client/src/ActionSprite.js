@@ -7,6 +7,7 @@ var ActionAnimation = cc.Node.extend({
     row: 0,
     length: 0,
     name : "",
+    dir : 0,
     ctor:function (sprite, row, length, w, h, frameX, frameY, name) {
         //////////////////////////////
         // super init first
@@ -53,6 +54,7 @@ var ActionSprite = cc.Node.extend({
     lastAnim: null,
     res: "",
     ui_name:null,
+    isMoving: false,
     ctor:function (scene, res) {
         //////////////////////////////
         // super init first
@@ -144,7 +146,10 @@ var ActionSprite = cc.Node.extend({
 	        if(this.lastAnim == null || this.lastAnim.name != aniName)
 	        {
 	            this.lastAnim = this.animations[aniName];
-	            this.lastAnim.reset();
+	            if(this.lastAnim != undefined)
+	          	  this.lastAnim.reset();
+	          	else
+	          		return;
 	        }
 	    }
 	    else
@@ -161,10 +166,10 @@ var ActionSprite = cc.Node.extend({
         this.state = state;
         
         // 初始动作表现
-        this.play("idle_down");        
+        this.updateAnim();
     },
 
-    getDir: function (dx, dy) 
+    calcDirection: function (dx, dy) 
     {
         // 坐标系 →x ↑y， 0 当前方向不变， 1 到 4 分别为右、上、左、下        
         if (dx > 0 && dx >= Math.abs(dy))
@@ -186,6 +191,69 @@ var ActionSprite = cc.Node.extend({
         
         return 0; // 当前方向不变
     },
+    
+    getDirection : function()
+    {
+    	return this.dir;
+    },
+    	
+    setDirection : function(dir)
+    {
+		this.dir = dir;
+		this.updateAnim();
+    },
+    
+    updateAnim : function()
+    {
+    	/* 服务端脚本定义的状态
+			ENTITY_STATE_UNKNOW										= -1
+			ENTITY_STATE_FREE										= 0
+			ENTITY_STATE_DEAD										= 1
+			ENTITY_STATE_REST										= 2
+			ENTITY_STATE_FIGHT										= 3
+			ENTITY_STATE_MAX    									= 4    
+			
+			当前所有的动作
+			atk_right
+			walk_right
+			idle_right
+			atk_up
+			walk_up
+			idle_up
+			atk_down
+			walk_down
+			idle_down		
+    	*/
+    	    	
+		var anim = "idle_";
+		if(this.isMoving)
+			anim = "walk_";
+		else if(this.state == 3)
+			anim = "atk_";
+		
+		switch(this.dir)
+		{
+			case 1:
+				this.scaleX = 1;		
+				this.ui_name.scaleX = 1;
+				anim += "right";
+				break;
+			case 2:
+				anim += "up";
+				break;
+			case 3:
+				// 由于只有一个right, 因此这个方向的表现需要翻转图片
+				this.scaleX = -1;
+				this.ui_name.scaleX = -1;
+				anim += "right";
+				break;
+			case 4:
+				anim += "down";
+				break;
+		};
+		
+		this.play(anim);
+    },
     	
 	moveTo : function(position)
 	{
@@ -200,27 +268,8 @@ var ActionSprite = cc.Node.extend({
         var actF = cc.sequence(act1, act2);
 		this.runAction(actF);
 		
-		var dir = this.getDir(x, y);
-		switch(dir)
-		{
-			case 1:
-				this.scaleX = 1;		
-				this.ui_name.scaleX = 1;
-				this.play("walk_right");
-				break;
-			case 2:
-				this.play("walk_up");
-				break;
-			case 3:
-				// 由于只有一个right, 因此这个方向的表现需要翻转图片
-				this.scaleX = -1;
-				this.ui_name.scaleX = -1;
-				this.play("walk_right");
-				break;
-			case 4:
-				this.play("walk_down");
-				break;
-		};
+		this.isMoving = true;
+		this.setDirection(this.calcDirection(x, y));
 	},
 
     onMoveToOver : function (pSender) 
@@ -236,7 +285,9 @@ var ActionSprite = cc.Node.extend({
         else if(pSender.lastAnim.name == "walk_right")
         {
         	pSender.play("idle_right");
-        }        
+        }
+        
+        this.isMoving = false;
     },
     	
     /* -----------------------------------------------------------------------/

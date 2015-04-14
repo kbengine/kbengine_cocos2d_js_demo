@@ -253,13 +253,17 @@ var WorldSceneLayer = cc.Layer.extend({
 		this.set_modelScale(entity, entity.modelScale);
 		this.set_entityName(entity, entity.name);
 		this.set_HP(entity, entity.HP);	
+		this.set_direction(entity);
 	},
 
 	onLeaveWorld : function(entity)
 	{
 		// 实体离开了客户端世界，通常是因为离开了玩家的AOI
-		this.removeChild(this.entities[entity.id]);
+		this.mapNode.removeChild(this.entities[entity.id]);
 		delete this.entities[entity.id];
+		
+		if(entity.isPlayer())
+			this.player = null;
 	},
 
 	set_position : function(entity)
@@ -280,7 +284,10 @@ var WorldSceneLayer = cc.Layer.extend({
 
 	set_direction : function(entity)
 	{
+		// 我们将实体的方向设置在服务器实体的direction.z上，因此数据同步过来时我们
+		// 需要将表现设置到对应的朝向上
 		var ae = this.entities[entity.id];
+		ae.setDirection(entity.direction.z);
 	},
 
 	set_HP : function(entity, v)
@@ -432,13 +439,16 @@ var WorldSceneLayer = cc.Layer.extend({
     	this.mapNode.y += pos.y;
     	
     	var player = KBEngine.app.player();
-		player.position.x = this.player.x / 16;
-		player.position.y = 0;
-		player.position.z = this.player.y / 16;
-		player.direction.x = 0;
-		player.direction.y = 0;		
-		player.direction.z = this.player.getDir();
-		KBEngine.app.isOnGound = 1;
+    	if(player != undefined && player.inWorld)
+    	{
+			player.position.x = this.player.x / 16;
+			player.position.y = 0;
+			player.position.z = this.player.y / 16;
+			player.direction.x = 0;
+			player.direction.y = 0;		
+			player.direction.z = this.player.getDirection();
+			KBEngine.app.isOnGound = 1;
+		}
     }
 });
 
