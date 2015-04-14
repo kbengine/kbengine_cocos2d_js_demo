@@ -257,7 +257,12 @@ var WorldSceneLayer = cc.Layer.extend({
 
 	set_position : function(entity)
 	{
+		// 强制将位置设置到坐标点
 		var ae = this.entities[entity.id];
+		ae.x = entity.position.x * 16;
+		ae.y = entity.position.z * 16;
+		ae.destPosition.x = entity.position.x * 16;
+		ae.destPosition.y = entity.position.z * 16;
 	},
 
 	update_position : function(entity)

@@ -1,5 +1,6 @@
 var ActionEntity = ActionSprite.extend({
 	destPosition:null,
+	isOnGound:true,
     ctor:function (scene, res) {
         //////////////////////////////
         // super init first
@@ -12,8 +13,13 @@ var ActionEntity = ActionSprite.extend({
     /* -----------------------------------------------------------------------/
     							其他系统相关
     /------------------------------------------------------------------------ */
+    motionUpdate : function(dt)
+    {
+    },
+    	
     spriteUpdate : function(dt)
     {
         this._super(dt);
+        this.motionUpdate();
     }
 });
