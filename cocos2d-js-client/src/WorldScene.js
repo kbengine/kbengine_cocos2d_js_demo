@@ -194,11 +194,26 @@ var WorldSceneLayer = cc.Layer.extend({
 	
 	onClickUp : function(pos)
 	{
-		cc.log("onClickUp at: " + pos.x + " " + pos.y );
+		cc.log("onClickUp at: " + pos.x + " " + pos.y);
 		
 		// 点击了鼠标，我们需要将角色移动到该位置
 		if(this.player != null && this.player.state != 1/* 非死亡状态才可以移动 */)
-			this.player.moveTo(this.mapNode.convertToNodeSpace(pos));
+		{
+			this.player.chaseTarget = null;
+			this.player.moveToPosition(this.mapNode.convertToNodeSpace(pos));
+		}
+	},
+	
+	onClickTarget : function(target)
+	{
+		cc.log("onClickTarget: " + target.res);
+		
+		if(this.player != target)
+		{
+			// 点击了鼠标，我们需要将角色移动到该目标的位置
+			if(this.player != null && this.player.state != 1/* 非死亡状态才可以移动 */)
+				this.player.moveToTarget(target);
+		}	
 	},
 		
     /* -----------------------------------------------------------------------/
@@ -264,7 +279,7 @@ var WorldSceneLayer = cc.Layer.extend({
 	onAvatarEnterWorld : function(rndUUID, eid, avatar)
 	{
 		// 角色进入世界，创建角色精灵
-		this.player = new Avatar(this, "res/img/3/clotharmor.png");
+		this.player = new Avatar(this, eid, "res/img/3/clotharmor.png");
         this.player.attr({
             x: avatar.position.x * 16,
             y: avatar.position.z * 16,
@@ -295,7 +310,7 @@ var WorldSceneLayer = cc.Layer.extend({
 		// NPC/Monster/Gate等实体进入客户端世界，我们需要创建一个精灵来描述整个实体的表现
 		if(!entity.isPlayer())
 		{
-			var ae = new ActionEntity(this, "res/img/3/crab.png");
+			var ae = new ActionEntity(this, entity.id, "res/img/3/crab.png");
 	        ae.attr({
 	            x: entity.position.x * 16,
 	            y: entity.position.z * 16,
@@ -347,7 +362,7 @@ var WorldSceneLayer = cc.Layer.extend({
 			return;
 				
 		ae.isOnGound = entity.isOnGound;
-		ae.moveTo(cc.p(entity.position.x * 16, entity.position.z * 16));	
+		ae.moveToPosition(cc.p(entity.position.x * 16, entity.position.z * 16));	
 	},	
 
 	set_direction : function(entity)

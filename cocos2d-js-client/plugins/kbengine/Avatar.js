@@ -16,6 +16,7 @@ KBEngine.Avatar = KBEngine.GameObject.extend(
 	useTargetSkill : function(skillID, targetID)
 	{
 		KBEngine.INFO_MSG(this.className + '::useTargetSkill: ' + skillID + ", targetID: " + targetID);
+		this.cellCall("useTargetSkill", skillID, targetID);
   	},
   		
 	jump : function()

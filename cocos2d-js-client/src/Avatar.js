@@ -1,13 +1,103 @@
 /*
-	Íæ¼ÒÊµÌåÀà£¬¼Ì³ĞÓÚActionEntity
-	ÓëActionEntityÖ÷ÒªµÄÇø±ğÊÇÊµÌåÓÉ¿Í»§¶Ë¿ØÖÆ
+	ç©å®¶å®ä½“ç±»ï¼Œç»§æ‰¿äºActionEntity
+	ä¸ActionEntityä¸»è¦çš„åŒºåˆ«æ˜¯å®ä½“ç”±å®¢æˆ·ç«¯æ§åˆ¶
 */
 var Avatar = ActionEntity.extend(
 {
-    ctor:function (scene, res) {
+	chaseTarget: null,
+	attackTarget: null,
+	lastTime : 0,
+    ctor:function (scene, entityID, res) {
         //////////////////////////////
         // super init first
-        this._super(scene, res);
+        this._super(scene, entityID, res);
         return true;
-    }
+    },
+    	
+    setState : function(state)
+    {
+        this._super(state);
+		
+		// å¦‚æœæ­»äº¡ï¼Œæ¸…ç©ºç›®æ ‡
+	    if(state == 1) {
+            this.chaseTarget = null;
+        }
+    },
+    	    	
+    moveToTarget : function(target)
+	{
+		this.isMoving = true;
+		this.stopAllActions();
+		this.chaseTarget = target;
+		this.updateAnim();
+	},
+	
+	attack : function(dt)
+	{
+		if(this.attackTarget == null)
+			return;
+		
+		if(this.state == 1 || this.attackTarget.isDestroyed == true || this.attackTarget.state == 1)
+		{
+			this.attackTarget = null;
+			return;
+		}
+		
+		this.lastTime += dt;
+        var x = this.attackTarget.x - this.x;
+        var y = this.attackTarget.y - this.y;
+        var t = Math.sqrt(x * x + y * y) / 16;
+        
+        if(t <= 5)
+        {
+        	if(this.lastTime > 1.0)
+        	{
+        		// æŠ€èƒ½ID1ä¸ºæ™®é€šæ”»å‡»æŠ€èƒ½
+        		var player = KBEngine.app.player();
+        		if(player != undefined)
+        			player.useTargetSkill(1, this.attackTarget.entityID);
+        		
+        		this.lastTime = 0;
+        	}
+        }
+        else
+        {
+        	this.moveToTarget(this.attackTarget);
+        	this.attackTarget = null;
+		}		
+	},
+		
+    /* -----------------------------------------------------------------------/
+    							å…¶ä»–ç³»ç»Ÿç›¸å…³
+    /------------------------------------------------------------------------ */
+    spriteUpdate : function(dt)
+    {
+        this._super(dt);
+        
+        if(this.chaseTarget != null)
+        {
+			if(this.chaseTarget.isDestroyed == true || this.state == 1)
+			{
+				this.chaseTarget = null;
+				return;
+			} 
+			
+	        var x = this.chaseTarget.x - this.x;
+	        var y = this.chaseTarget.y - this.y;
+	        var t = Math.sqrt(x * x + y * y) / 16;
+            if(t <= 2)
+            {
+            	this.stop();
+            	this.attackTarget = this.chaseTarget;
+            	this.chaseTarget = null;
+            }
+            else
+            {
+            	this.isMoving = true;
+				this.moveToPosition(cc.p(this.chaseTarget.x, this.chaseTarget.y));
+			}
+		}
+		
+		this.attack(dt);
+    }		
 });

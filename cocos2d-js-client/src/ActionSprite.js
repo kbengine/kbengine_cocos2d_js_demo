@@ -39,6 +39,7 @@ var ActionAnimation = cc.Node.extend({
         this.frameX = 0;
         this.frameY = 0;
         this.parent.addChild(this.sprite);
+        this.parent.sprite = this.sprite;
     },
     
     stop : function()
@@ -53,8 +54,6 @@ var ActionAnimation = cc.Node.extend({
 */
 var ActionSprite = cc.Node.extend({
 	sprite:null,
-    frameX: 0,
-    frameY: 0,
     scene:null,
     animations: null,
     state: 0,
@@ -62,6 +61,8 @@ var ActionSprite = cc.Node.extend({
     lastAnim: null,
     res: "",
     isMoving: false,
+    _listener: null,
+    isDestroyed : true,
     ctor:function (scene, res) {
         //////////////////////////////
         // super init first
@@ -75,6 +76,7 @@ var ActionSprite = cc.Node.extend({
 
     onEnter: function () 
     {
+    	this.isDestroyed = false;
     	this._super();
     	
     	this.setSprite(this.res);
@@ -83,13 +85,66 @@ var ActionSprite = cc.Node.extend({
         this.schedule(this.spriteUpdate, 0.15, cc.REPEAT_FOREVER, 0.15);
         
 		this.runAction(cc.fadeIn(1.0));
+		this.installClickEvent();
     },
 
     onExit: function () 
     {
+    	this.isDestroyed = true;
     	this._super();
+    	this.uninstallClickEvent();
     },
 
+    /* -----------------------------------------------------------------------/
+    							输入输出事件 相关
+    /------------------------------------------------------------------------ */
+	installClickEvent : function()
+	{
+        var selfPointer = this;
+        var listener = cc.EventListener.create({
+            event: cc.EventListener.TOUCH_ONE_BY_ONE,
+            swallowTouches: true,
+            onTouchBegan: function (touch, event) 
+            {
+            	if(selfPointer.lastAnim == null)
+            		return false;
+            	
+            	var target = event.getCurrentTarget();
+            	
+                var locationInNode = target.convertToNodeSpace(touch.getLocation());
+                var w = selfPointer.lastAnim.w;
+                var h = selfPointer.lastAnim.h;
+                
+                if(w < 100)	w = 100;
+                if(h < 100)	h = 100;
+                
+                var rect = cc.rect(-(w / 2), -(h / 2), w, h);
+
+                if (cc.rectContainsPoint(rect, locationInNode)) {
+                    target.scene.onClickTarget(selfPointer);
+                    return true;
+                }
+                
+                return false;
+            }
+        });
+
+		cc.eventManager.addListener(listener, this);
+        this._listener = listener;		
+	},
+	
+	uninstallClickEvent : function()
+	{
+		if(this._listener != null)
+		{
+			cc.eventManager.removeListener(this._listener);
+			this._listener = null;
+		}
+	},
+		    
+    /* -----------------------------------------------------------------------/
+    							其他相关
+    /------------------------------------------------------------------------ */    
 	setSpeed : function(speed)
 	{
 		this.speed = speed;
@@ -111,7 +166,7 @@ var ActionSprite = cc.Node.extend({
         var jsonData = cc.loader.getRes("res/sprites/" + name + ".json");
 
 		this.sprite = new cc.Sprite(res, cc.rect(0, 0, jsonData.width * 3, jsonData.height * 3));
-
+		
 		// 播放动画的时候决定添加到节点上显示
 		// 因为可能动画不在同一张图上, 例如死亡动画是一张通用的精灵图
         // this.addChild(this.sprite);
@@ -287,8 +342,8 @@ var ActionSprite = cc.Node.extend({
     	this.isMoving = false;
     	this.updateAnim();
     },
-    	
-	moveTo : function(position)
+		
+	moveToPosition : function(position)
 	{
 		this.stopAllActions();
 
@@ -297,15 +352,16 @@ var ActionSprite = cc.Node.extend({
         var t = Math.sqrt(x * x + y * y) / 16 / this.speed;
         
         var act1 = cc.moveTo(t, position);
-        var act2 = cc.callFunc(this.onMoveToOver);
-        var actF = cc.sequence(act1, act2);
+        var delay = cc.delayTime(0.1);
+        var act2 = cc.callFunc(this.onMoveToPositionOver);
+        var actF = cc.sequence(act1, delay, act2);
 		this.runAction(actF);
 		
 		this.isMoving = true;
 		this.setDirection(this.calcDirection(x, y));
 	},
 
-    onMoveToOver : function (pSender) 
+    onMoveToPositionOver : function (pSender) 
     {
         if(pSender.lastAnim == null || pSender.lastAnim.name == "walk_down")
         {
