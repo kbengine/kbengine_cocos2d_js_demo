@@ -213,6 +213,18 @@ var StartSceneLayer = cc.Layer.extend({
         this.playButton.addTouchEventListener(this.touchPlayButtonEvent ,this);
         this.playButton.visible = false;
         this.addChild(this.playButton, 2);
+        
+		if(window.localStorage)
+		{
+			var username = window.localStorage["user_name"];
+			var password = window.localStorage["user_passwd"];
+			
+			if(username != undefined)
+				this.usernamebox.setString(username);
+			
+			if(password != undefined)
+				this.passwordbox.setString(password);			
+		}
     },
 
 	showCreatePlayerUI : function(isShow)
@@ -319,7 +331,14 @@ var StartSceneLayer = cc.Layer.extend({
             	}
             	
                 GUIDebugLayer.debug.INFO_MSG("Connect to server...");
-                KBEngine.Event.fire("login", this.usernamebox.getString(), this.passwordbox.getString(), "kbengine_cocos2d_js_demo");            
+                KBEngine.Event.fire("login", this.usernamebox.getString(), this.passwordbox.getString(), "kbengine_cocos2d_js_demo");    
+                
+				if(window.localStorage)
+				{
+					window.localStorage["user_name"] = this.usernamebox.getString();
+					window.localStorage["user_passwd"] = this.passwordbox.getString();
+				}
+				
                 break;
             case ccui.Widget.TOUCH_CANCELED:
                 break;
