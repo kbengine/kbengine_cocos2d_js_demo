@@ -81,6 +81,8 @@ var ActionSprite = cc.Node.extend({
     	
         // 激活update
         this.schedule(this.spriteUpdate, 0.15, cc.REPEAT_FOREVER, 0.15);
+        
+		this.runAction(cc.fadeIn(1.0));
     },
 
     onExit: function () 
@@ -109,7 +111,7 @@ var ActionSprite = cc.Node.extend({
         var jsonData = cc.loader.getRes("res/sprites/" + name + ".json");
 
 		this.sprite = new cc.Sprite(res, cc.rect(0, 0, jsonData.width * 3, jsonData.height * 3));
-		
+
 		// 播放动画的时候决定添加到节点上显示
 		// 因为可能动画不在同一张图上, 例如死亡动画是一张通用的精灵图
         // this.addChild(this.sprite);

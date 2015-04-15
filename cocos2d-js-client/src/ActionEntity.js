@@ -42,14 +42,38 @@ var ActionEntity = ActionSprite.extend({
     {
     	this._super(res);
     	
+        if(this.state != 1)
+			this.addShadow();   
+    },
+    
+    addShadow : function()
+    {
+    	if(this.shadow != null)
+    		return;
+    	    	
     	// 脚下添加一个影子
 		this.shadow = new cc.Sprite("res/img/3/shadow16.png");
         this.shadow.attr({
             anchorX: 0.5,
             y : -20
         });
-        			
-        this.addChild(this.shadow);
+        
+        // 针对不同怪将阴影便宜设置不同
+        if(this.res.indexOf("bat.png") != -1)
+        	this.shadow.y = -40;
+        else if(this.res.indexOf("crab.png") != -1 || this.res.indexOf("rat.png") != -1)
+        	this.shadow.y = -12;
+        
+		this.addChild(this.shadow);    	
+    },
+    
+    removeShadow : function()
+    {
+    	if(this.shadow == null)
+    		return;
+    	
+    	this.removeChild(this.shadow);   
+    	this.shadow = null; 
     },
     	
     /* -----------------------------------------------------------------------/
@@ -89,6 +113,22 @@ var ActionEntity = ActionSprite.extend({
 		this.uiHP.setString("" + this.uiHP.HP + "/" + this.uiHP.HP_MAX);
 	},
 
+    setState : function(state)
+    {
+        this._super(state);
+
+		if(this.shadow != null)
+		{
+    	    if(state == 1) {
+                this.removeShadow();   
+            }
+			else
+            {
+                this.addShadow();   
+            }
+		}
+    },
+    	
 	recvDamage : function(entity, attacker, skillID, damageType, damage)
 	{
 		// 实体接受伤害，可以在此做受击表现
