@@ -314,6 +314,7 @@ var WorldSceneLayer = cc.Layer.extend({
 		this.set_modelScale(entity, entity.modelScale);
 		this.set_entityName(entity, entity.name);
 		this.set_HP(entity, entity.HP);	
+		this.set_HP_Max(entity, entity.HP_Max);	
 		this.set_direction(entity);
 	},
 
@@ -331,6 +332,9 @@ var WorldSceneLayer = cc.Layer.extend({
 	{
 		// 强制将位置设置到坐标点
 		var ae = this.entities[entity.id];
+		if(ae == undefined)
+			return;
+		
 		ae.x = entity.position.x * 16;
 		ae.y = entity.position.z * 16;
 	},
@@ -339,6 +343,9 @@ var WorldSceneLayer = cc.Layer.extend({
 	{
 		// 服务器同步到实体的新位置，我们需要将实体平滑移动到指定坐标点
 		var ae = this.entities[entity.id];
+		if(ae == undefined)
+			return;
+				
 		ae.isOnGound = entity.isOnGound;
 		ae.moveTo(cc.p(entity.position.x * 16, entity.position.z * 16));	
 	},	
@@ -348,43 +355,66 @@ var WorldSceneLayer = cc.Layer.extend({
 		// 我们将实体的方向设置在服务器实体的direction.z上，因此数据同步过来时我们
 		// 需要将表现设置到对应的朝向上
 		var ae = this.entities[entity.id];
+		if(ae == undefined)
+			return;
+				
 		ae.setDirection(entity.direction.z);
 	},
 
 	set_HP : function(entity, v)
 	{
 		var ae = this.entities[entity.id];
+		if(ae == undefined)
+			return;	
+		
+		ae.set_HP(v);
 	},
 
 	set_MP : function(entity, v)
 	{
 		var ae = this.entities[entity.id];
+		if(ae == undefined)
+			return;		
 	},
 
 	set_HP_Max : function(entity, v)
 	{
 		var ae = this.entities[entity.id];
+		if(ae == undefined)
+			return;	
+		
+		ae.set_HP_Max(v);	
 	},	
 		
 	set_MP_Max : function(entity, v)
 	{
 		var ae = this.entities[entity.id];
+		if(ae == undefined)
+			return;		
 	},
 
 	set_level : function(entity, v)
 	{
 		var ae = this.entities[entity.id];
+		if(ae == undefined)
+			return;		
 	},
 
 	set_entityName : function(entity, v)
 	{
 		var ae = this.entities[entity.id];
+		if(ae == undefined)
+			return;
+				
 		ae.setName(v);
 	},	
 
 	set_state : function(entity, v)
 	{
 		var ae = this.entities[entity.id];
+		if(ae == undefined)
+			return;
+				
 		ae.setState(v);
 		
 		if(entity.isPlayer())
@@ -398,7 +428,7 @@ var WorldSceneLayer = cc.Layer.extend({
 			// 如果死亡了，弹出死亡复活面板
 			if(v == 1)
 			{
-				this.createReliveUI();		        											
+				this.createReliveUI();
 			}
 		}
 	},
@@ -406,17 +436,25 @@ var WorldSceneLayer = cc.Layer.extend({
 	set_moveSpeed : function(entity, v)
 	{
 		var ae = this.entities[entity.id];
+		if(ae == undefined)
+			return;
+				
 		ae.setSpeed(v / 10.0);
 	},
 
 	set_modelScale : function(entity, v)
 	{
 		var ae = this.entities[entity.id];
+		if(ae == undefined)
+			return;		
 	},
 
 	set_modelID : function(entity, v)
 	{
 		var ae = this.entities[entity.id];
+		if(ae == undefined)
+			return;
+				
 		switch(v)
 		{
 			case 80001001:
@@ -472,16 +510,22 @@ var WorldSceneLayer = cc.Layer.extend({
 	{
 		// 实体接受伤害，可以在此做受击表现
 		var ae = this.entities[entity.id];
+		if(ae == undefined)
+			return;
 	},
 
 	onAddSkill : function(entity)
 	{
 		var ae = this.entities[entity.id];
+		if(ae == undefined)
+			return;		
 	},
 
 	otherAvatarOnJump : function(entity)
 	{
 		var ae = this.entities[entity.id];
+		if(ae == undefined)
+			return;		
 	},
 															
     /* -----------------------------------------------------------------------/

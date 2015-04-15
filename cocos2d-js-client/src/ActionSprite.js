@@ -8,7 +8,8 @@ var ActionAnimation = cc.Node.extend({
     length: 0,
     name : "",
     dir : 0,
-    ctor:function (sprite, row, length, w, h, frameX, frameY, name) {
+    parent: null,
+    ctor:function (parent, sprite, row, length, w, h, frameX, frameY, name) {
         //////////////////////////////
         // super init first
         this._super();
@@ -21,6 +22,7 @@ var ActionAnimation = cc.Node.extend({
         this.frameX = frameX;
         this.frameY = frameY;
         this.name = name;
+        this.parent = parent;
         return true;
     },	
     
@@ -36,6 +38,12 @@ var ActionAnimation = cc.Node.extend({
     {
         this.frameX = 0;
         this.frameY = 0;
+        this.parent.addChild(this.sprite);
+    },
+    
+    stop : function()
+    {
+    	this.parent.removeChild(this.sprite);
     }
 });
 
@@ -53,7 +61,6 @@ var ActionSprite = cc.Node.extend({
     speed: 6,
     lastAnim: null,
     res: "",
-    ui_name:null,
     isMoving: false,
     ctor:function (scene, res) {
         //////////////////////////////
@@ -86,25 +93,6 @@ var ActionSprite = cc.Node.extend({
 		this.speed = speed;
 	},
 		
-	setName : function(name)
-	{
-		if(this.ui_name == null)
-		{
-	        this.ui_name = new ccui.Text();
-	        this.ui_name.attr({
-	            string: name,
-	            fontName: "graphicpixel-webfont",
-	            fontSize: 20,
-	            anchorX: 0.5,
-	            anchorY: -1
-	        });
-	        this.ui_name.setColor(new cc.Color(255, 255, 0, 255));
-	        this.addChild(this.ui_name, 1);
-	    }
-
-        this.ui_name.setString(name);
-	},
-		
     setSprite : function(res)
     {
     	this.res = res;
@@ -121,7 +109,10 @@ var ActionSprite = cc.Node.extend({
         var jsonData = cc.loader.getRes("res/sprites/" + name + ".json");
 
 		this.sprite = new cc.Sprite(res, cc.rect(0, 0, jsonData.width * 3, jsonData.height * 3));
-        this.addChild(this.sprite);
+		
+		// 播放动画的时候决定添加到节点上显示
+		// 因为可能动画不在同一张图上, 例如死亡动画是一张通用的精灵图
+        // this.addChild(this.sprite);
 
         // 初始化动画信息
         this.animations = {};
@@ -131,8 +122,18 @@ var ActionSprite = cc.Node.extend({
         for(var aniName in animations)
         {
             var ani = animations[aniName];
-            var actionAnimation = new ActionAnimation(this.sprite, ani.row, ani.length, jsonData.width * 3, jsonData.height * 3, 0, 0, aniName);
+            var actionAnimation = new ActionAnimation(this, this.sprite, ani.row, ani.length, jsonData.width * 3, jsonData.height * 3, 0, 0, aniName);
             this.animations[aniName] = actionAnimation;
+        }
+        
+        // 如果资源中没有包含死亡动画，那么创建一个通用死亡动画
+        var deathAnim = this.animations["death"];
+        if(deathAnim == undefined)
+        {
+        	jsonData = cc.loader.getRes("res/sprites/death.json");
+        	var ani = jsonData.animations["death"];
+        	var death_sprite = new cc.Sprite("res/img/3/death.png", cc.rect(0, 0, jsonData.width * 3, jsonData.height * 3))
+        	this.animations["death"] = new ActionAnimation(this, death_sprite, ani.row, ani.length, jsonData.width * 3, jsonData.height * 3, 0, 0, "death");
         }
         
         // 重新刷动画播放
@@ -145,6 +146,9 @@ var ActionSprite = cc.Node.extend({
     	{
 	        if(this.lastAnim == null || this.lastAnim.name != aniName)
 	        {
+	        	if(this.lastAnim != null)
+	        		this.lastAnim.stop();
+	        	
 	            this.lastAnim = this.animations[aniName];
 	            if(this.lastAnim != undefined)
 	          	  this.lastAnim.reset();
@@ -164,9 +168,12 @@ var ActionSprite = cc.Node.extend({
     setState : function(state)
     {
         this.state = state;
-        
-        // 初始动作表现
-        this.updateAnim();
+
+        if(state == 1)
+            this.stop();
+        else
+          // 初始动作表现
+           this.updateAnim();
     },
 
     calcDirection: function (dx, dy) 
@@ -235,41 +242,48 @@ var ActionSprite = cc.Node.extend({
 		
 		if(this.state == 1)
 		{
-			// 死亡时也播放idle，一段时间后模型将消失
-			anim = "idle_";
+			anim = "death";
 		}
-		else if(this.isMoving)
+		else
 		{
-			anim = "walk_";
+			if(this.isMoving)
+			{
+				anim = "walk_";
+			}
+			else if(this.state == 3)
+			{
+				// 这里仍然使用idle， "atk_", 在挥动武器的刹那才播放该动作
+				anim = "idle_"; 
+			}
+			
+			switch(this.dir)
+			{
+				case 1:
+					this.scaleX = 1;		
+					anim += "right";
+					break;
+				case 2:
+					anim += "up";
+					break;
+				case 3:
+					// 由于只有一个right, 因此这个方向的表现需要翻转图片
+					this.scaleX = -1;
+					anim += "right";
+					break;
+				case 4:
+					anim += "down";
+					break;
+			};
 		}
-		else if(this.state == 3)
-		{
-			// 这里仍然使用idle， "atk_", 在挥动武器的刹那才播放该动作
-			anim = "idle_"; 
-		}
-		
-		switch(this.dir)
-		{
-			case 1:
-				this.scaleX = 1;		
-				this.ui_name.scaleX = 1;
-				anim += "right";
-				break;
-			case 2:
-				anim += "up";
-				break;
-			case 3:
-				// 由于只有一个right, 因此这个方向的表现需要翻转图片
-				this.scaleX = -1;
-				this.ui_name.scaleX = -1;
-				anim += "right";
-				break;
-			case 4:
-				anim += "down";
-				break;
-		};
 		
 		this.play(anim);
+    },
+    
+    stop : function()
+    {
+    	this.stopAllActions();
+    	this.isMoving = false;
+    	this.updateAnim();
     },
     	
 	moveTo : function(position)
