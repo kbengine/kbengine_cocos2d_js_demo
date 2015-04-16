@@ -9,7 +9,8 @@ var ActionAnimation = cc.Node.extend({
     name : "",
     dir : 0,
     parent: null,
-    ctor:function (parent, sprite, row, length, w, h, frameX, frameY, name) {
+    repeat: false,
+    ctor:function (parent, sprite, repeat, row, length, w, h, frameX, frameY, name) {
         //////////////////////////////
         // super init first
         this._super();
@@ -23,6 +24,7 @@ var ActionAnimation = cc.Node.extend({
         this.frameY = frameY;
         this.name = name;
         this.parent = parent;
+        this.repeat = repeat;
         return true;
     },	
     
@@ -31,7 +33,12 @@ var ActionAnimation = cc.Node.extend({
         this.sprite.setTextureRect(cc.rect(this.frameX * this.w, (this.frameY + this.row) * this.h, this.w, this.h));
         this.frameX += 1;
         if(this.frameX >= this.length)
-            this.frameX = 0;
+        {
+        	if(this.repeat == true)
+            	this.frameX = 0;
+            else
+            	this.frameX = this.length;
+        }
     },
 
     reset : function()
@@ -179,7 +186,7 @@ var ActionSprite = cc.Node.extend({
         for(var aniName in animations)
         {
             var ani = animations[aniName];
-            var actionAnimation = new ActionAnimation(this, this.sprite, ani.row, ani.length, jsonData.width * 3, jsonData.height * 3, 0, 0, aniName);
+            var actionAnimation = new ActionAnimation(this, this.sprite, aniName != "death", ani.row, ani.length, jsonData.width * 3, jsonData.height * 3, 0, 0, aniName);
             this.animations[aniName] = actionAnimation;
         }
         
@@ -190,7 +197,7 @@ var ActionSprite = cc.Node.extend({
         	jsonData = cc.loader.getRes("res/sprites/death.json");
         	var ani = jsonData.animations["death"];
         	var death_sprite = new cc.Sprite("res/img/3/death.png", cc.rect(0, 0, jsonData.width * 3, jsonData.height * 3))
-        	this.animations["death"] = new ActionAnimation(this, death_sprite, ani.row, ani.length, jsonData.width * 3, jsonData.height * 3, 0, 0, "death");
+        	this.animations["death"] = new ActionAnimation(this, death_sprite, false, ani.row, ani.length, jsonData.width * 3, jsonData.height * 3, 0, 0, "death");
         }
         
         // 重新刷动画播放
@@ -268,6 +275,9 @@ var ActionSprite = cc.Node.extend({
     		this.updateAnim();
     		return;
     	}
+
+    	if(this.dir == dir)
+    		return;
     	
 		this.dir = dir;
 		this.updateAnim();
@@ -316,7 +326,7 @@ var ActionSprite = cc.Node.extend({
 			switch(this.dir)
 			{
 				case 1:
-					this.scaleX = 1;		
+					this.scaleX = 1;
 					anim += "right";
 					break;
 				case 2:
@@ -328,6 +338,9 @@ var ActionSprite = cc.Node.extend({
 					anim += "right";
 					break;
 				case 4:
+					anim += "down";
+					break;
+				default:
 					anim += "down";
 					break;
 			};

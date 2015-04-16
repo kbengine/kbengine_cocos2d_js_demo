@@ -1,7 +1,7 @@
 /* 
-	一个抽象的实体类，可以用来描述NPC/MONSTER/传送门/可交互的服务端实体对象
+	一个抽象的实体精灵表现类，可以用来描述NPC/MONSTER/传送门/可交互的服务端实体对象
 */	
-var ActionEntity = ActionSprite.extend({
+var EntitySprite = ActionSprite.extend({
 	isOnGound: true,
 	ui_name:null,
 	uiHP: null,

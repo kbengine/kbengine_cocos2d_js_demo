@@ -122,64 +122,26 @@ var WorldSceneLayer = cc.Layer.extend({
         if( 'mouse' in cc.sys.capabilities ) {
             cc.eventManager.addListener({
                  event: cc.EventListener.MOUSE,
-                onMouseDown: this.onMouseDown,
                 onMouseMove: this.onMouseMove,
-                onMouseUp: this.onMouseUp
             }, target);
-        } else {
-	        if( 'touches' in cc.sys.capabilities )
-	            cc.eventManager.addListener(cc.EventListener.create({
-	                event: cc.EventListener.TOUCH_ALL_AT_ONCE,
-	                onTouchesEnded:this.onTouchesEnded
-	            }), this);
-            else        	
-          	  cc.log("MOUSE and TOUCH Not supported");
-        }		
+        } 
+        
+        cc.eventManager.addListener(cc.EventListener.create({
+            event: cc.EventListener.TOUCH_ONE_BY_ONE,
+            swallowTouches: true,
+            onTouchBegan:this.onTouchBegan
+        }), this);
 	},
-		
-    onMouseDown: function(event)
-    {
-        var pos = event.getLocation(), target = event.getCurrentTarget();
-        var locationInNode = target.convertToNodeSpace(pos);
-        var s = target.getContentSize();
-        var rect = cc.rect(0, 0, s.width, s.height);
-		
-		// 检查是否在区域内
-        if (cc.rectContainsPoint(rect, locationInNode))
-		{
-	        if(event.getButton() === cc.EventMouse.BUTTON_RIGHT)
-	            cc.log("onRightMouseDown at: " + pos.x + " " + pos.y);
-	        else if(event.getButton() === cc.EventMouse.BUTTON_LEFT)
-	            cc.log("onLeftMouseDown at: " + pos.x + " " + pos.y);
-		}
-    },
     	
     onMouseMove: function(event)
     {
         //var pos = event.getLocation(), target = event.getCurrentTarget();
         //cc.log("onMouseMove at: " + pos.x + " " + pos.y );
     },
-    	
-    onMouseUp: function(event)
-    {
-        var pos = event.getLocation(), target = event.getCurrentTarget();
-        var locationInNode = target.convertToNodeSpace(pos);
-        var s = target.getContentSize();
-        var rect = cc.rect(0, 0, s.width, s.height);
-		
-		// 检查是否在区域内
-        if (cc.rectContainsPoint(rect, locationInNode))
-		{
-			target.onClickUp(pos);
-		}
-    },
 
-	onTouchesEnded : function (touches, event) 
+	onTouchBegan: function (touch, event) 
 	{
-        if (touches.length <= 0)
-            return;
-        
-        var pos = touches[0].getLocation(), target = event.getCurrentTarget();
+        var pos = touch.getLocation(), target = event.getCurrentTarget();
         
         var locationInNode = target.convertToNodeSpace(pos);
         var s = target.getContentSize();
@@ -189,7 +151,10 @@ var WorldSceneLayer = cc.Layer.extend({
         if (cc.rectContainsPoint(rect, locationInNode))
 		{
 			target.onClickUp(pos);
+			return true;
 		}
+		
+		return false;
 	},
 	
 	onClickUp : function(pos)
@@ -279,7 +244,7 @@ var WorldSceneLayer = cc.Layer.extend({
 	onAvatarEnterWorld : function(rndUUID, eid, avatar)
 	{
 		// 角色进入世界，创建角色精灵
-		this.player = new Avatar(this, eid, "res/img/3/clotharmor.png");
+		this.player = new AvatarSprite(this, eid, "res/img/3/clotharmor.png");
         this.player.attr({
             x: avatar.position.x * 16,
             y: avatar.position.z * 16,
@@ -310,7 +275,7 @@ var WorldSceneLayer = cc.Layer.extend({
 		// NPC/Monster/Gate等实体进入客户端世界，我们需要创建一个精灵来描述整个实体的表现
 		if(!entity.isPlayer())
 		{
-			var ae = new ActionEntity(this, entity.id, "res/img/3/crab.png");
+			var ae = new EntitySprite(this, entity.id, "res/img/3/crab.png");
 	        ae.attr({
 	            x: entity.position.x * 16,
 	            y: entity.position.z * 16,
@@ -567,7 +532,13 @@ var WorldSceneLayer = cc.Layer.extend({
     		
     	if(this.player.state != 1)
     	{
-    		GUIDebugLayer.debug.INFO_MSG("[scene] = " + this.mapName + ", [pos] = (" + Math.round(this.player.x) + ", " + Math.round(this.player.y) + ")");
+    		var s = "[scene] = " + this.mapName + ", [pos] = (" + Math.round(this.player.x) + ", " + Math.round(this.player.y) + ")";
+    		if(this.player.chaseTarget != null)
+    			s += ", [chaseTarget] = " + this.player.chaseTarget.entityID;
+    		else if(this.player.attackTarget != null)
+    			s += ", [attackTarget] = " + this.player.attackTarget.entityID;
+    		
+    		GUIDebugLayer.debug.INFO_MSG(s);
     	}
     	else
     	{

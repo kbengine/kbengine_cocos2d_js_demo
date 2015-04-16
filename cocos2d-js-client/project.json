@@ -25,7 +25,7 @@
         "src/StartScene.js",
 	"src/WorldScene.js",
 	"src/ActionSprite.js",
-	"src/ActionEntity.js",
-	"src/Avatar.js"
+	"src/EntitySprite.js",
+	"src/AvatarSprite.js"
     ]
 }

@@ -1,8 +1,8 @@
 /*
-	玩家实体类，继承于ActionEntity
-	与ActionEntity主要的区别是实体由客户端控制
+	玩家实体精灵表现类，继承于EntitySprite
+	与EntitySprite主要的区别是实体由客户端控制
 */
-var Avatar = ActionEntity.extend(
+var AvatarSprite = EntitySprite.extend(
 {
 	chaseTarget: null,
 	attackTarget: null,
@@ -23,7 +23,7 @@ var Avatar = ActionEntity.extend(
             this.chaseTarget = null;
         }
     },
-    	    	
+
     moveToTarget : function(target)
 	{
 		this.isMoving = true;
