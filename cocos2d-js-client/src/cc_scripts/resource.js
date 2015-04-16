@@ -10,7 +10,7 @@ var g_resources = [
 	
 "res/img/3/shadow16.png",	
 "res/img/3/tilesheet.png",
-"res/img/3/cocosjs_demo_map1.tmx",
+"res/img/3/cocosjs_demo_map1.png",
 	
 "res/img/3/death.png",
 "res/sprites/death.json",

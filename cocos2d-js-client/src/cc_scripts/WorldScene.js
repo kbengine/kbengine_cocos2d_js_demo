@@ -237,7 +237,7 @@ var WorldSceneLayer = cc.Layer.extend({
 		
         // 其实可以将resPath与地图tmx文件名设置为一致，那么就可以根据服务器返回的信息来加载场景
         // resPath由服务端cell/space.py中KBEngine.addSpaceGeometryMapping(self.spaceID, None, resPath)设置
-        this.createScene("res/img/3/cocosjs_demo_map1.tmx");
+        this.createScene("res/img/3/cocosjs_demo_map1.png");
         this.fixMap();
 	},
 	
@@ -521,7 +521,19 @@ var WorldSceneLayer = cc.Layer.extend({
     /------------------------------------------------------------------------ */
 	createScene : function(resPath)
     {
-        this.tmxmap = cc.TMXTiledMap.create(resPath);    
+    	if(resPath.indexOf(".tmx") != -1)
+    	{
+      	  this.tmxmap = cc.TMXTiledMap.create(resPath);    
+      	}
+      	else
+      	{
+			this.tmxmap = new cc.Sprite(resPath);   
+	        this.tmxmap.attr({
+	            anchorX: 0,
+	            anchorY: 0
+	        });			  		
+      	}
+      	
         this.mapNode.addChild(this.tmxmap, 1, NODE_TAG_TMX);
     },
 
