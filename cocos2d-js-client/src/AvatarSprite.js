@@ -13,6 +13,12 @@ var AvatarSprite = EntitySprite.extend(
         this._super(scene, entityID, res);
         return true;
     },
+    
+    clearTarget : function()
+    {
+		this.attackTarget = null;
+		this.chaseTarget = null;    	
+    },
     	
     setState : function(state)
     {
@@ -20,11 +26,24 @@ var AvatarSprite = EntitySprite.extend(
 		
 		// 如果死亡，清空目标
 	    if(state == 1) {
-            this.chaseTarget = null;
+			this.clearTarget();
         }
     },
 
+	moveToPosition : function(position)
+	{
+		this.clearTarget();
+		this._super(position);
+		this.updateAnim();
+	},
+
     moveToTarget : function(target)
+	{
+		this.clearTarget();
+		this._moveToTarget(target);
+	},
+		
+    _moveToTarget : function(target)
 	{
 		this.isMoving = true;
 		this.stopAllActions();
@@ -32,14 +51,14 @@ var AvatarSprite = EntitySprite.extend(
 		this.updateAnim();
 	},
 	
-	attack : function(dt)
+	_attack : function(dt)
 	{
 		if(this.attackTarget == null)
 			return;
 		
 		if(this.state == 1 || this.attackTarget.isDestroyed == true || this.attackTarget.state == 1)
 		{
-			this.attackTarget = null;
+			this.clearTarget();
 			return;
 		}
 		
@@ -52,6 +71,8 @@ var AvatarSprite = EntitySprite.extend(
         {
         	if(this.lastTime > 1.0)
         	{
+        		this.setDirection(this.calcDirection(x, y));
+        		
         		// 技能ID1为普通攻击技能
         		var player = KBEngine.app.player();
         		if(player != undefined)
@@ -62,7 +83,7 @@ var AvatarSprite = EntitySprite.extend(
         }
         else
         {
-        	this.moveToTarget(this.attackTarget);
+        	this._moveToTarget(this.attackTarget);
         	this.attackTarget = null;
 		}		
 	},
@@ -76,9 +97,9 @@ var AvatarSprite = EntitySprite.extend(
         
         if(this.chaseTarget != null)
         {
-			if(this.chaseTarget.isDestroyed == true || this.state == 1)
+			if(this.chaseTarget.isDestroyed == true || this.chaseTarget.state == 1 || this.state == 1)
 			{
-				this.chaseTarget = null;
+				this.clearTarget();
 				return;
 			} 
 			
@@ -94,10 +115,10 @@ var AvatarSprite = EntitySprite.extend(
             else
             {
             	this.isMoving = true;
-				this.moveToPosition(cc.p(this.chaseTarget.x, this.chaseTarget.y));
+				this._moveToPosition(cc.p(this.chaseTarget.x, this.chaseTarget.y));
 			}
 		}
 		
-		this.attack(dt);
+		this._attack(dt);
     }		
 });

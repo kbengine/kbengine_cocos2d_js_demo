@@ -488,8 +488,16 @@ var WorldSceneLayer = cc.Layer.extend({
 
 	recvDamage : function(entity, attacker, skillID, damageType, damage)
 	{
-		// 实体接受伤害，可以在此做受击表现
+		// 实体做攻击表现
+		var atk_ae = this.entities[attacker.id];
 		var ae = this.entities[entity.id];
+		
+		if(atk_ae != undefined)
+		{
+			atk_ae.attack(ae, skillID, damageType, damage);
+		}
+				
+		// 实体接受伤害，可以在此做受击表现
 		if(ae == undefined)
 			return;
 	},

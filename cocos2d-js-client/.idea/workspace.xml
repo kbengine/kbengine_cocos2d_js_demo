@@ -46,8 +46,8 @@
       <file leaf-file-name="WorldScene.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/WorldScene.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="7505" max-vertical-offset="11134">
-              <caret line="418" column="6" selection-start-line="418" selection-start-column="4" selection-end-line="418" selection-end-column="4" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="7676" max-vertical-offset="11286">
+              <caret line="427" column="6" selection-start-line="427" selection-start-column="4" selection-end-line="427" selection-end-column="4" />
               <folding />
             </state>
           </provider>
@@ -76,8 +76,8 @@
       <file leaf-file-name="ActionSprite.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/ActionSprite.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.44362292" vertical-offset="2439" max-vertical-offset="7733">
-              <caret line="141" column="4" selection-start-line="141" selection-start-column="4" selection-end-line="141" selection-end-column="4" />
+            <state vertical-scroll-proportion="0.44362292" vertical-offset="3427" max-vertical-offset="8968">
+              <caret line="193" column="0" selection-start-line="193" selection-start-column="0" selection-end-line="193" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -665,13 +665,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.8595194" vertical-offset="16426" max-vertical-offset="44973">
           <caret line="913" column="9" selection-start-line="913" selection-start-column="9" selection-end-line="913" selection-end-column="9" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/WorldScene.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="7505" max-vertical-offset="11134">
-          <caret line="418" column="6" selection-start-line="418" selection-start-column="4" selection-end-line="418" selection-end-column="4" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="7676" max-vertical-offset="11286">
+          <caret line="427" column="6" selection-start-line="427" selection-start-column="4" selection-end-line="427" selection-end-column="4" />
           <folding />
         </state>
       </provider>
@@ -702,8 +703,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/ActionSprite.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.44362292" vertical-offset="2439" max-vertical-offset="7733">
-          <caret line="141" column="4" selection-start-line="141" selection-start-column="4" selection-end-line="141" selection-end-column="4" />
+        <state vertical-scroll-proportion="0.44362292" vertical-offset="3427" max-vertical-offset="8968">
+          <caret line="193" column="0" selection-start-line="193" selection-start-column="0" selection-end-line="193" selection-end-column="0" />
           <folding />
         </state>
       </provider>

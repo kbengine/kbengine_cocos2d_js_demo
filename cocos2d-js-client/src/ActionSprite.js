@@ -37,21 +37,37 @@ var ActionAnimation = cc.Node.extend({
         	if(this.repeat == true)
             	this.frameX = 0;
             else
-            	this.frameX = this.length;
+            	this.frameX = this.length - 1;
         }
     },
 
+	isOver : function()
+	{
+		// 重复播放的动画没有结束状态
+		if(this.repeat == true)
+			return false;
+		
+		// 动画是否播放完毕
+		return this.frameX >= this.length - 1;
+	},
+		
     reset : function()
     {
-        this.frameX = 0;
-        this.frameY = 0;
+        this.replay();
         this.parent.addChild(this.sprite);
         this.parent.sprite = this.sprite;
     },
     
+    replay : function()
+    {
+        this.frameX = 0;
+        this.frameY = 0;
+    },
+    	
     stop : function()
     {
     	this.parent.removeChild(this.sprite);
+    	this.replay();
     }
 });
 
@@ -66,6 +82,7 @@ var ActionSprite = cc.Node.extend({
     state: 0,
     speed: 6,
     lastAnim: null,
+    onceAnim: null,
     res: "",
     isMoving: false,
     _listener: null,
@@ -186,7 +203,9 @@ var ActionSprite = cc.Node.extend({
         for(var aniName in animations)
         {
             var ani = animations[aniName];
-            var actionAnimation = new ActionAnimation(this, this.sprite, aniName != "death", ani.row, ani.length, jsonData.width * 3, jsonData.height * 3, 0, 0, aniName);
+            var actionAnimation = new ActionAnimation(this, this.sprite, aniName != "death" && aniName.indexOf("atk_") == -1, 
+            		ani.row, ani.length, jsonData.width * 3, jsonData.height * 3, 0, 0, aniName);
+            
             this.animations[aniName] = actionAnimation;
         }
         
@@ -210,14 +229,21 @@ var ActionSprite = cc.Node.extend({
     	{
 	        if(this.lastAnim == null || this.lastAnim.name != aniName)
 	        {
-	        	if(this.lastAnim != null)
-	        		this.lastAnim.stop();
-	        	
-	            this.lastAnim = this.animations[aniName];
-	            if(this.lastAnim != undefined)
-	          	  this.lastAnim.reset();
-	          	else
-	          		return;
+	        	if(this.onceAnim == null)
+	        	{
+		        	if(this.lastAnim != null)
+		        		this.lastAnim.stop();
+		        	
+		            this.lastAnim = this.animations[aniName];
+		            if(this.lastAnim != undefined)
+						this.lastAnim.reset();
+					else
+						return;
+				}
+				else
+				{
+					this.lastAnim = this.animations[aniName];
+				}
 	        }
 	    }
 	    else
@@ -226,9 +252,38 @@ var ActionSprite = cc.Node.extend({
 	    		return;
 	    }
 
+		// 不重复播放的动画通常是死亡、攻击等，这些必须播完才可以进行其他动画播放
+		if(this.onceAnim == null)
+		{
+			if(this.lastAnim.repeat != true)
+				this.onceAnim = this.lastAnim;
+		}
+		else
+		{
+			if(this.onceAnim.isOver() == false)
+			{
+				this.onceAnim.play();
+				return;
+			}
+			else
+			{
+				if(this.onceAnim != this.lastAnim)
+				{
+					this.onceAnim.stop();
+					this.onceAnim = null;
+					this.lastAnim.reset();
+				}
+		        else
+		        {
+		        	if(arguments.length > 0 && this.lastAnim.repeat != true)
+		        		this.lastAnim.replay();
+		        }				
+			}
+		}
+		
 	    this.lastAnim.play();
     },
-
+		
     setState : function(state)
     {
         this.state = state;
@@ -323,6 +378,11 @@ var ActionSprite = cc.Node.extend({
 				anim = "idle_"; 
 			}
 			
+			if(arguments.length == 1)
+			{
+				anim = arguments[0];
+			}
+			
 			switch(this.dir)
 			{
 				case 1:
@@ -355,8 +415,13 @@ var ActionSprite = cc.Node.extend({
     	this.isMoving = false;
     	this.updateAnim();
     },
-		
+
 	moveToPosition : function(position)
+	{
+		this._moveToPosition(position);
+	},
+		
+	_moveToPosition : function(position)
 	{
 		this.stopAllActions();
 

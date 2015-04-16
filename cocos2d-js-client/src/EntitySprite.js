@@ -128,6 +128,18 @@ var EntitySprite = ActionSprite.extend({
             this.addShadow();   
         }
     },
+    
+    attack : function(entity, skillID, damageType, damage)
+    {
+    	if(entity != undefined)
+    	{
+	        var x = entity.x - this.x;
+	        var y = entity.y - this.y;
+			this.setDirection(this.calcDirection(x, y));
+		}
+		
+		this.updateAnim("atk_");    	
+    },
     	
 	recvDamage : function(entity, attacker, skillID, damageType, damage)
 	{
@@ -142,7 +154,12 @@ var EntitySprite = ActionSprite.extend({
     /------------------------------------------------------------------------ */
     updateAnim : function()
     {
-    	this._super();
+		if(arguments.length == 1)
+		{
+			this._super(arguments[0]);
+		}
+		else    	
+    		this._super();
     	
     	if(this.ui_name != null)
         	this.ui_name.scaleX = this.scaleX;
