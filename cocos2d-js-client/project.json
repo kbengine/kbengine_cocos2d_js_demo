@@ -12,20 +12,21 @@
 
     "jsList" : [
 	"plugins/kbengine/kbengine.js",
-        "plugins/kbengine/GameObject.js",
-        "plugins/kbengine/Account.js",
-        "plugins/kbengine/Avatar.js",
-        "plugins/kbengine/Monster.js",
-        "plugins/kbengine/NPC.js",
-        "plugins/kbengine/Gate.js",
 
-        "src/resource.js",
-	"src/global.js",
-	"src/GuiDebug.js",
-        "src/StartScene.js",
-	"src/WorldScene.js",
-	"src/ActionSprite.js",
-	"src/EntitySprite.js",
-	"src/AvatarSprite.js"
+        "src/kbe_scripts/GameObject.js",
+        "src/kbe_scripts/Account.js",
+        "src/kbe_scripts/Avatar.js",
+        "src/kbe_scripts/Monster.js",
+        "src/kbe_scripts/NPC.js",
+        "src/kbe_scripts/Gate.js",
+
+        "src/cc_scripts/resource.js",
+	"src/cc_scripts/global.js",
+	"src/cc_scripts/GuiDebug.js",
+        "src/cc_scripts/StartScene.js",
+	"src/cc_scripts/WorldScene.js",
+	"src/cc_scripts/ActionSprite.js",
+	"src/cc_scripts/EntitySprite.js",
+	"src/cc_scripts/AvatarSprite.js"
     ]
 }
