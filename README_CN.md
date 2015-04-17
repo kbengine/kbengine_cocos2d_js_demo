@@ -84,17 +84,13 @@ http://www.kbengine.org
 
 ##启动客户端:
 
-	直接在Unity3D编辑器启动或者编译后启动
-	（编译客户端：Unity Editor -> File -> Build Settings -> PC, MAC & Linux Standalone.）
+	1. 使用Python搭建简单的Web服务器
+		下载http://www.python.org/ftp/python/3.3.4/python-3.3.4.msi并安装。
 
+	2. 启动Web服务, 双击start_http_service.bat
 
-##生成导航网格(可选):
-	
-	服务端使用Recastnavigation在3D世界寻路，recastnavigation生成的导航网格（Navmeshs）放置于：
-		kbengine\kbengine_demos_assets\res\spaces\*
+	3. 进入游戏, 打开浏览器输入 http://127.0.0.1 即可进入登录界面。
 
-	在Unity3D中使用插件生成导航网格（Navmeshs）:
-		https://github.com/kbengine/unity3d_nav_critterai
 
 
 ##演示截图:

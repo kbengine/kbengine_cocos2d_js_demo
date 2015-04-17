@@ -79,18 +79,13 @@ http://www.kbengine.org
 
 ##Start the Client:
 
-	Directly start(U3DEditor or Executable file).
-	(Build Client£ºUnity Editor -> File -> Build Settings -> PC, MAC & Linux Standalone.)
+	1. We simply use python to build web service
+		Download and Install http://www.python.org/ftp/python/3.3.4/python-3.3.4.msi
 
+	2. Excute the start_http_service.bat
 
-##Navmesh-navigation(Optional):
-	
-	The server to use recastnavigation navigation.
-	Recastnavigation generated navigation mesh (Navmeshs) placed on the:
-		kbengine\demo\res\spaces\*
-
-	Generation Navmeshs:
-		https://github.com/kbengine/unity3d_nav_critterai
+	3. Enter the game
+		http://127.0.0.1
 
 
 ##Screenshots:
