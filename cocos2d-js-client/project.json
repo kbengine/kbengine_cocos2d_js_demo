@@ -11,7 +11,7 @@
     "modules" : ["cocos2d", "extensions", "external"],
 
     "jsList" : [
-	"plugins/kbengine/kbengine.js",
+	"plugins/kbengine_js_plugins/kbengine.js",
 
         "src/kbe_scripts/GameObject.js",
         "src/kbe_scripts/Account.js",
