@@ -39,6 +39,7 @@ http://www.kbengine.org
 			Download plugin(client):
 				https://github.com/kbengine/kbengine_js_plugins/releases/latest
 				unzip and copy to "kbengine_cocos2d_js_demo/cocos2d-js-client/plugins/"
+				(Note: the need to modify the folder name as "kbengine_js_plugins")
 
 			Download demo-assets(server):
 				https://github.com/kbengine/kbengine_demos_assets/releases/latest

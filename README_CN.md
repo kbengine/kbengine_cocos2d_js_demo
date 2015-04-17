@@ -46,6 +46,7 @@ http://www.kbengine.org
 		        客户端插件下载：
 		            https://github.com/kbengine/kbengine_js_plugins/releases/latest
 		            下载后请将其解压缩，插件源码请放置在: kbengine_cocos2d_js_demo/cocos2d-js-client/plugins/
+		            （注意：文件夹名称需要修改为"kbengine_js_plugins"）
 
 		        服务端资产库下载：
 		            https://github.com/kbengine/kbengine_demos_assets/releases/latest
