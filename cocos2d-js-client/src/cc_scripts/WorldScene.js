@@ -225,9 +225,12 @@ var WorldSceneLayer = cc.Layer.extend({
 	onConnectStatus : function(success)
 	{
 		if(!success)
-			GUIDebugLayer.debug.ERROR_MSG("connect(" + g_kbengine.ip + ":" + g_kbengine.port + ") is error! (连接错误)");
+			GUIDebugLayer.debug.ERROR_MSG("Connect(" + KBEngine.app.ip + ":" + KBEngine.app.port + ") is error! (连接错误)");
 		else
-			GUIDebugLayer.debug.INFO_MSG("connect successfully, please wait...(连接成功，请等候...)");
+			GUIDebugLayer.debug.INFO_MSG("Connect successfully, please wait...(连接成功，请等候...)");
+		
+		// 切换到场景
+		cc.director.runScene(new StartScene());			
 	},
 
 	addSpaceGeometryMapping : function(resPath)
