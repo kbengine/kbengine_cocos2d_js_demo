@@ -220,6 +220,8 @@ var WorldSceneLayer = cc.Layer.extend({
 		
 	onDisableConnect : function()
 	{
+		// 切换到场景
+		cc.director.runScene(new StartScene());			
 	},
 		
 	onConnectStatus : function(success)
