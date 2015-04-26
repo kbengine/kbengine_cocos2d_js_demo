@@ -6,8 +6,6 @@ KBEngine.Avatar = KBEngine.GameObject.extend(
 	__init__ : function()
 	{
 		this._super();
-		
-		KBEngine.Event.fire("onAvatarEnterWorld", KBEngine.app.entity_uuid, this.id, this);
   	},
   		
 	relive : function(type)
@@ -18,6 +16,7 @@ KBEngine.Avatar = KBEngine.GameObject.extend(
 	useTargetSkill : function(skillID, targetID)
 	{
 		KBEngine.INFO_MSG(this.className + '::useTargetSkill: ' + skillID + ", targetID: " + targetID);
+		this.cellCall("useTargetSkill", skillID, targetID);
   	},
   		
 	jump : function()
@@ -46,13 +45,15 @@ KBEngine.Avatar = KBEngine.GameObject.extend(
 	onEnterWorld : function()
 	{
 		KBEngine.INFO_MSG(this.className + '::onEnterWorld: ' + this.id); 
-		this._super();
-		
+
 		// 请求获取技能列表
 		if(this.isPlayer())
 		{
+			KBEngine.Event.fire("onAvatarEnterWorld", KBEngine.app.entity_uuid, this.id, this);
 			this.cellCall("requestPull");
-		}		
+		}
+		
+		this._super();		
 	}
 });
 

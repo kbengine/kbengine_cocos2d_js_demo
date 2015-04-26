@@ -188,7 +188,7 @@ var StartSceneLayer = cc.Layer.extend({
         this.logintButton.setTitleFontName("graphicpixel-webfont");
         this.logintButton.x = size.width / 2.0 - 100;
         this.logintButton.y = size.height / 2.0 - 150;
-        this.logintButton.addTouchEventListener(this.touchLogintButtonEvent ,this);
+        this.logintButton.addTouchEventListener(this.touchLoginButtonEvent ,this);
         this.addChild(this.logintButton, 2);
 
         // 注册按钮
@@ -213,6 +213,18 @@ var StartSceneLayer = cc.Layer.extend({
         this.playButton.addTouchEventListener(this.touchPlayButtonEvent ,this);
         this.playButton.visible = false;
         this.addChild(this.playButton, 2);
+        
+		if(window.localStorage)
+		{
+			var username = window.localStorage["user_name"];
+			var password = window.localStorage["user_passwd"];
+			
+			if(username != undefined)
+				this.usernamebox.setString(username);
+			
+			if(password != undefined)
+				this.passwordbox.setString(password);			
+		}
     },
 
 	showCreatePlayerUI : function(isShow)
@@ -298,7 +310,7 @@ var StartSceneLayer = cc.Layer.extend({
     editBoxReturn: function (editBox) {
     },
 
-    touchLogintButtonEvent: function (sender, type) 
+    touchLoginButtonEvent: function (sender, type) 
     {
         switch (type) {
             case ccui.Widget.TOUCH_BEGAN:
@@ -319,7 +331,14 @@ var StartSceneLayer = cc.Layer.extend({
             	}
             	
                 GUIDebugLayer.debug.INFO_MSG("Connect to server...");
-                KBEngine.Event.fire("login", this.usernamebox.getString(), this.passwordbox.getString(), "kbengine_cocos2d_js_demo");            
+                KBEngine.Event.fire("login", this.usernamebox.getString(), this.passwordbox.getString(), "kbengine_cocos2d_js_demo");    
+                
+				if(window.localStorage)
+				{
+					window.localStorage["user_name"] = this.usernamebox.getString();
+					window.localStorage["user_passwd"] = this.passwordbox.getString();
+				}
+				
                 break;
             case ccui.Widget.TOUCH_CANCELED:
                 break;
@@ -423,6 +442,8 @@ var StartSceneLayer = cc.Layer.extend({
 		
 	onDisableConnect : function()
 	{
+		// 切换到场景
+		cc.director.runScene(new StartScene());			
 	},
 		
 	onConnectStatus : function(success)
