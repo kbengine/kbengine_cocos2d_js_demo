@@ -39,9 +39,25 @@ KBEngine.Account = KBEngine.GameObject.extend(
 	
 	onRemoveAvatar  : function(dbid)
 	{
-		delete this.avatars[dbid];
-		console.info("Account::onRemoveAvatar: dbid=" + dbid);
-		KBEngine.Event.fire("onRemoveAvatar", dbid, this.avatars);
+		if(this.avatars["values"].length <= 0)
+			return;
+		
+		var done = false;
+		var values = [];
+		for(var i=0; i< this.avatars.values.length; i++)
+		{
+			if(this.avatars.values[i].dbid != dbid)
+				values.push(this.avatars.values[i]);
+			else
+				done = true;
+		}
+		
+		if(done)
+		{
+			this.avatars.values = values;
+			console.info("Account::onRemoveAvatar: dbid=" + dbid);
+			KBEngine.Event.fire("onRemoveAvatar", dbid, this.avatars);
+		}
 	},
 		
 	reqCreateAvatar : function(roleType, name)
