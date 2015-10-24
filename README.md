@@ -56,7 +56,7 @@ http://www.kbengine.org
 
 ##Configure Demo(Optional):
 
-	Change the login address:
+	Change the login address(Clear browser cache):
 
 		kbengine_cocos2d_js_demo\cocos2d-js-client\main.js
 			args.ip = "127.0.0.1";

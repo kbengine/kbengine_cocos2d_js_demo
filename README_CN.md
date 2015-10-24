@@ -63,7 +63,7 @@ http://www.kbengine.org
 
 ##配置Demo(可选):
 
-	改变登录IP地址与端口（注意：关于服务端端口部分参看http://www.kbengine.org/cn/docs/installation.html）:
+	改变登录IP地址与端口（注意：关于服务端端口部分参看http://www.kbengine.org/cn/docs/installation.html，修改完毕后请清除浏览器缓存刷新页面）:
 
 		kbengine_cocos2d_js_demo\cocos2d-js-client\main.js
 			args.ip = "127.0.0.1";
