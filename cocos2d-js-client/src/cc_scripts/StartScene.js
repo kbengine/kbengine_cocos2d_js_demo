@@ -418,16 +418,12 @@ var StartSceneLayer = cc.Layer.extend({
 		KBEngine.Event.register("onLoginFailed", this, "onLoginFailed");
 		KBEngine.Event.register("onVersionNotMatch", this, "onVersionNotMatch");
 		KBEngine.Event.register("onScriptVersionNotMatch", this, "onScriptVersionNotMatch");
-		KBEngine.Event.register("onLoginGatewayFailed", this, "onLoginGatewayFailed");
+		KBEngine.Event.register("onLoginBaseappFailed", this, "onLoginBaseappFailed");
 		KBEngine.Event.register("onLoginSuccessfully", this, "onLoginSuccessfully");
-		KBEngine.Event.register("login_baseapp", this, "login_baseapp");
+		KBEngine.Event.register("onLoginBaseapp", this, "onLoginBaseapp");
 		KBEngine.Event.register("Loginapp_importClientMessages", this, "Loginapp_importClientMessages");
 		KBEngine.Event.register("Baseapp_importClientMessages", this, "Baseapp_importClientMessages");
 		KBEngine.Event.register("Baseapp_importClientEntityDef", this, "Baseapp_importClientEntityDef");
-		
-		KBEngine.Event.register("onImportClientMessages", this, "onImportClientMessages");
-		KBEngine.Event.register("onImportClientEntityDef", this, "onImportClientEntityDef");
-		KBEngine.Event.register("onImportServerErrorsDescr", this, "onImportServerErrorsDescr");
 		
 		// selavatars
 		KBEngine.Event.register("onReqAvatarList", this, "onReqAvatarList");
@@ -535,9 +531,9 @@ var StartSceneLayer = cc.Layer.extend({
         this.serverVersion.setString("serverVersion: " + KBEngine.app.serverVersion);	    	
     },
 
-    onLoginGatewayFailed : function(failedcode)
+    onLoginBaseappFailed : function(failedcode)
     {
-    	GUIDebugLayer.debug.ERROR_MSG("LoginGateway is failed(登陆网关失败), err=" + KBEngine.app.serverErr(failedcode));	
+    	GUIDebugLayer.debug.ERROR_MSG("LoginBaseapp is failed(登陆网关失败), err=" + KBEngine.app.serverErr(failedcode));	
     },
     	
     onLoginSuccessfully : function(rndUUID, eid, accountEntity)
@@ -554,9 +550,9 @@ var StartSceneLayer = cc.Layer.extend({
         this.serverVersion.setString("serverVersion: " + KBEngine.app.serverVersion);		
     },
 
-    login_baseapp : function()
+    onLoginBaseapp : function()
     {
-    	GUIDebugLayer.debug.INFO_MSG("Connect to loginGateway, please wait...(连接到网关， 请稍后...)");
+    	GUIDebugLayer.debug.INFO_MSG("Connect to loginBaseapp, please wait...(连接到网关， 请稍后...)");
     },
 
     Loginapp_importClientMessages : function()
@@ -572,21 +568,6 @@ var StartSceneLayer = cc.Layer.extend({
     Baseapp_importClientEntityDef : function()
     {
     	GUIDebugLayer.debug.INFO_MSG("Baseapp_importClientEntityDef ...");
-    },
-
-    onImportClientMessages : function(currserver, stream)
-    {
-    	GUIDebugLayer.debug.INFO_MSG("importClientMessages successfully!");
-    },
-
-    onImportClientEntityDef : function(stream)
-    {
-    	GUIDebugLayer.debug.INFO_MSG("importClientEntityDef successfully!");
-    },
-    	
-    onImportServerErrorsDescr : function(stream)
-    {
-    	GUIDebugLayer.debug.INFO_MSG("importServerErrorsDescr successfully!");
     },
 
     /* -----------------------------------------------------------------------/

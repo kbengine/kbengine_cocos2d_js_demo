@@ -13,6 +13,11 @@ http://www.kbengine.org
 	binarys		: https://sourceforge.net/projects/kbengine/files/
 
 
+##KBE-Plugins docs
+
+	https://github.com/kbengine/kbengine_js_plugins/blob/master/README.md
+
+
 ##Start:
 	1. Download KBEngine(a MMOG engine of server):
 		Download(KBEngine):

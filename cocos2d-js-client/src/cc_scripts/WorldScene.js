@@ -198,7 +198,7 @@ var WorldSceneLayer = cc.Layer.extend({
 		KBEngine.Event.register("onLeaveWorld", this, "onLeaveWorld");
 		KBEngine.Event.register("set_position", this, "set_position");
 		KBEngine.Event.register("set_direction", this, "set_direction");
-		KBEngine.Event.register("update_position", this, "update_position");
+		KBEngine.Event.register("updatePosition", this, "updatePosition");
 		KBEngine.Event.register("set_HP", this, "set_HP");
 		KBEngine.Event.register("set_MP", this, "set_MP");
 		KBEngine.Event.register("set_HP_Max", this, "set_HP_Max");
@@ -324,7 +324,7 @@ var WorldSceneLayer = cc.Layer.extend({
 		ae.y = entity.position.z * 16;
 	},
 
-	update_position : function(entity)
+	updatePosition : function(entity)
 	{
 		// 服务器同步到实体的新位置，我们需要将实体平滑移动到指定坐标点
 		var ae = this.entities[entity.id];
