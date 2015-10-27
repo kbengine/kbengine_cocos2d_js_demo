@@ -1,1 +1,1 @@
-python -m http.server 80
+d:/python33/python -m http.server 80
