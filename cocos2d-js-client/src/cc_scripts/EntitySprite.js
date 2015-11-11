@@ -2,7 +2,7 @@
 	一个抽象的实体精灵表现类，可以用来描述NPC/MONSTER/传送门/可交互的服务端实体对象
 */	
 var EntitySprite = ActionSprite.extend({
-	isOnGound: true,
+	isOnGround: true,
 	ui_name:null,
 	uiHP: null,
 	shadow: null,

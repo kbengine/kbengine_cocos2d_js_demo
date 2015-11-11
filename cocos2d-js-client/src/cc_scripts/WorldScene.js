@@ -331,7 +331,7 @@ var WorldSceneLayer = cc.Layer.extend({
 		if(ae == undefined)
 			return;
 				
-		ae.isOnGound = entity.isOnGound;
+		ae.isOnGround = entity.isOnGround;
 		ae.moveToPosition(cc.p(entity.position.x * 16, entity.position.z * 16));	
 	},	
 
@@ -587,7 +587,7 @@ var WorldSceneLayer = cc.Layer.extend({
 		player.direction.x = 0;
 		player.direction.y = 0;		
 		player.direction.z = this.player.getDirection();
-		KBEngine.app.isOnGound = 1;
+		KBEngine.app.isOnGround = 1;
     }
 });
 
