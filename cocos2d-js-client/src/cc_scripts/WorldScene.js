@@ -290,17 +290,6 @@ var WorldSceneLayer = cc.Layer.extend({
 	        this.mapNode.addChild(ae, 10);
 	        this.entities[entity.id] = ae;
 	    }
-
-		// 实体第一次进入到这个世界时这些属性不属于值改变行为，造成事件不会触发
-		// 这里我们强制进行一次相关表现上的设置
-		this.set_moveSpeed(entity, entity.moveSpeed);
-		this.set_state(entity, entity.state);
-		this.set_modelID(entity, entity.modelID);
-		this.set_modelScale(entity, entity.modelScale);
-		this.set_entityName(entity, entity.name);
-		this.set_HP(entity, entity.HP);	
-		this.set_HP_Max(entity, entity.HP_Max);	
-		this.set_direction(entity);
 	},
 
 	onLeaveWorld : function(entity)
