@@ -5,7 +5,7 @@ kbengine_cocos2d_js_demo
 http://www.kbengine.org
 
 ##中文
-[Demo搭建文档](https://github.com/kbengine/kbengine_cocos2d_js_demo/blob/master/README_CN.md)，QQ交流群：16535321，[论坛](http://bbs.kbengine.org)
+[Demo搭建文档](https://github.com/kbengine/kbengine_cocos2d_js_demo/blob/master/README_CN.md)，QQ交流群：461368412，[论坛](http://bbs.kbengine.org)
 
 ##Releases
 
