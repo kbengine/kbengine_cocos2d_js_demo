@@ -214,17 +214,17 @@ var StartSceneLayer = cc.Layer.extend({
         this.playButton.visible = false;
         this.addChild(this.playButton, 2);
         
-		if(window.localStorage)
-		{
-			var username = window.localStorage["user_name"];
-			var password = window.localStorage["user_passwd"];
-			
-			if(username != undefined)
-				this.usernamebox.setString(username);
-			
-			if(password != undefined)
-				this.passwordbox.setString(password);			
-		}
+	if(window.localStorage)
+	{
+		var username = window.localStorage["user_name"];
+		var password = window.localStorage["user_passwd"];
+		
+		if(username != undefined)
+			this.usernamebox.setString(username);
+		
+		if(password != undefined)
+			this.passwordbox.setString(password);			
+	}
     },
 
 	showCreatePlayerUI : function(isShow)
@@ -538,16 +538,16 @@ var StartSceneLayer = cc.Layer.extend({
     	
     onLoginSuccessfully : function(rndUUID, eid, accountEntity)
     {
-    	GUIDebugLayer.debug.INFO_MSG("Login is successfully!(登陆成功!)");
-    	
-        this.usernamebox.visible = false;
-        this.passwordbox.visible = false;
-        this.logintButton.visible = false;
-        this.registerButton.visible = false;
-		this.playButton.visible = true;
-		
-        this.serverScriptVersion.setString("serverScriptVersion: " + KBEngine.app.serverScriptVersion);
-        this.serverVersion.setString("serverVersion: " + KBEngine.app.serverVersion);		
+	GUIDebugLayer.debug.INFO_MSG("Login is successfully!(登陆成功!)");
+
+	this.usernamebox.visible = false;
+	this.passwordbox.visible = false;
+	this.logintButton.visible = false;
+	this.registerButton.visible = false;
+	this.playButton.visible = true;
+
+	this.serverScriptVersion.setString("serverScriptVersion: " + KBEngine.app.serverScriptVersion);
+	this.serverVersion.setString("serverVersion: " + KBEngine.app.serverVersion);		
     },
 
     onLoginBaseapp : function()
