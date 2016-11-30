@@ -193,12 +193,14 @@ var WorldSceneLayer = cc.Layer.extend({
 		
 		// in world
 		KBEngine.Event.register("addSpaceGeometryMapping", this, "addSpaceGeometryMapping");
-		KBEngine.Event.register("onAvatarEnterWorld", this, "onAvatarEnterWorld");
 		KBEngine.Event.register("onEnterWorld", this, "onEnterWorld");
 		KBEngine.Event.register("onLeaveWorld", this, "onLeaveWorld");
 		KBEngine.Event.register("set_position", this, "set_position");
 		KBEngine.Event.register("set_direction", this, "set_direction");
 		KBEngine.Event.register("updatePosition", this, "updatePosition");
+		
+		// in world(register by scripts)
+		KBEngine.Event.register("onAvatarEnterWorld", this, "onAvatarEnterWorld");
 		KBEngine.Event.register("set_HP", this, "set_HP");
 		KBEngine.Event.register("set_MP", this, "set_MP");
 		KBEngine.Event.register("set_HP_Max", this, "set_HP_Max");

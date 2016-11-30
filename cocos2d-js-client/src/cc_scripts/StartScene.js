@@ -425,7 +425,7 @@ var StartSceneLayer = cc.Layer.extend({
 		KBEngine.Event.register("Baseapp_importClientMessages", this, "Baseapp_importClientMessages");
 		KBEngine.Event.register("Baseapp_importClientEntityDef", this, "Baseapp_importClientEntityDef");
 		
-		// selavatars
+		// selavatars(register by scripts)
 		KBEngine.Event.register("onReqAvatarList", this, "onReqAvatarList");
 		KBEngine.Event.register("onCreateAvatarResult", this, "onCreateAvatarResult");
 		KBEngine.Event.register("onRemoveAvatar", this, "onRemoveAvatar");
