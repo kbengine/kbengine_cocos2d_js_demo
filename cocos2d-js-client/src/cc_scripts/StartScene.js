@@ -410,8 +410,8 @@ var StartSceneLayer = cc.Layer.extend({
     {
 		// common
 		KBEngine.Event.register("onKicked", this, "onKicked");
-		KBEngine.Event.register("onDisableConnect", this, "onDisableConnect");
-		KBEngine.Event.register("onConnectStatus", this, "onConnectStatus");
+		KBEngine.Event.register("onDisconnected", this, "onDisconnected");
+		KBEngine.Event.register("onConnectionState", this, "onConnectionState");
 	    	
 		// login
 		KBEngine.Event.register("onCreateAccountResult", this, "onCreateAccountResult");
@@ -436,13 +436,13 @@ var StartSceneLayer = cc.Layer.extend({
 		GUIDebugLayer.debug.ERROR_MSG("kick, disconnect!, reason=" + KBEngine.app.serverErr(failedcode));
 	},
 		
-	onDisableConnect : function()
+	onDisconnected : function()
 	{
 		// 切换到场景
 		cc.director.runScene(new StartScene());			
 	},
 		
-	onConnectStatus : function(success)
+	onConnectionState : function(success)
 	{
 		if(!success)
 			GUIDebugLayer.debug.ERROR_MSG("Connect(" + KBEngine.app.ip + ":" + KBEngine.app.port + ") is error! (连接错误)");

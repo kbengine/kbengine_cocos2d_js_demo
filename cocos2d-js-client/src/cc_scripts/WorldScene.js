@@ -188,8 +188,8 @@ var WorldSceneLayer = cc.Layer.extend({
     {
 		// common
 		KBEngine.Event.register("onKicked", this, "onKicked");
-		KBEngine.Event.register("onDisableConnect", this, "onDisableConnect");
-		KBEngine.Event.register("onConnectStatus", this, "onConnectStatus");
+		KBEngine.Event.register("onDisconnected", this, "onDisconnected");
+		KBEngine.Event.register("onConnectionState", this, "onConnectionState");
 		
 		// in world
 		KBEngine.Event.register("addSpaceGeometryMapping", this, "addSpaceGeometryMapping");
@@ -220,13 +220,13 @@ var WorldSceneLayer = cc.Layer.extend({
 	{
 	},
 		
-	onDisableConnect : function()
+	onDisconnected : function()
 	{
 		// 切换到场景
 		cc.director.runScene(new StartScene());			
 	},
 		
-	onConnectStatus : function(success)
+	onConnectionState : function(success)
 	{
 		if(!success)
 			GUIDebugLayer.debug.ERROR_MSG("Connect(" + KBEngine.app.ip + ":" + KBEngine.app.port + ") is error! (连接错误)");
