@@ -421,6 +421,8 @@ var StartSceneLayer = cc.Layer.extend({
 		KBEngine.Event.register("onScriptVersionNotMatch", this, "onScriptVersionNotMatch");
 		KBEngine.Event.register("onLoginBaseappFailed", this, "onLoginBaseappFailed");
 		KBEngine.Event.register("onLoginSuccessfully", this, "onLoginSuccessfully");
+		KBEngine.Event.register("onReloginBaseappFailed", this, "onReloginBaseappFailed");
+		KBEngine.Event.register("onReloginBaseappSuccessfully", this, "onReloginBaseappSuccessfully");
 		KBEngine.Event.register("onLoginBaseapp", this, "onLoginBaseapp");
 		KBEngine.Event.register("Loginapp_importClientMessages", this, "Loginapp_importClientMessages");
 		KBEngine.Event.register("Baseapp_importClientMessages", this, "Baseapp_importClientMessages");
@@ -451,7 +453,6 @@ var StartSceneLayer = cc.Layer.extend({
 	{
 		if(KBEngine.app.socket != undefined && KBEngine.app.socket != null)
 		{
-			GUIDebugLayer.debug.INFO_MSG("relogin success!");
 			return;
 		}
 		
@@ -471,6 +472,16 @@ var StartSceneLayer = cc.Layer.extend({
           	  }, 1);
 	},
 	
+    onLoginBaseappFailed : function(failedcode)
+    {
+    	GUIDebugLayer.debug.ERROR_MSG("reogin is failed(断线重连失败), err=" + KBEngine.app.serverErr(failedcode));	
+    },
+    	
+    onReloginBaseappSuccessfully : function()
+    {
+	GUIDebugLayer.debug.INFO_MSG("reogin is successfully!(断线重连成功!)");	
+    },
+    	
 	onConnectionState : function(success)
 	{
 		if(!success)

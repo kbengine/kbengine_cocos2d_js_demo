@@ -191,7 +191,9 @@ var WorldSceneLayer = cc.Layer.extend({
 		KBEngine.Event.register("onKicked", this, "onKicked");
 		KBEngine.Event.register("onDisconnected", this, "onDisconnected");
 		KBEngine.Event.register("onConnectionState", this, "onConnectionState");
-		
+		KBEngine.Event.register("onReloginBaseappFailed", this, "onReloginBaseappFailed");
+		KBEngine.Event.register("onReloginBaseappSuccessfully", this, "onReloginBaseappSuccessfully");
+
 		// in world
 		KBEngine.Event.register("addSpaceGeometryMapping", this, "addSpaceGeometryMapping");
 		KBEngine.Event.register("onEnterWorld", this, "onEnterWorld");
@@ -235,7 +237,6 @@ var WorldSceneLayer = cc.Layer.extend({
 	{
 		if(KBEngine.app.socket != undefined && KBEngine.app.socket != null)
 		{
-			GUIDebugLayer.debug.INFO_MSG("relogin success!");
 			return;
 		}
 		
@@ -254,6 +255,16 @@ var WorldSceneLayer = cc.Layer.extend({
                 self.onReloginBaseappTimer(self);
           	  }, 1);
 	},
+	
+    onLoginBaseappFailed : function(failedcode)
+    {
+    	GUIDebugLayer.debug.ERROR_MSG("reogin is failed(断线重连失败), err=" + KBEngine.app.serverErr(failedcode));	
+    },
+    	
+    onReloginBaseappSuccessfully : function()
+    {
+	GUIDebugLayer.debug.INFO_MSG("reogin is successfully!(断线重连成功!)");	
+    },
 		
 	onConnectionState : function(success)
 	{
