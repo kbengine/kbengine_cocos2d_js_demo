@@ -8,6 +8,7 @@ var WorldSceneLayer = cc.Layer.extend({
     mapNode: null,
     mapName: "",
     relivePanel: null,
+    reloginCount:0,
     ctor:function () {
         //////////////////////////////
         // super init first
@@ -219,11 +220,39 @@ var WorldSceneLayer = cc.Layer.extend({
 	onKicked : function(failedcode)
 	{
 	},
-		
+
 	onDisconnected : function()
 	{
-		// 切换到场景
-		cc.director.runScene(new StartScene());			
+		GUIDebugLayer.debug.ERROR_MSG("disconnect! will try to reconnect...");
+		this.reloginCount = 0;
+		
+		this.scheduleOnce(function timerfn() {  
+                this.onReloginBaseappTimer(this);
+          	  }, 1);
+	},
+	
+	onReloginBaseappTimer : function(self)
+	{
+		if(KBEngine.app.socket != undefined && KBEngine.app.socket != null)
+		{
+			GUIDebugLayer.debug.INFO_MSG("relogin success!");
+			return;
+		}
+		
+		if(this.reloginCount >= 3)
+		{
+			// 切换起始到场景
+			cc.director.runScene(new StartScene());
+			return;
+		}
+	
+		this.reloginCount += 1;
+		
+		GUIDebugLayer.debug.ERROR_MSG("will try to reconnect(" + this.reloginCount + ")...");
+		KBEngine.app.reloginBaseapp();
+		this.scheduleOnce(function timerfn() {  
+                self.onReloginBaseappTimer(self);
+          	  }, 1);
 	},
 		
 	onConnectionState : function(success)

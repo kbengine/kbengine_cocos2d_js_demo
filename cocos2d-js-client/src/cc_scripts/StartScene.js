@@ -13,6 +13,7 @@ var StartSceneLayer = cc.Layer.extend({
     playButton:null,
     playerNameBox:null,
     playerNameLabel:null,
+    reloginCount:0,
     ctor:function () 
     {
         //////////////////////////////
@@ -25,7 +26,7 @@ var StartSceneLayer = cc.Layer.extend({
     {
     	this._super();
     	
-		// 激活 update
+	  // 激活 update
         this.schedule(this.sceneUpdate, 0.1, cc.REPEAT_FOREVER, 0.1);
     
     	// 初始化UI
@@ -438,10 +439,38 @@ var StartSceneLayer = cc.Layer.extend({
 		
 	onDisconnected : function()
 	{
-		// 切换到场景
-		cc.director.runScene(new StartScene());			
-	},
+		GUIDebugLayer.debug.ERROR_MSG("disconnect! will try to reconnect...");
+		this.reloginCount = 0;
 		
+		this.scheduleOnce(function timerfn() {  
+                this.onReloginBaseappTimer(this);
+          	  }, 1);
+	},
+	
+	onReloginBaseappTimer : function(self)
+	{
+		if(KBEngine.app.socket != undefined && KBEngine.app.socket != null)
+		{
+			GUIDebugLayer.debug.INFO_MSG("relogin success!");
+			return;
+		}
+		
+		if(this.reloginCount >= 3)
+		{
+			// 切换起始到场景
+			cc.director.runScene(new StartScene());
+			return;
+		}
+	
+		this.reloginCount += 1;
+		
+		GUIDebugLayer.debug.ERROR_MSG("will try to reconnect(" + this.reloginCount + ")...");
+		KBEngine.app.reloginBaseapp();
+		this.scheduleOnce(function timerfn() {  
+                self.onReloginBaseappTimer(self);
+          	  }, 1);
+	},
+	
 	onConnectionState : function(success)
 	{
 		if(!success)
