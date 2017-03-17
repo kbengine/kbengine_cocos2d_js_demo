@@ -256,7 +256,7 @@ var WorldSceneLayer = cc.Layer.extend({
           	  }, 1);
 	},
 	
-    onLoginBaseappFailed : function(failedcode)
+    onReloginBaseappFailed : function(failedcode)
     {
     	GUIDebugLayer.debug.ERROR_MSG("reogin is failed(断线重连失败), err=" + KBEngine.app.serverErr(failedcode));	
     },
