@@ -1,105 +1,107 @@
 kbengine_cocos2d_js_demo
 =============
 
-##±¾ÏîÄ¿×÷ÎªKBEngine·şÎñ¶ËÒıÇæµÄ¿Í»§¶ËÑİÊ¾¶øĞ´
+## æœ¬é¡¹ç›®ä½œä¸ºKBEngineæœåŠ¡ç«¯å¼•æ“çš„å®¢æˆ·ç«¯æ¼”ç¤ºè€Œå†™
+
 http://www.kbengine.org
 
-##¹Ù·½ÂÛÌ³
+## å®˜æ–¹è®ºå›
 
 	http://bbs.kbengine.org
 
 
-##QQ½»Á÷Èº
+## QQäº¤æµç¾¤
 
 	461368412 
 
 
-##Releases
+## Releases
 
 	sources		: https://github.com/kbengine/kbengine_cocos2d_js_demo/releases/latest
 	binarys		: https://sourceforge.net/projects/kbengine/files/
 
 
-##KBE²å¼şÎÄµµ
+## KBEæ’ä»¶æ–‡æ¡£
 
 	https://github.com/kbengine/kbengine_js_plugins/blob/master/README.md
 
 
-##¿ªÊ¼:
-	1. È·±£ÒÑ¾­ÏÂÔØ¹ıKBEngine·şÎñ¶ËÒıÇæ£¬Èç¹ûÃ»ÓĞÏÂÔØÇëÏÈÏÂÔØ
-		ÏÂÔØ·şÎñ¶ËÔ´Âë(KBEngine)£º
+## å¼€å§‹:
+	1. ç¡®ä¿å·²ç»ä¸‹è½½è¿‡KBEngineæœåŠ¡ç«¯å¼•æ“ï¼Œå¦‚æœæ²¡æœ‰ä¸‹è½½è¯·å…ˆä¸‹è½½
+		ä¸‹è½½æœåŠ¡ç«¯æºç (KBEngine)ï¼š
 			https://github.com/kbengine/kbengine/releases/latest
 
-		±àÒë(KBEngine)£º
+		ç¼–è¯‘(KBEngine)ï¼š
 			http://www.kbengine.org/docs/build.html
 
-		°²×°(KBEngine)£º
+		å®‰è£…(KBEngine)ï¼š
 			http://www.kbengine.org/docs/installation.html
 
-	2. ÏÂÔØkbengine¿Í»§¶Ëjs²å¼şÓë·şÎñ¶ËDemo×Ê²ú¿â:
+	2. ä¸‹è½½kbengineå®¢æˆ·ç«¯jsæ’ä»¶ä¸æœåŠ¡ç«¯Demoèµ„äº§åº“:
 
-	    * Ê¹ÓÃgitÃüÁîĞĞ£¬½øÈëµ½kbengine_cocos2d_js_demoÄ¿Â¼Ö´ĞĞ£º
+	    * ä½¿ç”¨gitå‘½ä»¤è¡Œï¼Œè¿›å…¥åˆ°kbengine_cocos2d_js_demoç›®å½•æ‰§è¡Œï¼š
 
 	        git submodule update --init --remote
 ![submodule_update1](http://www.kbengine.org/assets/img/screenshots/gitbash_submodule.png)
 
-		* »òÕßÊ¹ÓÃ TortoiseGit(Ñ¡Ôñ²Ëµ¥): TortoiseGit -> Submodule Update:
+		* æˆ–è€…ä½¿ç”¨ TortoiseGit(é€‰æ‹©èœå•): TortoiseGit -> Submodule Update:
 ![submodule_update2](http://www.kbengine.org/assets/img/screenshots/unity3d_plugins_submodule_update.jpg)
 
-                * Ò²¿ÉÒÔÊÖ¶¯ÏÂÔØkbengine¿Í»§¶Ë²å¼şÓë·şÎñ¶ËDemo×Ê²ú¿â
+                * ä¹Ÿå¯ä»¥æ‰‹åŠ¨ä¸‹è½½kbengineå®¢æˆ·ç«¯æ’ä»¶ä¸æœåŠ¡ç«¯Demoèµ„äº§åº“
 
-		        ¿Í»§¶Ë²å¼şÏÂÔØ£º
+		        å®¢æˆ·ç«¯æ’ä»¶ä¸‹è½½ï¼š
 		            https://github.com/kbengine/kbengine_js_plugins/releases/latest
-		            ÏÂÔØºóÇë½«Æä½âÑ¹Ëõ£¬²å¼şÔ´ÂëÇë·ÅÖÃÔÚ: kbengine_cocos2d_js_demo/cocos2d-js-client/plugins/
-		            £¨×¢Òâ£ºÎÄ¼ş¼ĞÃû³ÆĞèÒªĞŞ¸ÄÎª"kbengine_js_plugins"£©
+		            ä¸‹è½½åè¯·å°†å…¶è§£å‹ç¼©ï¼Œæ’ä»¶æºç è¯·æ”¾ç½®åœ¨: kbengine_cocos2d_js_demo/cocos2d-js-client/plugins/
+		            ï¼ˆæ³¨æ„ï¼šæ–‡ä»¶å¤¹åç§°éœ€è¦ä¿®æ”¹ä¸º"kbengine_js_plugins"ï¼‰
 
-		        ·şÎñ¶Ë×Ê²ú¿âÏÂÔØ£º
+		        æœåŠ¡ç«¯èµ„äº§åº“ä¸‹è½½ï¼š
 		            https://github.com/kbengine/kbengine_demos_assets/releases/latest
-		            ÏÂÔØºóÇë½«Æä½âÑ¹Ëõ,²¢½«Ä¿Â¼ÎÄ¼ş·ÅÖÃÓÚ·şÎñ¶ËÒıÇæ¸ùÄ¿Â¼"kbengine/"Ö®ÏÂ£¬ÈçÏÂÍ¼£º
+		            ä¸‹è½½åè¯·å°†å…¶è§£å‹ç¼©,å¹¶å°†ç›®å½•æ–‡ä»¶æ”¾ç½®äºæœåŠ¡ç«¯å¼•æ“æ ¹ç›®å½•"kbengine/"ä¹‹ä¸‹ï¼Œå¦‚ä¸‹å›¾ï¼š
 
-	3. ¿½±´·şÎñ¶Ë×Ê²ú¿â"kbengine_demos_assets"µ½·şÎñ¶ËÒıÇæ¸ùÄ¿Â¼"kbengine/"Ö®ÏÂ£¬ÈçÏÂÍ¼£º
+	3. æ‹·è´æœåŠ¡ç«¯èµ„äº§åº“"kbengine_demos_assets"åˆ°æœåŠ¡ç«¯å¼•æ“æ ¹ç›®å½•"kbengine/"ä¹‹ä¸‹ï¼Œå¦‚ä¸‹å›¾ï¼š
 ![demo_configure](http://www.kbengine.org/assets/img/screenshots/demo_copy_kbengine.jpg)
 
 
-##ÅäÖÃDemo(¿ÉÑ¡):
+## é…ç½®Demo(å¯é€‰):
 
-	¸Ä±äµÇÂ¼IPµØÖ·Óë¶Ë¿Ú£¨×¢Òâ£º¹ØÓÚ·şÎñ¶Ë¶Ë¿Ú²¿·Ö²Î¿´http://www.kbengine.org/cn/docs/installation.html£¬ĞŞ¸ÄÍê±ÏºóÇëÇå³ıä¯ÀÀÆ÷»º´æË¢ĞÂÒ³Ãæ£©:
+	æ”¹å˜ç™»å½•IPåœ°å€ä¸ç«¯å£ï¼ˆæ³¨æ„ï¼šå…³äºæœåŠ¡ç«¯ç«¯å£éƒ¨åˆ†å‚çœ‹http://www.kbengine.org/cn/docs/installation.htmlï¼Œä¿®æ”¹å®Œæ¯•åè¯·æ¸…é™¤æµè§ˆå™¨ç¼“å­˜åˆ·æ–°é¡µé¢ï¼‰:
 
 		kbengine_cocos2d_js_demo\cocos2d-js-client\main.js
 			args.ip = "127.0.0.1";
 			args.port = 20013;
 
 
-##Æô¶¯·şÎñÆ÷:
+## å¯åŠ¨æœåŠ¡å™¨:
 
-	È·±£¡°kbengine_cocos2d_js_demo\kbengine_demos_assets¡±ÒÑ¾­¿½±´µ½KBEngine¸ùÄ¿Â¼£º
-		²Î¿¼ÉÏ·½ÕÂ½Ú£º¿ªÊ¼
+	ç¡®ä¿â€œkbengine_cocos2d_js_demo\kbengine_demos_assetsâ€å·²ç»æ‹·è´åˆ°KBEngineæ ¹ç›®å½•ï¼š
+		å‚è€ƒä¸Šæ–¹ç« èŠ‚ï¼šå¼€å§‹
 
-	Ê¹ÓÃÆô¶¯½Å±¾Æô¶¯·şÎñ¶Ë£º
+	ä½¿ç”¨å¯åŠ¨è„šæœ¬å¯åŠ¨æœåŠ¡ç«¯ï¼š
 		Windows:
 			kbengine\kbengine_demos_assets\start_server.bat
 
 		Linux:
 			kbengine\kbengine_demos_assets\start_server.sh
 
-	¼ì²éÆô¶¯×´Ì¬£º
-			Èç¹ûÆô¶¯³É¹¦½«»áÔÚÈÕÖ¾ÖĞÕÒµ½"Components::process(): Found all the components!"¡£
-			ÈÎºÎÆäËûÇé¿öÇëÔÚÈÕÖ¾ÖĞËÑË÷"ERROR"¹Ø¼ü×Ö£¬¸ù¾İ´íÎóÃèÊö³¢ÊÔ½â¾ö¡£
-			(¸ü¶à²Î¿¼: http://www.kbengine.org/docs/startup_shutdown.html)
+	æ£€æŸ¥å¯åŠ¨çŠ¶æ€ï¼š
+			å¦‚æœå¯åŠ¨æˆåŠŸå°†ä¼šåœ¨æ—¥å¿—ä¸­æ‰¾åˆ°"Components::process(): Found all the components!"ã€‚
+			ä»»ä½•å…¶ä»–æƒ…å†µè¯·åœ¨æ—¥å¿—ä¸­æœç´¢"ERROR"å…³é”®å­—ï¼Œæ ¹æ®é”™è¯¯æè¿°å°è¯•è§£å†³ã€‚
+			(æ›´å¤šå‚è€ƒ: http://www.kbengine.org/docs/startup_shutdown.html)
 
 
-##Æô¶¯¿Í»§¶Ë:
+## å¯åŠ¨å®¢æˆ·ç«¯:
 
-	1. Ê¹ÓÃPython´î½¨¼òµ¥µÄWeb·şÎñÆ÷
-		ÏÂÔØhttp://www.python.org/ftp/python/3.3.4/python-3.3.4.msi²¢°²×°¡£
+	1. ä½¿ç”¨Pythonæ­å»ºç®€å•çš„WebæœåŠ¡å™¨
+		ä¸‹è½½http://www.python.org/ftp/python/3.3.4/python-3.3.4.msiå¹¶å®‰è£…ã€‚
 
-	2. Æô¶¯Web·şÎñ, Ë«»÷start_http_service.bat
+	2. å¯åŠ¨WebæœåŠ¡, åŒå‡»start_http_service.bat
 
-	3. ½øÈëÓÎÏ·, ´ò¿ªä¯ÀÀÆ÷ÊäÈë http://127.0.0.1 ¼´¿É½øÈëµÇÂ¼½çÃæ¡£
+	3. è¿›å…¥æ¸¸æˆ, æ‰“å¼€æµè§ˆå™¨è¾“å…¥ http://127.0.0.1 å³å¯è¿›å…¥ç™»å½•ç•Œé¢ã€‚
 
 
 
-##ÑİÊ¾½ØÍ¼:
+## æ¼”ç¤ºæˆªå›¾:
+
 ![screenshots1](http://www.kbengine.org/assets/img/screenshots/cocos_js_demo1.jpg)
 ![screenshots2](http://www.kbengine.org/assets/img/screenshots/cocos_js_demo2.jpg)
 ![screenshots3](http://www.kbengine.org/assets/img/screenshots/cocos_js_demo3.jpg)
