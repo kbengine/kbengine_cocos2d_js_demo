@@ -1,24 +1,26 @@
 kbengine_cocos2d_js_demo
 =============
 
-##This client-project is written for KBEngine(a MMOG engine of server)
+## This client-project is written for KBEngine(a MMOG engine of server)
+
 http://www.kbengine.org
 
-##中文
-[Demo搭建文档](https://github.com/kbengine/kbengine_cocos2d_js_demo/blob/master/README_CN.md)，QQ交流群：461368412，[论坛](http://bbs.kbengine.org)
+## 涓枃
 
-##Releases
+[Demo鎼缓鏂囨。](https://github.com/kbengine/kbengine_cocos2d_js_demo/blob/master/README_CN.md)锛孮Q浜ゆ祦缇わ細461368412锛孾璁哄潧](http://bbs.kbengine.org)
+
+## Releases
 
 	sources		: https://github.com/kbengine/kbengine_cocos2d_js_demo/releases/latest
 	binarys		: https://sourceforge.net/projects/kbengine/files/
 
 
-##KBE-Plugins docs
+## KBE-Plugins docs
 
 	https://github.com/kbengine/kbengine_js_plugins/blob/master/README.md
 
 
-##Start:
+## Start:
 	1. Download KBEngine(a MMOG engine of server):
 		Download(KBEngine):
 			https://github.com/kbengine/kbengine/releases/latest
@@ -54,7 +56,7 @@ http://www.kbengine.org
 ![demo_configure](http://www.kbengine.org/assets/img/screenshots/demo_copy_kbengine.jpg)
 
 
-##Configure Demo(Optional):
+## Configure Demo(Optional):
 
 	Change the login address(Clear browser cache):
 
@@ -63,10 +65,10 @@ http://www.kbengine.org
 			args.port = 20013;
 
 
-##Start the Servers:
+## Start the Servers:
 
 	Ensure that the "kbengine_cocos2d_js_demo\kbengine_demos_assets" has been copied to the "kbengine\" directory
-		Reference：Start
+		Reference锛歋tart
 
 	Check the startup status:
 		If successful will find log "Components::process(): Found all the components!".
@@ -83,7 +85,7 @@ http://www.kbengine.org
 		(More: http://www.kbengine.org/docs/startup_shutdown.html)
 
 
-##Start the Client:
+## Start the Client:
 
 	1. We simply use python to build web service
 		Download and Install http://www.python.org/ftp/python/3.3.4/python-3.3.4.msi
@@ -94,7 +96,8 @@ http://www.kbengine.org
 		http://127.0.0.1
 
 
-##Screenshots:
+## Screenshots:
+
 ![screenshots1](http://www.kbengine.org/assets/img/screenshots/cocos_js_demo1.jpg)
 ![screenshots2](http://www.kbengine.org/assets/img/screenshots/cocos_js_demo2.jpg)
 ![screenshots3](http://www.kbengine.org/assets/img/screenshots/cocos_js_demo3.jpg)
