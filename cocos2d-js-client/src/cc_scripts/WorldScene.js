@@ -353,6 +353,9 @@ var WorldSceneLayer = cc.Layer.extend({
 		
 		ae.x = entity.position.x * 16;
 		ae.y = entity.position.z * 16;
+		
+		if(entity.isPlayer())
+			ae.stopAllActions();
 	},
 
 	updatePosition : function(entity)
