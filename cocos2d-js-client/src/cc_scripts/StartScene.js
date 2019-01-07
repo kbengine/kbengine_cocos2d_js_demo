@@ -559,7 +559,8 @@ var StartSceneLayer = cc.Layer.extend({
 
     onVersionNotMatch : function(clientVersion, serverVersion)
     {
-    	GUIDebugLayer.debug.ERROR_MSG("Version not match(curr=" + clientVersion + ", srv=" + serverVersion + " )(版本不匹配)");	
+        GUIDebugLayer.debug.ERROR_MSG("Version not match(curr=" + clientVersion + ", srv=" + serverVersion + " )(版本不匹配)");	
+        KBEngine.ERROR_MSG("Execute the gensdk script to generate matching client SDK in the server-assets directory.");
         this.serverScriptVersion.setString("serverScriptVersion: " + KBEngine.app.serverScriptVersion);
         this.serverVersion.setString("serverVersion: " + KBEngine.app.serverVersion);	    	
     },
