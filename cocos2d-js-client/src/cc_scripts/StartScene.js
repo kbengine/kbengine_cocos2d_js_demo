@@ -545,11 +545,11 @@ var StartSceneLayer = cc.Layer.extend({
 		}    	
     },
     	    
-    onLoginFailed : function(failedcode)
+    onLoginFailed : function(failedcode, serverdatas)
     {
 		if(failedcode == 20)
 		{
-			GUIDebugLayer.debug.ERROR_MSG("Login is failed(登陆失败), err=" + KBEngine.app.serverErr(failedcode) + ", " + KBEngine.app.serverdatas);
+			GUIDebugLayer.debug.ERROR_MSG("Login is failed(登陆失败), err=" + KBEngine.app.serverErr(failedcode) + ", " + serverdatas);
 		}
 		else
 		{
